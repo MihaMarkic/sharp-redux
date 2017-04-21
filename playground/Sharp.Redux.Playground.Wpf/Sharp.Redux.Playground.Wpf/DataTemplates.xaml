@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vm="clr-namespace:Sharp.Redux.Playground.Engine.ViewModels;assembly=Sharp.Redux.Playground.Engine"
+                    xmlns:p="clr-namespace:Sharp.Redux.Playground.Wpf.Pages">
+    <DataTemplate DataType="{x:Type vm:FirstPageViewModel}">
+        <p:FirstPage />
+    </DataTemplate>
+</ResourceDictionary>

@@ -3,10 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Sharp.Redux.Playground.Engine.ViewModels;assembly=Sharp.Redux.Playground.Engine"
         xmlns:local="clr-namespace:Sharp.Redux.Playground.Wpf"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type vm:MainViewModel}}"
         Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+    <ContentControl Content="{Binding Content, Mode=OneWay}" Margin="12" />
 </Window>

@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharp.Redux", "..\..\src\Sh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Wpf", "..\..\src\Sharp.Redux\Sharp.Redux.Wpf\Sharp.Redux.Wpf.csproj", "{AF6AFBB5-3086-4FE4-9864-A0B9B76EDE5D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Playground.Engine", "..\Sharp.Redux.Playground.Engine\Sharp.Redux.Playground.Engine.csproj", "{ED042917-7AF2-467D-8FDF-9B580F4D8384}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{AF6AFBB5-3086-4FE4-9864-A0B9B76EDE5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF6AFBB5-3086-4FE4-9864-A0B9B76EDE5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF6AFBB5-3086-4FE4-9864-A0B9B76EDE5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED042917-7AF2-467D-8FDF-9B580F4D8384}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED042917-7AF2-467D-8FDF-9B580F4D8384}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED042917-7AF2-467D-8FDF-9B580F4D8384}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED042917-7AF2-467D-8FDF-9B580F4D8384}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

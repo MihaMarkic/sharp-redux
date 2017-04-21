@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Autofac;
+using Sharp.Redux.Playground.Engine;
+using Sharp.Redux.Playground.Engine.ViewModels;
+using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Sharp.Redux.Playground.Wpf
 {
@@ -20,9 +11,21 @@ namespace Sharp.Redux.Playground.Wpf
     /// </summary>
     public partial class MainWindow : Window
     {
+        public MainViewModel ViewModel { get; private set; }
         public MainWindow()
         {
             InitializeComponent();
+
+            IoC.Init();
+            ViewModel = IoCRegistrar.Container.Resolve<MainViewModel>();
+            ViewModel.Start();
+            DataContext = ViewModel;
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            IoCRegistrar.Container.Dispose();
+            base.OnClosed(e);
         }
     }
 }
