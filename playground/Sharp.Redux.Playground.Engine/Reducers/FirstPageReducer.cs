@@ -10,7 +10,9 @@ namespace Sharp.Redux.Playground.Engine.Reducers
             switch (action)
             {
                 case InputChangedAction inputChanged:
-                    return state.Clone(input: inputChanged.Value, output:$"Yolo: {inputChanged.Value}");
+                    return state.Clone(input: inputChanged.Value);
+                case ClickMeAction clickMe:
+                    return state.Clone(output:$"Yolo: {state.Input}");
                 default:
                     return state;
             }
