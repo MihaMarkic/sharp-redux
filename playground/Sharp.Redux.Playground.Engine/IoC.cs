@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Sharp.Redux.Playground.Engine.Core;
 using Sharp.Redux.Playground.Engine.Reducers;
-using Sharp.Redux.Playground.Engine.State;
+using Sharp.Redux.Playground.Engine.States;
 using Sharp.Redux.Playground.Engine.ViewModels;
 using System.Reflection;
 

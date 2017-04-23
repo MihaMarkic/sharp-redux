@@ -1,11 +1,11 @@
-﻿<UserControl x:Class="Sharp.Redux.Visualizer.Wpf.Views.ReduxActionView"
+﻿<UserControl x:Class="Sharp.Redux.Visualizer.Wpf.Views.StepView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type vm:StepViewModel}}"
-             xmlns:vm="clr-namespace:Sharp.Redux.Visualizer.Wpf.Views"
+             xmlns:vm="clr-namespace:Sharp.Redux.Visualizer.ViewModels;assembly=Sharp.Redux.Visualizer"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.RowDefinitions>

@@ -4,24 +4,32 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
+             xmlns:vis="clr-namespace:Sharp.Redux.Visualizer;assembly=Sharp.Redux.Visualizer"
+             xmlns:vm="clr-namespace:Sharp.Redux.Visualizer.ViewModels;assembly=Sharp.Redux.Visualizer"
+             xmlns:v="clr-namespace:Sharp.Redux.Visualizer.Wpf.Views"
+             d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type vm:MainViewModel}}"
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
+    <UserControl.Resources>
+        <v:PassthroughConverter x:Key="PassthroughConverter" />
+    </UserControl.Resources>
+    <Grid DataContext="{x:Static vis:ReduxVisualizer.MainViewModel}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <ListView x:Name="Actions" HorizontalAlignment="Stretch">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <ListView HorizontalAlignment="Stretch" ItemsSource="{Binding Steps, Mode=OneTime}">
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="{x:Type vm:StepViewModel}">
+                    <v:StepView />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            </ListView>
         <GridSplitter Grid.Column="1"  HorizontalAlignment="Center"
                         VerticalAlignment="Stretch"
                         ShowsPreview="True"
                         Width="5" />
         <Grid Grid.Column="2" />
+        
     </Grid>
 </UserControl>

@@ -31,8 +31,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Righthand.Immutable, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\playground\Sharp.Redux.Playground.Wpf\packages\Righthand.Immutable.1.0.0\lib\netstandard1.0\Righthand.Immutable.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\playground\Sharp.Redux.Playground.Wpf\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -60,8 +69,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Views\ReduxActionView.xaml.cs">
-      <DependentUpon>ReduxActionView.xaml</DependentUpon>
+    <Compile Include="Views\PassthroughConverter.cs" />
+    <Compile Include="Views\StepView.xaml.cs">
+      <DependentUpon>StepView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ReduxVisualizerView.xaml.cs">
       <DependentUpon>ReduxVisualizerView.xaml</DependentUpon>
@@ -73,6 +83,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -89,7 +100,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\ReduxActionView.xaml">
+    <Page Include="Views\StepView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

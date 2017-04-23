@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Righthand.Immutable" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Sharp.Redux\Sharp.Redux\Sharp.Redux.csproj" />
   </ItemGroup>
 

@@ -1,6 +1,6 @@
 ﻿using Righthand.Immutable;
 
-namespace Sharp.Redux.Playground.Engine.State
+namespace Sharp.Redux.Playground.Engine.States
 {
     public class FirstPageState
     {

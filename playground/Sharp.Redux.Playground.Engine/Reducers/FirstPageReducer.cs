@@ -1,5 +1,5 @@
 ﻿using Sharp.Redux.Playground.Engine.Actions.FirstPage;
-using Sharp.Redux.Playground.Engine.State;
+using Sharp.Redux.Playground.Engine.States;
 
 namespace Sharp.Redux.Playground.Engine.Reducers
 {

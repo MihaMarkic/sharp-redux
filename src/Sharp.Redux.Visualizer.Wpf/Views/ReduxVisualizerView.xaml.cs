@@ -10,7 +10,6 @@ namespace Sharp.Redux.Visualizer.Wpf.Views
         public ReduxVisualizerView()
         {
             InitializeComponent();
-            Actions.ItemsSource = ReduxVisualizer.Default.Steps;
         }
     }
 }

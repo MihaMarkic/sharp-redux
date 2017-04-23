@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Sharp.Redux.Playground.Engine.Actions.FirstPage;
 using Sharp.Redux.Playground.Engine.Core;
+using Sharp.Redux.Playground.Engine.States;
 using System.Runtime.CompilerServices;
 
 namespace Sharp.Redux.Playground.Engine.ViewModels
@@ -21,7 +22,7 @@ namespace Sharp.Redux.Playground.Engine.ViewModels
 
         public override void StateChanged()
         {
-            State.FirstPageState state = dispatcher.State.FirstPage;
+            FirstPageState state = dispatcher.State.FirstPage;
             Input = state.Input;
             Output = state.Output;
         }

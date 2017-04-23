@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using Sharp.Redux.Playground.Engine.Core;
-using Sharp.Redux.Playground.Engine.State;
+using Sharp.Redux.Playground.Engine.States;
 
 namespace Sharp.Redux.Playground.Engine.ViewModels
 {

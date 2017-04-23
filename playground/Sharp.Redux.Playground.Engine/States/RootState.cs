@@ -1,6 +1,7 @@
 ﻿using Righthand.Immutable;
+using Sharp.Redux.Playground.Engine.States;
 
-namespace Sharp.Redux.Playground.Engine.State
+namespace Sharp.Redux.Playground.Engine.States
 {
     public class RootState
     {

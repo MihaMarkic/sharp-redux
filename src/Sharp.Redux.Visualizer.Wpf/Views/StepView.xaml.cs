@@ -5,9 +5,9 @@ namespace Sharp.Redux.Visualizer.Wpf.Views
     /// <summary>
     /// Interaction logic for ReduxActionView.xaml
     /// </summary>
-    public partial class ReduxActionView : UserControl
+    public partial class StepView : UserControl
     {
-        public ReduxActionView()
+        public StepView()
         {
             InitializeComponent();
         }

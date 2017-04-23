@@ -1,29 +1,16 @@
 ﻿using Sharp.Redux.Visualizer.ViewModels;
-using System.Collections.ObjectModel;
 
 namespace Sharp.Redux.Visualizer
 {
-    public class ReduxVisualizer
+    public static class ReduxVisualizer
     {
-        private IReduxDispatcher dispatcher;
-        public static ReduxVisualizer Default { get; private set; }
-        public ObservableCollection<StepViewModel> Steps { get; private set; }
-
-        public static void Init(IReduxDispatcher dispatcher)
+        public static MainViewModel MainViewModel { get; private set; }
+        public static string[] IgnoredNamespacePrefixes { get; private set; }
+        public static void Init(IReduxDispatcher sourceDispatcher, string[] ignoredNamespacePrefixes = null)
         {
-            Default = new ReduxVisualizer(dispatcher);
-        }
-
-        public ReduxVisualizer(IReduxDispatcher dispatcher)
-        {
-            this.dispatcher = dispatcher;
-            dispatcher.StateChanged += Dispatcher_StateChanged;
-            Steps = new ObservableCollection<StepViewModel>();
-        }
-
-        private void Dispatcher_StateChanged(object sender, StateChangedEventArgs e)
-        {
-            Steps.Add(new StepViewModel(e.Action, dispatcher.State));
+            IgnoredNamespacePrefixes = ignoredNamespacePrefixes ?? new string[0];
+            VisualizerDispatcher.Init();
+            MainViewModel = new MainViewModel(sourceDispatcher);
         }
     }
 }
