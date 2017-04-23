@@ -1,4 +1,5 @@
-﻿using Sharp.Redux.Visualizer.States;
+﻿using Newtonsoft.Json;
+using Sharp.Redux.Visualizer.States;
 
 namespace Sharp.Redux.Visualizer.ViewModels
 {
@@ -25,5 +26,8 @@ namespace Sharp.Redux.Visualizer.ViewModels
             }
             return fullName;
         }
+        public string ActionContent => JsonConvert.SerializeObject(Step.Action);
+
+        public string StateJson => JsonConvert.SerializeObject(Step.State);
     }
 }

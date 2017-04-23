@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\playground\Sharp.Redux.Playground.Wpf\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Righthand.Immutable, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\playground\Sharp.Redux.Playground.Wpf\packages\Righthand.Immutable.1.0.0\lib\netstandard1.0\Righthand.Immutable.dll</HintPath>
     </Reference>
@@ -70,6 +73,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Views\PassthroughConverter.cs" />
+    <Compile Include="Views\ReduxStateView.xaml.cs">
+      <DependentUpon>ReduxStateView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\StepView.xaml.cs">
       <DependentUpon>StepView.xaml</DependentUpon>
     </Compile>
@@ -100,6 +106,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\ReduxStateView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\StepView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

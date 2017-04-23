@@ -18,18 +18,17 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <ListView HorizontalAlignment="Stretch" ItemsSource="{Binding Steps, Mode=OneTime}">
+        <ListView HorizontalAlignment="Stretch" ItemsSource="{Binding Steps, Mode=OneTime}" SelectedItem="{Binding SelectedStep, Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate DataType="{x:Type vm:StepViewModel}">
                     <v:StepView />
                 </DataTemplate>
             </ListView.ItemTemplate>
-            </ListView>
+        </ListView>
         <GridSplitter Grid.Column="1"  HorizontalAlignment="Center"
                         VerticalAlignment="Stretch"
                         ShowsPreview="True"
                         Width="5" />
-        <Grid Grid.Column="2" />
-        
+        <v:ReduxStateView Grid.Column="2" DataContext="{Binding SelectedStep}" />
     </Grid>
 </UserControl>

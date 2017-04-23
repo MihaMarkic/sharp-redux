@@ -1,0 +1,11 @@
+﻿<UserControl x:Class="Sharp.Redux.Visualizer.Wpf.Views.ReduxStateView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type vm:StepViewModel}}"
+             xmlns:vm="clr-namespace:Sharp.Redux.Visualizer.ViewModels;assembly=Sharp.Redux.Visualizer"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <TextBox TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True" Background="LightGray" Text="{Binding StateJson, Mode=OneTime}" />
+</UserControl>
