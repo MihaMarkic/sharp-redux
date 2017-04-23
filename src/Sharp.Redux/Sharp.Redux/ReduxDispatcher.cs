@@ -10,9 +10,10 @@ namespace Sharp.Redux
         where TReducer: IReduxReducer<TState>
     {
         private readonly TReducer reducer;
-        public event EventHandler StateChanged;
+        public event EventHandler<StateChangedEventArgs> StateChanged;
         private readonly BlockingCollection<ReduxAction> queue = new BlockingCollection<ReduxAction>();
         public TState State { get; private set; }
+        object IReduxDispatcher.State => State;
         private TaskFactory notificationFactory;
         private CancellationTokenSource cts;
         private Task processor;
@@ -74,11 +75,11 @@ namespace Sharp.Redux
             State = await reducer.ReduceAsync(State, action, CancellationToken.None);
             if (!ct.IsCancellationRequested)
             {
-                await notificationFactory.StartNew(() => OnStateChanged(EventArgs.Empty));
+                await notificationFactory.StartNew(() => OnStateChanged(new StateChangedEventArgs(action)));
             }
         }
 
-        protected virtual void OnStateChanged(EventArgs e)
+        protected virtual void OnStateChanged(StateChangedEventArgs e)
         {
             try
             {

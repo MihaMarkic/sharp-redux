@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AF6AFBB5-3086-4FE4-9864-A0B9B76EDE5D}</ProjectGuid>
+    <ProjectGuid>{72C58239-221F-4DA3-99E3-3DC0C27114BC}</ProjectGuid>
     <OutputType>library</OutputType>
-    <RootNamespace>Sharp.Redux.Wpf</RootNamespace>
-    <AssemblyName>Sharp.Redux.Wpf</AssemblyName>
+    <RootNamespace>Sharp.Redux.Visualizer.Wpf</RootNamespace>
+    <AssemblyName>Sharp.Redux.Visualizer.Wpf</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -60,7 +60,15 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="ReduxVisualizer.cs" />
+    <Compile Include="Views\ReduxActionView.xaml.cs">
+      <DependentUpon>ReduxActionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ReduxVisualizerView.xaml.cs">
+      <DependentUpon>ReduxVisualizerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ReduxVisualizerWindow.xaml.cs">
+      <DependentUpon>ReduxVisualizerWindow.xaml</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -71,11 +79,28 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sharp.Redux\Sharp.Redux.csproj">
-      <Project>{16aba628-5bdc-48f6-aaec-0096ce19f69e}</Project>
+    <ProjectReference Include="..\Sharp.Redux.Visualizer\Sharp.Redux.Visualizer.csproj">
+      <Project>{d0c5108f-d8bc-406c-900c-63356a097975}</Project>
+      <Name>Sharp.Redux.Visualizer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sharp.Redux\Sharp.Redux\Sharp.Redux.csproj">
+      <Project>{afcc6737-a684-4682-a7ef-22a72958350c}</Project>
       <Name>Sharp.Redux</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Page Include="Views\ReduxActionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ReduxVisualizerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ReduxVisualizerWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

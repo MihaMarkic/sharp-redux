@@ -7,9 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Playground.Wpf"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharp.Redux", "..\..\src\Sharp.Redux\Sharp.Redux\Sharp.Redux.csproj", "{AFCC6737-A684-4682-A7EF-22A72958350C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Wpf", "..\..\src\Sharp.Redux\Sharp.Redux.Wpf\Sharp.Redux.Wpf.csproj", "{AF6AFBB5-3086-4FE4-9864-A0B9B76EDE5D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Playground.Engine", "..\Sharp.Redux.Playground.Engine\Sharp.Redux.Playground.Engine.csproj", "{ED042917-7AF2-467D-8FDF-9B580F4D8384}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Visualizer", "..\..\src\Sharp.Redux.Visualizer\Sharp.Redux.Visualizer.csproj", "{D0C5108F-D8BC-406C-900C-63356A097975}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Visualizer.Wpf", "..\..\src\Sharp.Redux.Visualizer.Wpf\Sharp.Redux.Visualizer.Wpf.csproj", "{72C58239-221F-4DA3-99E3-3DC0C27114BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,14 +27,18 @@ Global
 		{AFCC6737-A684-4682-A7EF-22A72958350C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFCC6737-A684-4682-A7EF-22A72958350C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFCC6737-A684-4682-A7EF-22A72958350C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AF6AFBB5-3086-4FE4-9864-A0B9B76EDE5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AF6AFBB5-3086-4FE4-9864-A0B9B76EDE5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AF6AFBB5-3086-4FE4-9864-A0B9B76EDE5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AF6AFBB5-3086-4FE4-9864-A0B9B76EDE5D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ED042917-7AF2-467D-8FDF-9B580F4D8384}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ED042917-7AF2-467D-8FDF-9B580F4D8384}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED042917-7AF2-467D-8FDF-9B580F4D8384}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED042917-7AF2-467D-8FDF-9B580F4D8384}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0C5108F-D8BC-406C-900C-63356A097975}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0C5108F-D8BC-406C-900C-63356A097975}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0C5108F-D8BC-406C-900C-63356A097975}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0C5108F-D8BC-406C-900C-63356A097975}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72C58239-221F-4DA3-99E3-3DC0C27114BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72C58239-221F-4DA3-99E3-3DC0C27114BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72C58239-221F-4DA3-99E3-3DC0C27114BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72C58239-221F-4DA3-99E3-3DC0C27114BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

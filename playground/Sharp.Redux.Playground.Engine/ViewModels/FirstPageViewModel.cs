@@ -1,7 +1,6 @@
-﻿using System;
-using Autofac;
-using Sharp.Redux.Playground.Engine.Core;
+﻿using Autofac;
 using Sharp.Redux.Playground.Engine.Actions.FirstPage;
+using Sharp.Redux.Playground.Engine.Core;
 using System.Runtime.CompilerServices;
 
 namespace Sharp.Redux.Playground.Engine.ViewModels

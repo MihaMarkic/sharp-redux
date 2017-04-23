@@ -3,13 +3,18 @@ using System.Threading.Tasks;
 
 namespace Sharp.Redux
 {
-    public interface IReduxDispatcher<TState>: IDisposable
+    public interface IReduxDispatcher<TState>: IReduxDispatcher, IDisposable
     {
-        TState State { get; }
-        event EventHandler StateChanged;
+        new TState State { get; }
         void Dispatch(ReduxAction action);
         void Start();
         bool IsProcessorRunning { get; }
         Task StopAsync();
+    }
+
+    public interface IReduxDispatcher
+    {
+        event EventHandler<StateChangedEventArgs> StateChanged;
+        object State { get; }
     }
 }

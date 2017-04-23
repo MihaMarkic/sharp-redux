@@ -14,7 +14,7 @@ namespace Sharp.Redux.Playground.Engine
         {
             builder.RegisterType<RootReducer>().As<IReduxReducer<RootState>>().SingleInstance();
             // register root dispatcher and initialize statef
-            builder.Register<IPlaygroundReduxDispatcher>(ctx => new WpfReduxDispatcher(
+            builder.Register<IPlaygroundReduxDispatcher>(ctx => new PlaygroundReduxDispatcher(
                 initialState: new RootState(
                     navigation: new NavigationState(NavigationPage.FirstPage, data: null, isNavigating: true), 
                     firstPage: new FirstPageState(input: null, output: null)), 
