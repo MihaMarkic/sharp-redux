@@ -8,10 +8,14 @@
              xmlns:vm="clr-namespace:Sharp.Redux.Visualizer.ViewModels;assembly=Sharp.Redux.Visualizer"
              xmlns:s="clr-namespace:Sharp.Redux.Visualizer.States;assembly=Sharp.Redux.Visualizer"
              d:DesignHeight="300" d:DesignWidth="300">
-    <TreeView ItemsSource="{Binding RootStateNode, Mode=OneWay}">
+    <UserControl.Resources>
+        <ResourceDictionary Source="/Sharp.Redux.Visualizer.Wpf;component/Styles/TreeView.xaml" />
+    </UserControl.Resources>
+    <TreeView ItemsSource="{Binding RootStateNode, Mode=OneWay}" ItemContainerStyle="{StaticResource VisualizerTreeViewItemContainerStyle}">
         <TreeView.ItemTemplate>
             <HierarchicalDataTemplate ItemsSource="{Binding Children}" DataType="{x:Type s:ObjectTreeItem}">
-                <TreeViewItem Header="{Binding Path=Header}"  />
+                <!--<TreeViewItem Header="{Binding Path=Header}"  />-->
+                <TextBlock Text="{Binding Path=Header}" />
             </HierarchicalDataTemplate>
         </TreeView.ItemTemplate>
     </TreeView>
