@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Visualizer", ".
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Visualizer.Wpf", "..\..\src\Sharp.Redux.Visualizer.Wpf\Sharp.Redux.Visualizer.Wpf.csproj", "{72C58239-221F-4DA3-99E3-3DC0C27114BC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{37326DA4-554D-4CC2-AE04-ECEC0DABB593}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Visualizer.Test", "..\..\test\Sharp.Redux.Visualizer.Test\Sharp.Redux.Visualizer.Test.csproj", "{930A49F3-7415-4FB6-99E9-00678F4804C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,8 +43,15 @@ Global
 		{72C58239-221F-4DA3-99E3-3DC0C27114BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72C58239-221F-4DA3-99E3-3DC0C27114BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72C58239-221F-4DA3-99E3-3DC0C27114BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{930A49F3-7415-4FB6-99E9-00678F4804C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{930A49F3-7415-4FB6-99E9-00678F4804C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{930A49F3-7415-4FB6-99E9-00678F4804C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{930A49F3-7415-4FB6-99E9-00678F4804C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{930A49F3-7415-4FB6-99E9-00678F4804C0} = {37326DA4-554D-4CC2-AE04-ECEC0DABB593}
 	EndGlobalSection
 EndGlobal

@@ -7,7 +7,7 @@ namespace Sharp.Redux
     {
         public static MergeResult Merge<TKey, TSource, TTarget>(IEnumerable<TSource> source, IList<TTarget> target, Func<TSource, TTarget> creator)
             where TSource: IKeyedItem<TKey>
-            where TTarget : IKeyedItem<TKey>
+            where TTarget : IKeyedItem<TKey>, IBoundViewModel<TSource>
         {
             MergeResult result = new MergeResult();
             List<TSource> curent = new List<TSource>(source);
@@ -23,6 +23,11 @@ namespace Sharp.Redux
                 else
                 {
                     curent.Remove(match);
+                    if (!ReferenceEquals(match, target[i].State))
+                    {
+                        target[i].Update(match);
+                        result.Updated++;
+                    }
                 }
             }
             foreach (TSource item in curent)
@@ -53,5 +58,6 @@ namespace Sharp.Redux
     {
         public int Added { get; set; }
         public int Removed { get; set; }
+        public int Updated { get; set; }
     }
 }

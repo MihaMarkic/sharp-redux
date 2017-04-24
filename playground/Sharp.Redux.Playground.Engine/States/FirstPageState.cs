@@ -2,6 +2,7 @@
 
 namespace Sharp.Redux.Playground.Engine.States
 {
+    [ReduxState]
     public class FirstPageState
     {
         public string Input { get; }

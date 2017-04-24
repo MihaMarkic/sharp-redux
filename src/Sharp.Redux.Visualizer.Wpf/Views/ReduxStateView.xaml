@@ -6,6 +6,13 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type vm:StepViewModel}}"
              xmlns:vm="clr-namespace:Sharp.Redux.Visualizer.ViewModels;assembly=Sharp.Redux.Visualizer"
+             xmlns:s="clr-namespace:Sharp.Redux.Visualizer.States;assembly=Sharp.Redux.Visualizer"
              d:DesignHeight="300" d:DesignWidth="300">
-    <TextBox TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True" Background="LightGray" Text="{Binding StateJson, Mode=OneTime}" />
+    <TreeView ItemsSource="{Binding RootStateNode, Mode=OneWay}">
+        <TreeView.ItemTemplate>
+            <HierarchicalDataTemplate ItemsSource="{Binding Children}" DataType="{x:Type s:ObjectTreeItem}">
+                <TreeViewItem Header="{Binding Path=Header}"  />
+            </HierarchicalDataTemplate>
+        </TreeView.ItemTemplate>
+    </TreeView>
 </UserControl>

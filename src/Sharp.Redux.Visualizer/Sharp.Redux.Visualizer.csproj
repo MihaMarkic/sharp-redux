@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
     <PackageReference Include="Righthand.Immutable" Version="1.0.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.3.1" />
   </ItemGroup>
 
   <ItemGroup>

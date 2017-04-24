@@ -11,5 +11,15 @@ namespace Sharp.Redux
             result[result.Length - 1] = addition;
             return result;
         }
+
+        public static T[] Replace<T>(this T[] source, T originalItem, T newItem)
+        {
+            var result = new T[source.Length];
+            for (int i = 0; i < source.Length; i++)
+            {
+                result[i] = Equals(source[i], originalItem) ? newItem : source[i];
+            }
+            return result;
+        }
     }
 }

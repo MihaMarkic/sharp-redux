@@ -41,6 +41,7 @@ namespace Sharp.Redux.Visualizer.ViewModels
             {
                 case nameof(SelectedStep):
                     dispatcher.Dispatch(new SelectedStepChangedAction(SelectedStep?.Key));
+                    dispatcher.Dispatch(new GenerateTreeHierarchyAction());
                     break;
             }
             base.OnPropertyChanged(name);

@@ -3,6 +3,7 @@ using Sharp.Redux.Playground.Engine.Core;
 
 namespace Sharp.Redux.Playground.Engine.States
 {
+    [ReduxState]
     public class NavigationState
     {
         public NavigationPage Page { get; }

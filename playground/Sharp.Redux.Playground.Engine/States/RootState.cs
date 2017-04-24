@@ -1,8 +1,8 @@
 ﻿using Righthand.Immutable;
-using Sharp.Redux.Playground.Engine.States;
 
 namespace Sharp.Redux.Playground.Engine.States
 {
+    [ReduxState]
     public class RootState
     {
         public NavigationState Navigation { get; }
