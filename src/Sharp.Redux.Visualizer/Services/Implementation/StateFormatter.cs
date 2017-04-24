@@ -7,7 +7,7 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
 {
     public static class StateFormatter
     {
-        public static ObjectTreeItem ToTreeHierarchy(ObjectData source, string propertyName = "")
+        public static ObjectTreeItem ToTreeHierarchy(ObjectData source, string propertyName = "State")
         {
             switch (source)
             {

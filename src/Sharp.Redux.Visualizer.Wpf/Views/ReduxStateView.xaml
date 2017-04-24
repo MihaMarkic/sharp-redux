@@ -14,8 +14,10 @@
     <TreeView ItemsSource="{Binding RootStateNode, Mode=OneWay}" ItemContainerStyle="{StaticResource VisualizerTreeViewItemContainerStyle}">
         <TreeView.ItemTemplate>
             <HierarchicalDataTemplate ItemsSource="{Binding Children}" DataType="{x:Type s:ObjectTreeItem}">
-                <!--<TreeViewItem Header="{Binding Path=Header}"  />-->
-                <TextBlock Text="{Binding Path=Header}" />
+                <TextBlock >
+                    <Run Text="{Binding DescriptionHeader, Mode=OneTime}" />
+                    <Run Text="{Binding ValueHeader, Mode=OneTime}" FontWeight="Bold" />
+                </TextBlock>
             </HierarchicalDataTemplate>
         </TreeView.ItemTemplate>
     </TreeView>

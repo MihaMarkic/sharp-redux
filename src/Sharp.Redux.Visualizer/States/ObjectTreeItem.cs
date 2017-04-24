@@ -35,5 +35,28 @@
                 }
             }
         }
+
+        public string DescriptionHeader
+        {
+            get
+            {
+                string result;
+                if (!string.IsNullOrEmpty(PropertyName))
+                {
+                    result = PropertyName;
+                    if (Children == null)
+                    {
+                        result += ": ";
+                    }
+                }
+                else
+                {
+                    result = null;
+                }
+                return result;
+            }
+        }
+
+        public string ValueHeader => Value;
     }
 }
