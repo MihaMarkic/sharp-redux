@@ -54,52 +54,5 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
             }
             return new ObjectTreeItem(propertyName, source.TypeName, null, builder.ToArray());
         }
-
-        //public const string Level = "  ";
-        //public static void Format(StringBuilder sb, ObjectData source, string prefix = "")
-        //{
-        //    switch (source)
-        //    {
-        //        case StateObjectData state:
-        //            FormatState(sb, state, prefix);
-        //            break;
-        //        case ListData list:
-        //            FormatList(sb, list, prefix);
-        //            break;
-        //        case DictionaryData dictionary:
-        //            FormatDictionary(sb, dictionary, prefix);
-        //            break;
-        //        case PrimitiveData primitive:
-        //            FormatPrimitive(sb, primitive);
-        //            break;
-        //    }
-        //}
-
-        //public static void FormatState(StringBuilder sb, StateObjectData source, string prefix)
-        //{
-        //    sb.AppendLine("{");
-        //    foreach (var property in source.Properties)
-        //    {
-        //        sb.Append($"{property.Key}: ");
-        //        Format(sb, property.Value, prefix + Level);
-        //    }
-        //    sb.AppendLine("}");
-        //}
-        //public static void FormatList(StringBuilder sb, ListData source, string prefix)
-        //{
-        //    sb.Append("[");
-        //    foreach (var item in source.List)
-        //    {
-        //        //Format(sb, property.Value, prefix + Level);
-        //    }
-        //    sb.Append("}");
-        //}
-        //public static void FormatDictionary(StringBuilder sb, DictionaryData source, string prefix)
-        //{
-        //}
-        //public static void FormatPrimitive(StringBuilder sb, PrimitiveData source)
-        //{
-        //    sb.Append($"'{source.Value}'");
-        //}
     }
 }
