@@ -51,12 +51,6 @@ namespace Sharp.Redux.Visualizer.Test.Services.Implementation
         public class CollectAsync
         {
             [Test]
-            public async Task WhenNullIsPassed_NullIsReturned()
-            {
-                var actual = await PropertiesCollector.CollectAsync(null, CancellationToken.None);
-                Assert.That(actual, Is.Null);
-            }
-            [Test]
             public async Task WhenSimpleState_StateObjectDataIsUsed()
             {
                 var actual = await PropertiesCollector.CollectAsync(new State(), CancellationToken.None);
