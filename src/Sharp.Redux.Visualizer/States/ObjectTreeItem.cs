@@ -2,17 +2,19 @@
 {
     public class ObjectTreeItem
     {
+        public bool IsRoot { get; }
         public string PropertyName { get; }
         public string TypeName { get; }
         public string Value { get; }
         public ObjectTreeItem[] Children { get; }
 
-        public  ObjectTreeItem(string propertyName, string typeName, string value, ObjectTreeItem[] children)
+        public  ObjectTreeItem(string propertyName, string typeName, string value, ObjectTreeItem[] children, bool isRoot = false)
         {
             PropertyName = propertyName;
             TypeName = typeName;
             Value = value;
             Children = children;
+            IsRoot = isRoot;
         }
 
         public string Header
