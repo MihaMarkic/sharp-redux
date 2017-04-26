@@ -1,4 +1,5 @@
 ﻿using Sharp.Redux.Visualizer.Core;
+using Sharp.Redux.Visualizer.Models;
 using Sharp.Redux.Visualizer.Services.Implementation;
 using Sharp.Redux.Visualizer.States;
 

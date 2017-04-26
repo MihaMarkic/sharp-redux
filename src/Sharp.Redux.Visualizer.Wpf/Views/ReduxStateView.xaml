@@ -4,16 +4,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type vm:StepViewModel}}"
-             xmlns:vm="clr-namespace:Sharp.Redux.Visualizer.ViewModels;assembly=Sharp.Redux.Visualizer"
-             xmlns:s="clr-namespace:Sharp.Redux.Visualizer.States;assembly=Sharp.Redux.Visualizer"
+             d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type m:ObjectTreeItem}}"
+             xmlns:m="clr-namespace:Sharp.Redux.Visualizer.Models;assembly=Sharp.Redux.Visualizer"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary Source="/Sharp.Redux.Visualizer.Wpf;component/Styles/TreeView.xaml" />
     </UserControl.Resources>
-    <TreeView ItemsSource="{Binding RootStateNode, Mode=OneWay}" ItemContainerStyle="{StaticResource VisualizerTreeViewItemContainerStyle}">
+    <TreeView ItemsSource="{Binding Mode=OneWay}" ItemContainerStyle="{StaticResource VisualizerTreeViewItemContainerStyle}">
         <TreeView.ItemTemplate>
-            <HierarchicalDataTemplate ItemsSource="{Binding Children}" DataType="{x:Type s:ObjectTreeItem}">
+            <HierarchicalDataTemplate ItemsSource="{Binding Children}" DataType="{x:Type m:ObjectTreeItem}">
                 <TextBlock >
                     <Run Text="{Binding DescriptionHeader, Mode=OneTime}" />
                     <Run Text="{Binding ValueHeader, Mode=OneTime}" FontWeight="Bold" />

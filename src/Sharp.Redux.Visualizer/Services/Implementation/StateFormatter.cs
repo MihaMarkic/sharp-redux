@@ -1,5 +1,5 @@
 ﻿using Sharp.Redux.Visualizer.Core;
-using Sharp.Redux.Visualizer.States;
+using Sharp.Redux.Visualizer.Models;
 using System;
 using System.Collections.Generic;
 
@@ -28,36 +28,36 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
                     throw new Exception($"Unknown ObjectData {source.GetType()}");
             }
         }
-        public static ObjectTreeItem FormatPrimitive(int depth, string propertyName, PrimitiveData source)
+        public static PrimitiveObjectTreeItem FormatPrimitive(int depth, string propertyName, PrimitiveData source)
         {
-           return new ObjectTreeItem(propertyName, source.TypeName, Convert.ToString(source.Value), null, isRoot: depth==0);
+           return new PrimitiveObjectTreeItem(source.Value, propertyName, source.TypeName, isRoot: depth==0, diffType: DiffType.None);
         }
-        public static ObjectTreeItem FormatList(int depth, string propertyName, ListData source)
+        public static ListObjectTreeItem FormatList(int depth, string propertyName, ListData source)
         {
             var builder = new List<ObjectTreeItem>(source.List.Length);
             foreach (var item in source.List)
             {
                 builder.Add(ToTreeHierarchy(item, depth+1, null));
             }
-            return new ObjectTreeItem(propertyName, source.TypeName, null, builder.ToArray(), isRoot: depth == 0);
+            return new ListObjectTreeItem(builder.ToArray(), propertyName, source.TypeName, isRoot: depth == 0, diffType: DiffType.None);
         }
-        public static ObjectTreeItem FormatDictionary(int depth, string propertyName, DictionaryData source)
+        public static DictionaryObjectTreeItem FormatDictionary(int depth, string propertyName, DictionaryData source)
         {
             var builder = new List<ObjectTreeItem>(source.Dictionary.Count);
             foreach (var item in source.Dictionary)
             {
                 builder.Add(ToTreeHierarchy(item.Value, depth+1, Convert.ToString(item.Key)));
             }
-            return new ObjectTreeItem(propertyName, source.TypeName, null, builder.ToArray(), isRoot: depth == 0);
+            return new DictionaryObjectTreeItem(builder.ToArray(), propertyName, source.TypeName, isRoot: depth == 0, diffType: DiffType.None);
         }
-        public static ObjectTreeItem FormatState(int depth, string propertyName, StateObjectData source)
+        public static StateObjectTreeItem FormatState(int depth, string propertyName, StateObjectData source)
         {
             var builder = new List<ObjectTreeItem>(source.Properties.Count);
             foreach (var item in source.Properties)
             {
                 builder.Add(ToTreeHierarchy(item.Value, depth+1, item.Key));
             }
-            return new ObjectTreeItem(propertyName, source.TypeName, null, builder.ToArray(), isRoot: depth == 0);
+            return new StateObjectTreeItem(builder.ToArray(), propertyName, source.TypeName, isRoot: depth == 0, diffType: DiffType.None);
         }
 
         public static string GetActionName(ReduxAction action)

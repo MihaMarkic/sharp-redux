@@ -12,6 +12,7 @@
     <UserControl.Resources>
         <v:PassthroughConverter x:Key="PassthroughConverter" />
     </UserControl.Resources>
+    
     <Grid DataContext="{x:Static vis:ReduxVisualizer.MainViewModel}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -29,6 +30,13 @@
                         VerticalAlignment="Stretch"
                         ShowsPreview="True"
                         Width="5" />
-        <v:ReduxStateView Grid.Column="2" DataContext="{Binding SelectedStep}" />
+        <TabControl Grid.Column="2">
+            <TabItem Header="State">
+                <v:ReduxStateView DataContext="{Binding SelectedStep.RootStateNode}" />
+            </TabItem>
+            <TabItem Header="Diff">
+                
+            </TabItem>
+        </TabControl>
     </Grid>
 </UserControl>

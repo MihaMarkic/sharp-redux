@@ -1,5 +1,6 @@
 ﻿using Righthand.Immutable;
 using Sharp.Redux.Visualizer.Core;
+using Sharp.Redux.Visualizer.Models;
 
 namespace Sharp.Redux.Visualizer.States
 {
