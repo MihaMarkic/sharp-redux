@@ -13,6 +13,10 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
     public static class PropertiesCollector
     {
         private static readonly ConcurrentDictionary<Type, TypeMetadata> metadata = new ConcurrentDictionary<Type, TypeMetadata>();
+        /// <summary>
+        /// Contains references to all ObjectData instances created.
+        /// </summary>
+        private static readonly ConcurrentDictionary<object, ObjectData> cache = new ConcurrentDictionary<object, ObjectData>();
         public async static Task<ObjectData> CollectAsync(object source, CancellationToken ct)
         {
             if (ReferenceEquals(source, null))
@@ -23,42 +27,97 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
             string typeName = source.GetType().FullName;
             if (typeMetadata.IsState)
             {
-                return new StateObjectData(
-                    typeName,
-                    await CollectPropertiesAsync(typeMetadata.Properties, source, ct).ConfigureAwait(false)
-                );
+                return await CreateStateObjectAsync(source, typeMetadata, typeName, ct);
             }
             else if (source is IDictionary dictionary)
             {
-                var data = ImmutableDictionary.CreateBuilder<object, ObjectData>();
-                foreach (DictionaryEntry pair in dictionary)
-                {
-                    data.Add(pair.Key, await CollectAsync(pair.Value, ct));
-                }
-                return new DictionaryData(
-                    typeName,
-                    data.ToImmutableDictionary()
-                );
+                return await CreateDictionaryAsync(typeName, dictionary, ct);
             }
             else if (source is IEnumerable enumerable && !(source is string))
             {
-                var list = ImmutableArray.CreateBuilder<ObjectData>();
-                foreach (var item in enumerable)
-                {
-                    list.Add(await CollectAsync(item, ct));
-                }
-                return new ListData(
-                    typeName,
-                    list.ToArray()
-                );
+                return await CreateListDataAsync(typeName, enumerable, ct);
             }
             else
             {
-                return new PrimitiveData(
-                    typeName,
-                    source
-                );
+                return CreatePrimitiveData(source, typeName);
             }
+        }
+
+        private static PrimitiveData CreatePrimitiveData(object source, string typeName)
+        {
+            return CreateObjectData(source,
+                        src =>
+                            new PrimitiveData(
+                                typeName,
+                                source
+                        ));
+        }
+
+        private static Task<ListData> CreateListDataAsync(string typeName, IEnumerable enumerable, CancellationToken ct)
+        {
+            return CreateObjectDataAsync(enumerable,
+                                async (src, ctoken) =>
+                                {
+                                    var list = ImmutableArray.CreateBuilder<ObjectData>();
+                                    foreach (var item in src)
+                                    {
+                                        list.Add(await CollectAsync(item, ctoken));
+                                    }
+                                    return new ListData(
+                            typeName,
+                            list.ToArray()
+                        );
+                                }, ct);
+        }
+
+        private static Task<DictionaryData> CreateDictionaryAsync(string typeName, IDictionary dictionary, CancellationToken ct)
+        {
+            return CreateObjectDataAsync(dictionary,
+                                async (src, ctoken) =>
+                                {
+                                    var data = ImmutableDictionary.CreateBuilder<object, ObjectData>();
+                                    foreach (DictionaryEntry pair in dictionary)
+                                    {
+                                        data.Add(pair.Key, await CollectAsync(pair.Value, ctoken).ConfigureAwait(false));
+                                    }
+                                    return new DictionaryData(
+                                        typeName,
+                                        data.ToImmutableDictionary()
+                                    );
+                                }, ct
+                            );
+        }
+
+        public static Task<StateObjectData> CreateStateObjectAsync(object source, TypeMetadata typeMetadata, string typeName, CancellationToken ct)
+        {
+            return CreateObjectDataAsync(source,
+                        async (src, ctoken) =>
+                            new StateObjectData(
+                                typeName,
+                                await CollectPropertiesAsync(typeMetadata.Properties, source, ctoken).ConfigureAwait(false)
+                        ), ct
+                    );
+        }
+
+        public static async Task<TResult> CreateObjectDataAsync<TSource, TResult>(TSource source, Func<TSource, CancellationToken, Task<TResult>> factoryAsync, CancellationToken ct)
+           where TResult: ObjectData
+        {
+            ObjectData cached;
+            if (cache.TryGetValue(source, out cached))
+            {
+                return (TResult)cached;
+            }
+            return await factoryAsync(source, ct);
+        }
+        public static  TResult CreateObjectData<TSource, TResult>(TSource source, Func<TSource, TResult> factory)
+           where TResult : ObjectData
+        {
+            ObjectData cached;
+            if (cache.TryGetValue(source, out cached))
+            {
+                return (TResult)cached;
+            }
+            return factory(source);
         }
 
         public static Task<ImmutableDictionary<string, ObjectData>> CollectPropertiesAsync(PropertyInfo[] properties, object source, CancellationToken ct)
