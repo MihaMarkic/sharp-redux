@@ -1,12 +1,10 @@
-﻿using Righthand.Immutable;
-
-namespace Sharp.Redux.Visualizer.Models
+﻿namespace Sharp.Redux.Visualizer.Models
 {
     public abstract class NodeObjectTreeItem : ObjectTreeItem
     {
         public ObjectTreeItem[] Children { get; }
 
-        public NodeObjectTreeItem(ObjectTreeItem[] children, string propertyName, string typeName, bool isRoot) : base(propertyName, typeName, isRoot)
+        public NodeObjectTreeItem(ObjectTreeItem[] children, string propertyName, Sharp.Redux.Visualizer.Core.ObjectData source, bool isRoot) : base(propertyName, source, isRoot)
         {
             Children = children;
         }

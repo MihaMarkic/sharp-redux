@@ -7,16 +7,16 @@ namespace Sharp.Redux.Visualizer.Models
     {
         public object Value { get; }
 
-        public PrimitiveObjectTreeItem(object value, string propertyName, string typeName, bool isRoot) : base(propertyName, typeName, isRoot)
+        public PrimitiveObjectTreeItem(object value, string propertyName, Sharp.Redux.Visualizer.Core.ObjectData source, bool isRoot) : base(propertyName, source, isRoot)
         {
             Value = value;
         }
 
-        public PrimitiveObjectTreeItem Clone(Param<object>? value = null, Param<string>? propertyName = null, Param<string>? typeName = null, Param<bool>? isRoot = null)
+        public PrimitiveObjectTreeItem Clone(Param<object>? value = null, Param<string>? propertyName = null, Param<Sharp.Redux.Visualizer.Core.ObjectData>? source = null, Param<bool>? isRoot = null)
         {
             return new PrimitiveObjectTreeItem(value.HasValue ? value.Value.Value : Value,
 propertyName.HasValue ? propertyName.Value.Value : PropertyName,
-typeName.HasValue ? typeName.Value.Value : TypeName,
+source.HasValue ? source.Value.Value : Source,
 isRoot.HasValue ? isRoot.Value.Value : IsRoot);
         }
 

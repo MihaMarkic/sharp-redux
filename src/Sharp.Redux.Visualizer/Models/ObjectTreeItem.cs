@@ -6,16 +6,16 @@ namespace Sharp.Redux.Visualizer.Models
     public abstract class ObjectTreeItem
     {
         public string PropertyName { get; }
-        public string TypeName { get; }
+        public ObjectData Source { get; }
         public bool IsRoot { get; }
 
-        public  ObjectTreeItem(string propertyName, string typeName, bool isRoot)
+        public  ObjectTreeItem(string propertyName, ObjectData source, bool isRoot)
         {
             PropertyName = propertyName;
-            TypeName = typeName;
+            Source = source;
             IsRoot = isRoot;
         }
-
+        public string TypeName => Source?.TypeName;
         public abstract string ValueHeader { get; }
         public abstract string DescriptionHeader { get; }
     }

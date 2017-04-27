@@ -30,7 +30,7 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
         }
         public static PrimitiveObjectTreeItem FormatPrimitive(int depth, string propertyName, PrimitiveData source)
         {
-           return new PrimitiveObjectTreeItem(source.Value, propertyName, source.TypeName, isRoot: depth==0);
+           return new PrimitiveObjectTreeItem(source.Value, propertyName, source, isRoot: depth==0);
         }
         public static ListObjectTreeItem FormatList(int depth, string propertyName, ListData source)
         {
@@ -39,7 +39,7 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
             {
                 builder.Add(ToTreeHierarchy(item, depth+1, null));
             }
-            return new ListObjectTreeItem(builder.ToArray(), propertyName, source.TypeName, isRoot: depth == 0);
+            return new ListObjectTreeItem(builder.ToArray(), propertyName, source, isRoot: depth == 0);
         }
         public static DictionaryObjectTreeItem FormatDictionary(int depth, string propertyName, DictionaryData source)
         {
@@ -48,7 +48,7 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
             {
                 builder.Add(ToTreeHierarchy(item.Value, depth+1, Convert.ToString(item.Key)));
             }
-            return new DictionaryObjectTreeItem(builder.ToArray(), propertyName, source.TypeName, isRoot: depth == 0);
+            return new DictionaryObjectTreeItem(builder.ToArray(), propertyName, source, isRoot: depth == 0);
         }
         public static StateObjectTreeItem FormatState(int depth, string propertyName, StateObjectData source)
         {
@@ -57,7 +57,7 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
             {
                 builder.Add(ToTreeHierarchy(item.Value, depth+1, item.Key));
             }
-            return new StateObjectTreeItem(builder.ToArray(), propertyName, source.TypeName, isRoot: depth == 0);
+            return new StateObjectTreeItem(builder.ToArray(), propertyName, source, isRoot: depth == 0);
         }
 
         public static string GetActionName(ReduxAction action)
