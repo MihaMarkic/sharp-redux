@@ -1,4 +1,5 @@
 ﻿using Sharp.Redux.Visualizer.Core;
+using Righthand.Immutable;
 
 namespace Sharp.Redux.Visualizer.Models
 {
@@ -7,14 +8,12 @@ namespace Sharp.Redux.Visualizer.Models
         public string PropertyName { get; }
         public string TypeName { get; }
         public bool IsRoot { get; }
-        public DiffType DiffType { get; }
 
-        public  ObjectTreeItem(string propertyName, string typeName, bool isRoot, DiffType diffType)
+        public  ObjectTreeItem(string propertyName, string typeName, bool isRoot)
         {
             PropertyName = propertyName;
             TypeName = typeName;
             IsRoot = isRoot;
-            DiffType = diffType;
         }
 
         public abstract string ValueHeader { get; }

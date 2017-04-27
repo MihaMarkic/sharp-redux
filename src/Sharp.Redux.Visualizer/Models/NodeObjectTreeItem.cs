@@ -1,10 +1,12 @@
-﻿namespace Sharp.Redux.Visualizer.Models
+﻿using Righthand.Immutable;
+
+namespace Sharp.Redux.Visualizer.Models
 {
     public abstract class NodeObjectTreeItem : ObjectTreeItem
     {
         public ObjectTreeItem[] Children { get; }
 
-        public NodeObjectTreeItem(ObjectTreeItem[] children, string propertyName, string typeName, bool isRoot, Sharp.Redux.Visualizer.Core.DiffType diffType) : base(propertyName, typeName, isRoot, diffType)
+        public NodeObjectTreeItem(ObjectTreeItem[] children, string propertyName, string typeName, bool isRoot) : base(propertyName, typeName, isRoot)
         {
             Children = children;
         }
