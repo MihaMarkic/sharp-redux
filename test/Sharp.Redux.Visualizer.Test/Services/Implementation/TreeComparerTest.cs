@@ -30,7 +30,7 @@ namespace Sharp.Redux.Visualizer.Test.Services.Implementation
                 Assert.That(actual, Is.Null);
             }
             [Test]
-            public void WhenCurrentIsPresentButNextIsNot_ReturnsRemovedDifferenceItem()
+            public void WhenCurrentIsPresentButNextIsNull_ReturnsRemovedDifferenceItem()
             {
                 var current = CreatePrimitiveTreeItem(1);
 
@@ -42,7 +42,7 @@ namespace Sharp.Redux.Visualizer.Test.Services.Implementation
                 Assert.That(actual.Next, Is.Null);
             }
             [Test]
-            public void WhenCurrentIsNotPresentButNextIs_ReturnsAddedDifferenceItem()
+            public void WhenCurrentIsNullButNextIsValid_ReturnsAddedDifferenceItem()
             {
                 var next = CreatePrimitiveTreeItem(1);
 
