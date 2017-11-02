@@ -72,6 +72,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Views\ReduxDiffView.xaml.cs">
+      <DependentUpon>ReduxDiffView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PassthroughConverter.cs" />
     <Compile Include="Views\ReduxStateView.xaml.cs">
       <DependentUpon>ReduxStateView.xaml</DependentUpon>
@@ -106,6 +109,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\ReduxDiffView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Styles\TreeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

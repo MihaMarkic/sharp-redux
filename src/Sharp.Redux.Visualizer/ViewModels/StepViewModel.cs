@@ -1,4 +1,5 @@
-﻿using Sharp.Redux.Visualizer.Core;
+﻿using System;
+using Sharp.Redux.Visualizer.Core;
 using Sharp.Redux.Visualizer.Models;
 using Sharp.Redux.Visualizer.Services.Implementation;
 using Sharp.Redux.Visualizer.States;
@@ -18,6 +19,7 @@ namespace Sharp.Redux.Visualizer.ViewModels
             // only RootStateNode can be updated
             OnPropertyChanged(nameof(RootStateNode));
         }
+        public bool IsKeyEqualTo(IKeyedItem other) => State.IsKeyEqualTo(other);
         public int Key => State.Key;
         
         public string ActionContent => PropertiesCollector.DataToString(State.ActionData);

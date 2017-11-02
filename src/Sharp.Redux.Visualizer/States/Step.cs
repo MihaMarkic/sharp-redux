@@ -1,4 +1,5 @@
-﻿using Righthand.Immutable;
+﻿using System;
+using Righthand.Immutable;
 using Sharp.Redux.Visualizer.Core;
 using Sharp.Redux.Visualizer.Models;
 
@@ -34,6 +35,20 @@ actionData.HasValue ? actionData.Value.Value : ActionData,
 actionTreeItem.HasValue ? actionTreeItem.Value.Value : ActionTreeItem,
 stateData.HasValue ? stateData.Value.Value : StateData,
 stateTreeItem.HasValue ? stateTreeItem.Value.Value : StateTreeItem);
+        }
+
+        public bool IsKeyEqualTo(IKeyedItem other)
+        {
+            if (ReferenceEquals(other, null))
+            {
+                return false;
+            }
+            Step otherStep = other as Step;
+            if (ReferenceEquals(otherStep, null))
+            {
+                return false;
+            }
+            return otherStep.Key == Key;
         }
     }
 }

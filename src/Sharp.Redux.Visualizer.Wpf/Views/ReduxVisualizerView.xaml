@@ -35,7 +35,7 @@
                 <v:ReduxStateView DataContext="{Binding SelectedStep.RootStateNode}" />
             </TabItem>
             <TabItem Header="Diff">
-                
+                <v:ReduxDiffView DataContext="{Binding SelectedStep.RootStateNode}" />
             </TabItem>
         </TabControl>
     </Grid>
