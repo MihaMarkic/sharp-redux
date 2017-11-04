@@ -3,17 +3,24 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:cnv="clr-namespace:Sharp.Redux.Visualizer.Wpf.Converters"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type m:ObjectTreeItem}}"
+             d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type m:DifferenceItem}}"
              xmlns:m="clr-namespace:Sharp.Redux.Visualizer.Models;assembly=Sharp.Redux.Visualizer"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <ResourceDictionary Source="/Sharp.Redux.Visualizer.Wpf;component/Styles/TreeView.xaml" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Sharp.Redux.Visualizer.Wpf;component/Styles/TreeView.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <cnv:DiffTypeToBrushConverter x:Key="DiffTypeToBrushConverter" />
+        </ResourceDictionary>
     </UserControl.Resources>
     <TreeView ItemsSource="{Binding Mode=OneWay}" ItemContainerStyle="{StaticResource VisualizerTreeViewItemContainerStyle}">
         <TreeView.ItemTemplate>
-            <HierarchicalDataTemplate ItemsSource="{Binding Children}" DataType="{x:Type m:ObjectTreeItem}">
+            <HierarchicalDataTemplate ItemsSource="{Binding Children}" DataType="{x:Type m:DifferenceItem}">
                 <TextBlock >
+                    <Run Text="{Binding DiffType, Mode=OneTime}" Foreground="{Binding DiffType, Converter={StaticResource DiffTypeToBrushConverter}}" />
                     <Run Text="{Binding DescriptionHeader, Mode=OneTime}" />
                     <Run Text="{Binding ValueHeader, Mode=OneTime}" FontWeight="Bold" />
                 </TextBlock>

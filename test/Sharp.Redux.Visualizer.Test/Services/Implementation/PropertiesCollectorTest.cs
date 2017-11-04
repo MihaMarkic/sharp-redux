@@ -80,8 +80,15 @@ namespace Sharp.Redux.Visualizer.Test.Services.Implementation
             [Test]
             public async Task WhenPrimitiveType_PrimitiveDataIsUsed()
             {
-                var actual = await PropertiesCollector.CollectAsync(new NotState(), CancellationToken.None);
+                var primitive = 5;
+                var actual = await PropertiesCollector.CollectAsync(primitive, CancellationToken.None);
                 Assert.That(actual, Is.TypeOf<PrimitiveData>());
+            }
+            [Test]
+            public async Task WhenNonStateDecoratedObject_StateObjectDataIsUsed()
+            {
+                var actual = await PropertiesCollector.CollectAsync(new NotState(), CancellationToken.None);
+                Assert.That(actual, Is.TypeOf<StateObjectData>());
             }
             [Test]
             public async Task WhenIDictionary_DictionaryDataIsUsed()

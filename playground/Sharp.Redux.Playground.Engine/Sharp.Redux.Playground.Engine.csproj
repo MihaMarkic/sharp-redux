@@ -8,8 +8,9 @@
     <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.5.0" />
+    <PackageReference Include="Autofac" Version="4.6.2" />
     <PackageReference Include="Righthand.Immutable" Version="1.0.0" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.4.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Sharp.Redux\Sharp.Redux\Sharp.Redux.csproj" />

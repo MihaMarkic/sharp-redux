@@ -1,8 +1,9 @@
 ﻿using Sharp.Redux.Visualizer.Core;
-using Righthand.Immutable;
+using System.Diagnostics;
 
 namespace Sharp.Redux.Visualizer.Models
 {
+    [DebuggerDisplay("{PropertyName,nq}")]
     public abstract class ObjectTreeItem
     {
         public string PropertyName { get; }

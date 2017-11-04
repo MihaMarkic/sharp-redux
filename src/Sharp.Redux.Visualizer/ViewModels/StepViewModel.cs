@@ -18,6 +18,8 @@ namespace Sharp.Redux.Visualizer.ViewModels
             State = step;
             // only RootStateNode can be updated
             OnPropertyChanged(nameof(RootStateNode));
+            OnPropertyChanged(nameof(DifferenceNode));
+            OnPropertyChanged(nameof(ActionNode));
         }
         public bool IsKeyEqualTo(IKeyedItem other) => State.IsKeyEqualTo(other);
         public int Key => State.Key;
@@ -26,5 +28,6 @@ namespace Sharp.Redux.Visualizer.ViewModels
 
         public ObjectTreeItem[] RootStateNode => new ObjectTreeItem[] { State.StateTreeItem };
         public ObjectTreeItem[] ActionNode => new ObjectTreeItem[] { State.ActionTreeItem };
+        public DifferenceItem[] DifferenceNode => new DifferenceItem[] { State.DifferenceItem };
     }
 }

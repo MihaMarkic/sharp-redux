@@ -1,6 +1,8 @@
 ﻿using Sharp.Redux.Visualizer.Actions;
+using Sharp.Redux.Visualizer.Models;
 using Sharp.Redux.Visualizer.Services.Implementation;
 using Sharp.Redux.Visualizer.States;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +13,7 @@ namespace Sharp.Redux.Visualizer.Reducers
     {
         public async Task<RootState> ReduceAsync(RootState state, ReduxAction action, CancellationToken ct)
         {
-            RootState result = state;
+            RootState result;
             switch (action)
             {
                 case InsertNewAction insertNew:
@@ -28,16 +30,44 @@ namespace Sharp.Redux.Visualizer.Reducers
                     result = state.Clone(steps: state.Steps.Spread(
                         new Step(key, insertNew.Action, insertNew.State, actionData: actionDataTask.Result, 
                             actionTreeItem: actionTreeItem,
-                            stateData: stateDataTask.Result, stateTreeItem: null)));
+                            stateData: stateDataTask.Result, stateTreeItem: null, differenceItem: null, differenceCalculated: false)));
                     break;
                 case GenerateTreeHierarchyAction generateTreeHierarchy:
                     {
                         Step selectedStep = state.SelectedStep;
-                        if (selectedStep?.StateTreeItem == null)
+                        result = state;
+                        if (selectedStep != null)
                         {
-                            var hierachy = StateFormatter.ToTreeHierarchy(selectedStep.StateData);
-                            Step updated = selectedStep.Clone(stateTreeItem: hierachy);
-                            result = state.Clone(steps: state.Steps.Replace(selectedStep, updated), selectedStep: updated);
+                            if (selectedStep.StateTreeItem is null)
+                            {
+                                var hierachy = StateFormatter.ToTreeHierarchy(selectedStep.StateData);
+                                Step updated = selectedStep.Clone(stateTreeItem: hierachy);
+                                result = result.Clone(steps: state.Steps.Replace(selectedStep, updated), selectedStep: updated);
+                                selectedStep = updated;
+                            }
+                            if (!selectedStep.DifferenceCalculated)
+                            {
+                                // first check if previous step has StateTree
+                                var selectedStepIndex = Array.IndexOf(result.Steps, selectedStep);
+                                var previousStep = selectedStepIndex > 0 ? result.Steps[selectedStepIndex - 1] : null;
+                                ObjectTreeItem previousHierarchy = null;
+                                if (previousStep != null)
+                                {
+                                    if (previousStep.StateTreeItem == null)
+                                    {
+                                        previousHierarchy = StateFormatter.ToTreeHierarchy(previousStep.StateData);
+                                        Step previousUpdated = previousStep.Clone(stateTreeItem: previousHierarchy);
+                                        result = result.Clone(steps: result.Steps.Replace(previousStep, previousUpdated));
+                                    }
+                                    else
+                                    {
+                                        previousHierarchy = previousStep.StateTreeItem;
+                                    }
+                                }
+                                var difference = TreeComparer.CreateDifferenceTree(previousHierarchy, selectedStep.StateTreeItem);
+                                Step updated = selectedStep.Clone(differenceItem: difference, differenceCalculated: true);
+                                result = result.Clone(steps: result.Steps.Replace(selectedStep, updated), selectedStep: updated);
+                            }
                         }
                     }
                     break;
@@ -46,6 +76,9 @@ namespace Sharp.Redux.Visualizer.Reducers
                         var selectedStep = selectedStepChanged.Key.HasValue ? state.Steps.Single(s => s.Key == selectedStepChanged.Key) : null;
                         result = state.Clone(selectedStep: selectedStep);
                     }
+                    break;
+                default:
+                    result = state;
                     break;
             }
             return result;

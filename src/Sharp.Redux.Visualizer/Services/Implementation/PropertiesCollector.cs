@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
@@ -37,9 +38,13 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
             {
                 return await CreateListDataAsync(typeName, enumerable, ct);
             }
-            else
+            else if (typeMetadata.IsPrimitive)
             {
                 return CreatePrimitiveData(source, typeName);
+            }
+            else
+            {
+                return await CreateStateObjectAsync(source, typeMetadata, typeName, ct);
             }
         }
 
@@ -58,16 +63,20 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
             return CreateObjectDataAsync(enumerable,
                                 async (src, ctoken) =>
                                 {
-                                    var list = ImmutableArray.CreateBuilder<ObjectData>();
-                                    foreach (var item in src)
-                                    {
-                                        list.Add(await CollectAsync(item, ctoken));
-                                    }
                                     return new ListData(
-                            typeName,
-                            list.ToArray()
-                        );
+                                        typeName,
+                                        list: await CollectListValuesAsync(src, ctoken)
+                                    );
                                 }, ct);
+        }
+        public static async ValueTask<ObjectData[]> CollectListValuesAsync(IEnumerable enumerable, CancellationToken ct)
+        {
+            var list = new List<ObjectData>();
+            foreach (var item in enumerable)
+            {
+                list.Add(await CollectAsync(item, ct));
+            }
+            return list.ToArray();
         }
 
         private static Task<DictionaryData> CreateDictionaryAsync(string typeName, IDictionary dictionary, CancellationToken ct)
@@ -75,35 +84,49 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
             return CreateObjectDataAsync(dictionary,
                                 async (src, ctoken) =>
                                 {
-                                    var data = ImmutableDictionary.CreateBuilder<object, ObjectData>();
-                                    foreach (DictionaryEntry pair in dictionary)
-                                    {
-                                        data.Add(pair.Key, await CollectAsync(pair.Value, ctoken).ConfigureAwait(false));
-                                    }
                                     return new DictionaryData(
                                         typeName,
-                                        data.ToImmutableDictionary()
+                                        dictionary: await CollectDictionaryValuesAsync(src, ctoken)
                                     );
                                 }, ct
                             );
         }
+        public static async ValueTask<ImmutableDictionary<object, ObjectData>> CollectDictionaryValuesAsync(IDictionary dictionary, CancellationToken ct)
+        {
+            var data = ImmutableDictionary.CreateBuilder<object, ObjectData>();
+            foreach (DictionaryEntry pair in dictionary)
+            {
+                data.Add(pair.Key, await CollectAsync(pair.Value, ct).ConfigureAwait(false));
+            }
+            return data.ToImmutableDictionary();
+        }
 
+        /// <summary>
+        /// Creates a <see cref="StateObjectData"/> object.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="typeMetadata"></param>
+        /// <param name="typeName"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        // TODO can parallelize
         public static Task<StateObjectData> CreateStateObjectAsync(object source, TypeMetadata typeMetadata, string typeName, CancellationToken ct)
         {
             return CreateObjectDataAsync(source,
                         async (src, ctoken) =>
-                            new StateObjectData(
+                        {
+                            return new StateObjectData(
                                 typeName,
-                                await CollectPropertiesAsync(typeMetadata.Properties, source, ctoken).ConfigureAwait(false)
-                        ), ct
+                                properties: await CollectPropertiesAsync(typeMetadata.Properties, source, ctoken).ConfigureAwait(false)
+                            );
+                        }, ct
                     );
         }
 
         public static async Task<TResult> CreateObjectDataAsync<TSource, TResult>(TSource source, Func<TSource, CancellationToken, Task<TResult>> factoryAsync, CancellationToken ct)
            where TResult: ObjectData
         {
-            ObjectData cached;
-            if (cache.TryGetValue(source, out cached))
+            if (cache.TryGetValue(source, out ObjectData cached))
             {
                 return (TResult)cached;
             }
@@ -112,8 +135,7 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
         public static  TResult CreateObjectData<TSource, TResult>(TSource source, Func<TSource, TResult> factory)
            where TResult : ObjectData
         {
-            ObjectData cached;
-            if (cache.TryGetValue(source, out cached))
+            if (cache.TryGetValue(source, out ObjectData cached))
             {
                 return (TResult)cached;
             }
@@ -143,6 +165,7 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
 
         /// <summary>
         /// Return an array of PropertyInfo[] for the given <paramref name="source"/>.
+        /// It sets two additional flags: IsState when source is either <see cref="ReduxStateAttribute"/> decorated or a descendant or <see cref="ReduxAction"/>.
         /// It also stores it in the cache.
         /// </summary>
         /// <param name="source"></param>
@@ -157,19 +180,34 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
                 return result;
             }
             TypeInfo typeInfo = type.GetTypeInfo();
-            bool isState = typeInfo.CustomAttributes.Any(cad => cad.AttributeType == typeof(ReduxStateAttribute)) || source is ReduxAction;
-            if (!isState)
+            bool isState = source is ReduxAction || typeInfo.CustomAttributes.Any(cad => cad.AttributeType == typeof(ReduxStateAttribute));
+            if (isState)
             {
-                result = new TypeMetadata(false, null);
+                var properties = typeInfo.GetProperties();
+                result = new TypeMetadata(true, false, properties);
             }
             else
             {
-                var properties = typeInfo.DeclaredProperties.ToArray();
-                result = new TypeMetadata(true, properties);
+                bool isPrimitive = IsPrimitiveType(typeInfo, type);
+                PropertyInfo[] properties;
+                if (isPrimitive)
+                {
+                    properties = null;
+                }
+                else
+                {
+                    properties = typeInfo.GetProperties();
+                }
+                result = new TypeMetadata(false, isPrimitive, properties);
             }
             metadata.TryAdd(type, result);
             return result;
         }
+
+        public static bool IsPrimitiveType(TypeInfo typeInfo, Type type) =>
+            typeInfo.IsEnum || type == typeof(int) || type == typeof(uint) || type == typeof(byte) || type == typeof(sbyte)
+            || type == typeof(short) || type == typeof(ushort) || type == typeof(long) || type == typeof(ulong) || type == typeof(float)
+            || type == typeof(double) || type == typeof(char) || type == typeof(bool) || type == typeof(string) || type == typeof(decimal);
 
         public static string DataToString(ObjectData source)
         {

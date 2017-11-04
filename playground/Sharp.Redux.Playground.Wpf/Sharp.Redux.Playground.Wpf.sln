@@ -1,21 +1,28 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Blend for Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Playground.Wpf", "Sharp.Redux.Playground.Wpf\Sharp.Redux.Playground.Wpf.csproj", "{0B921B19-AC3A-4861-A40E-3DDD31D30BE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux", "..\..\src\Sharp.Redux\Sharp.Redux\Sharp.Redux.csproj", "{AFCC6737-A684-4682-A7EF-22A72958350C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharp.Redux", "..\..\src\Sharp.Redux\Sharp.Redux\Sharp.Redux.csproj", "{AFCC6737-A684-4682-A7EF-22A72958350C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Playground.Engine", "..\Sharp.Redux.Playground.Engine\Sharp.Redux.Playground.Engine.csproj", "{ED042917-7AF2-467D-8FDF-9B580F4D8384}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharp.Redux.Playground.Engine", "..\Sharp.Redux.Playground.Engine\Sharp.Redux.Playground.Engine.csproj", "{ED042917-7AF2-467D-8FDF-9B580F4D8384}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Visualizer", "..\..\src\Sharp.Redux.Visualizer\Sharp.Redux.Visualizer.csproj", "{D0C5108F-D8BC-406C-900C-63356A097975}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharp.Redux.Visualizer", "..\..\src\Sharp.Redux.Visualizer\Sharp.Redux.Visualizer.csproj", "{D0C5108F-D8BC-406C-900C-63356A097975}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Visualizer.Wpf", "..\..\src\Sharp.Redux.Visualizer.Wpf\Sharp.Redux.Visualizer.Wpf.csproj", "{72C58239-221F-4DA3-99E3-3DC0C27114BC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{37326DA4-554D-4CC2-AE04-ECEC0DABB593}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Visualizer.Test", "..\..\test\Sharp.Redux.Visualizer.Test\Sharp.Redux.Visualizer.Test.csproj", "{930A49F3-7415-4FB6-99E9-00678F4804C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharp.Redux.Visualizer.Test", "..\..\test\Sharp.Redux.Visualizer.Test\Sharp.Redux.Visualizer.Test.csproj", "{0998FE34-FBEF-46D4-841C-ACE59030C047}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{F382383E-E000-42F9-980B-6EFC008852F2}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\docs\specs.md = ..\..\docs\specs.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Test", "..\..\test\Sharp.Redux.Test\Sharp.Redux.Test.csproj", "{9663A5CD-792F-4C4D-81FC-816879E93316}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,15 +50,23 @@ Global
 		{72C58239-221F-4DA3-99E3-3DC0C27114BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72C58239-221F-4DA3-99E3-3DC0C27114BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72C58239-221F-4DA3-99E3-3DC0C27114BC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{930A49F3-7415-4FB6-99E9-00678F4804C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{930A49F3-7415-4FB6-99E9-00678F4804C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{930A49F3-7415-4FB6-99E9-00678F4804C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{930A49F3-7415-4FB6-99E9-00678F4804C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0998FE34-FBEF-46D4-841C-ACE59030C047}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0998FE34-FBEF-46D4-841C-ACE59030C047}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0998FE34-FBEF-46D4-841C-ACE59030C047}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0998FE34-FBEF-46D4-841C-ACE59030C047}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9663A5CD-792F-4C4D-81FC-816879E93316}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9663A5CD-792F-4C4D-81FC-816879E93316}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9663A5CD-792F-4C4D-81FC-816879E93316}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9663A5CD-792F-4C4D-81FC-816879E93316}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{930A49F3-7415-4FB6-99E9-00678F4804C0} = {37326DA4-554D-4CC2-AE04-ECEC0DABB593}
+		{0998FE34-FBEF-46D4-841C-ACE59030C047} = {37326DA4-554D-4CC2-AE04-ECEC0DABB593}
+		{9663A5CD-792F-4C4D-81FC-816879E93316} = {37326DA4-554D-4CC2-AE04-ECEC0DABB593}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2E7D5D67-4A75-4E4E-8C35-F6388A58DE30}
 	EndGlobalSection
 EndGlobal

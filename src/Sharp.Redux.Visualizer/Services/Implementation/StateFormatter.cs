@@ -5,6 +5,10 @@ using System.Collections.Generic;
 
 namespace Sharp.Redux.Visualizer.Services.Implementation
 {
+    /// <summary>
+    /// Transforms state expressed as <see cref="ObjectData"/> and descending types to <see cref="ObjectTreeItem"/> suitable
+    /// for display in a tree structure.
+    /// </summary>
     public static class StateFormatter
     {
         public const string DefaultPropertyName = "State";
@@ -50,14 +54,22 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
             }
             return new DictionaryObjectTreeItem(builder.ToArray(), propertyName, source, isRoot: depth == 0);
         }
+        /// <summary>
+        /// Creates <see cref=" StateObjectTreeItem"/>. Besides properties it could implement either a <see cref="IDictionary"/> or <see cref="IEnumerable"/>
+        /// but not both.
+        /// </summary>
+        /// <param name="depth"></param>
+        /// <param name="propertyName"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
         public static StateObjectTreeItem FormatState(int depth, string propertyName, StateObjectData source)
         {
-            var builder = new List<ObjectTreeItem>(source.Properties.Count);
+            var properties = new List<ObjectTreeItem>(source.Properties.Count);
             foreach (var item in source.Properties)
             {
-                builder.Add(ToTreeHierarchy(item.Value, depth+1, item.Key));
+                properties.Add(ToTreeHierarchy(item.Value, depth+1, item.Key));
             }
-            return new StateObjectTreeItem(builder.ToArray(), propertyName, source, isRoot: depth == 0);
+            return new StateObjectTreeItem(properties.ToArray(), propertyName, source, isRoot: depth == 0);
         }
 
         public static string GetActionName(ReduxAction action)
