@@ -5,24 +5,57 @@ namespace Sharp.Redux
 {
     public static class ReduxMerger
     {
-        public static MergeResult Merge<TKey, TSource, TTarget>(IEnumerable<TSource> source, IList<TTarget> target, Func<TSource, TTarget> creator)
-            where TSource: IKeyedItem<TKey>
-            where TTarget : IKeyedItem<TKey>, IBoundViewModel<TSource>
+        public static MergeResult MergeDictionary<TKey, TValue, TTargetValue>(
+            IDictionary<TKey, TValue> source, 
+            IList<KeyValuePair<TKey, TTargetValue>> target, 
+            Func<TValue, TTargetValue> creator)
+            where TTargetValue: IBoundViewModel<TValue>
         {
             MergeResult result = new MergeResult();
-            List<TSource> curent = new List<TSource>(source);
-            TSource match;
+            var current = new Dictionary<TKey, TValue>(source);
             for (int i = target.Count - 1; i >= 0; i--)
             {
                 TKey targetKey = target[i].Key;
-                if (!Find(targetKey, source, out match))
+                if (!source.TryGetValue(targetKey, out var match))
                 {
                     target.RemoveAt(i);
                     result.Removed++;
                 }
                 else
                 {
-                    curent.Remove(match);
+                    current.Remove(targetKey);
+                    if (!ReferenceEquals(match, target[i].Value.State))
+                    {
+                        target[i].Value.Update(match);
+                        result.Updated++;
+                    }
+                }
+            }
+            foreach (var pair in current)
+            {
+                var value = creator(pair.Value);
+                target.Add(new KeyValuePair<TKey, TTargetValue>(pair.Key, value));
+                result.Added++;
+            }
+            return result;
+        }
+        public static MergeResult MergeList<TKey, TSource, TTarget>(IEnumerable<TSource> source, IList<TTarget> target, Func<TSource, TTarget> creator)
+            where TSource: IKeyedItem<TKey>
+            where TTarget : IKeyedItem<TKey>, IBoundViewModel<TSource>
+        {
+            MergeResult result = new MergeResult();
+            List<TSource> current = new List<TSource>(source);
+            for (int i = target.Count - 1; i >= 0; i--)
+            {
+                TKey targetKey = target[i].Key;
+                if (!Find(targetKey, source, out var match))
+                {
+                    target.RemoveAt(i);
+                    result.Removed++;
+                }
+                else
+                {
+                    current.Remove(match);
                     if (!ReferenceEquals(match, target[i].State))
                     {
                         target[i].Update(match);
@@ -30,7 +63,7 @@ namespace Sharp.Redux
                     }
                 }
             }
-            foreach (TSource item in curent)
+            foreach (TSource item in current)
             {
                 target.Add(creator(item));
                 result.Added++;

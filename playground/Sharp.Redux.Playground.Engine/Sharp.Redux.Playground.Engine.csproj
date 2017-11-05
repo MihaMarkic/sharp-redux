@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.6.2" />
     <PackageReference Include="Righthand.Immutable" Version="1.0.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.4.0" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.4.0" />
   </ItemGroup>
   <ItemGroup>

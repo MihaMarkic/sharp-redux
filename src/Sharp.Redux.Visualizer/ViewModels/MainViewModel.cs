@@ -50,7 +50,7 @@ namespace Sharp.Redux.Visualizer.ViewModels
         private void Default_StateChanged(object sender, StateChangedEventArgs e)
         {
             RootState state = VisualizerDispatcher.Default.State;
-            ReduxMerger.Merge<int, Step, StepViewModel>(state.Steps, Steps, step => new StepViewModel(step));
+            ReduxMerger.MergeList<int, Step, StepViewModel>(state.Steps, Steps, step => new StepViewModel(step));
             SelectedStep = state.SelectedStep != null ? Steps.Single(s => s.Key == state.SelectedStep.Key): null;
         }
 

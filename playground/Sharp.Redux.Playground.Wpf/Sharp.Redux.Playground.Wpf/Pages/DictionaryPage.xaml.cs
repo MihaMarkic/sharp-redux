@@ -3,11 +3,11 @@
 namespace Sharp.Redux.Playground.Wpf.Pages
 {
     /// <summary>
-    /// Interaction logic for FirstPage.xaml
+    /// Interaction logic for DictionaryPage.xaml
     /// </summary>
-    public partial class FirstPage : UserControl
+    public partial class DictionaryPage : UserControl
     {
-        public FirstPage()
+        public DictionaryPage()
         {
             InitializeComponent();
         }

@@ -5,4 +5,7 @@
     <DataTemplate DataType="{x:Type vm:FirstPageViewModel}">
         <p:FirstPage />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:DictionaryPageViewModel}">
+        <p:DictionaryPage />
+    </DataTemplate>
 </ResourceDictionary>

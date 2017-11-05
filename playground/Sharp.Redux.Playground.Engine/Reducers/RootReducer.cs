@@ -10,10 +10,12 @@ namespace Sharp.Redux.Playground.Engine.Reducers
         {
             var navigationReduceTask = Task.Run(() => NavigationReducer.Reduce(state.Navigation, action));
             var newFirstPageReduceTask = Task.Run(() => FirstPageReducer.Reduce(state.FirstPage, action));
+            var dictionaryPageReduceTask = Task.Run(() => DictionaryPageReducer.Reduce(state.DictionaryPage, action));
 
             return state.Clone(
                 navigation: await navigationReduceTask,
-                firstPage: await newFirstPageReduceTask
+                firstPage: await newFirstPageReduceTask,
+                dictionaryPage: await dictionaryPageReduceTask
             );
         }
     }

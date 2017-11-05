@@ -12,12 +12,17 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
     public static class StateFormatter
     {
         public const string DefaultPropertyName = "State";
+        public const int MaxDepth = 1000;
         public static ObjectTreeItem ToTreeHierarchy(ObjectData source, string propertyName = DefaultPropertyName)
         {
             return ToTreeHierarchy(source, 0, propertyName);
         }
         public static ObjectTreeItem ToTreeHierarchy(ObjectData source, int depth, string propertyName)
         {
+            if (depth > MaxDepth)
+            {
+                throw new Exception("Object graph is too deep");
+            }
             switch (source)
             {
                 case StateObjectData state:
@@ -28,6 +33,8 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
                     return FormatDictionary(depth, propertyName, dictionary);
                 case PrimitiveData primitive:
                     return FormatPrimitive(depth, propertyName, primitive);
+                case RecursiveObjectData recursive:
+                    return new RecursiveObjectTreeItem(null, propertyName, recursive, isRoot: depth == 0);
                 default:
                     throw new Exception($"Unknown ObjectData {source.GetType()}");
             }

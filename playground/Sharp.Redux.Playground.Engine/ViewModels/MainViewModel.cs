@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Sharp.Redux.Playground.Engine.Core;
 using Sharp.Redux.Playground.Engine.States;
+using System;
 
 namespace Sharp.Redux.Playground.Engine.ViewModels
 {
@@ -36,6 +37,11 @@ namespace Sharp.Redux.Playground.Engine.ViewModels
                         case NavigationPage.FirstPage:
                             page = lifetimeScope.Resolve<FirstPageViewModel>();
                             break;
+                        case NavigationPage.DictionaryPage:
+                            page = lifetimeScope.Resolve<DictionaryPageViewModel>();
+                            break;
+                        default:
+                            throw new Exception($"Unknown navigation page {newState.Page}");
                     }
                 }
                 if (page != Content)

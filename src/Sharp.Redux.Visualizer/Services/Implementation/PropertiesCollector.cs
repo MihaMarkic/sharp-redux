@@ -15,7 +15,7 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
         {
             public int Depth { get; }
             public ConcurrentDictionary<object, ObjectData> Cache { get; }
-            public static readonly CollectContext Empty = 
+            public static CollectContext CreateEmpty() =>
                 new CollectContext(0, 
                     new ConcurrentDictionary<object, ObjectData>());
             private CollectContext(int depth, ConcurrentDictionary<object, ObjectData> cache)
@@ -32,7 +32,7 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
         private static readonly ConcurrentDictionary<Type, TypeMetadata> metadata = new ConcurrentDictionary<Type, TypeMetadata>();
         public static ObjectData Collect(object source)
         {
-            return Collect(source, CollectContext.Empty);
+            return Collect(source, CollectContext.CreateEmpty());
         }
         public static ObjectData Collect(object source, CollectContext context)
         {
@@ -47,21 +47,21 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
             // prevents recursion
             if (context.Cache.TryGetValue(source, out var data))
             {
-                return data;
+                return new RecursiveObjectData(data);
             }
             var typeMetadata = GetTypeMetadata(source);
             string typeName = source.GetType().FullName;
             if (typeMetadata.IsState)
             {
-                return CreateStateObject(source, typeMetadata, typeName, context.IncreaseDepth());
+                return CreateStateObject(source, typeMetadata, typeName, context);
             }
             else if (source is IDictionary dictionary)
             {
-                return CreateDictionary(dictionary, typeName, context.IncreaseDepth());
+                return CreateDictionary(dictionary, typeName, context);
             }
             else if (source is IEnumerable enumerable && !(source is string))
             {
-                return CreateListData(enumerable, typeName, context.IncreaseDepth());
+                return CreateListData(enumerable, typeName, context);
             }
             else if (typeMetadata.IsPrimitive)
             {

@@ -163,6 +163,9 @@
     <Compile Include="Core\NotificableObject.cs" />
     <Compile Include="Core\RelayCommand.cs" />
     <Compile Include="IoC.cs" />
+    <Compile Include="Pages\DictionaryPage.xaml.cs">
+      <DependentUpon>DictionaryPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\FirstPage.xaml.cs">
       <DependentUpon>FirstPage.xaml</DependentUpon>
     </Compile>
@@ -182,6 +185,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Pages\DictionaryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\FirstPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

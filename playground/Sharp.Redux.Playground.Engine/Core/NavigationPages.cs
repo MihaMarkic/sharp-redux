@@ -2,6 +2,7 @@
 {
     public enum NavigationPage
     {
-        FirstPage
+        FirstPage,
+        DictionaryPage
     }
 }

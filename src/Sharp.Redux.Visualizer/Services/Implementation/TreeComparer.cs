@@ -49,8 +49,12 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
                 var added = FromBranchAdded(next);
                 return new DifferenceItemContainer(new[] { removed, added }, current, next, DiffType.Modified);
             }
+            if (current is RecursiveObjectTreeItem recursive)
+            {
+                return new DifferenceItem(current, next, DiffType.None);
+            }
             // from this point both states are same type
-            if (current is StateObjectTreeItem || current is DictionaryObjectTreeItem)
+            else if (current is StateObjectTreeItem || current is DictionaryObjectTreeItem)
             {
                 return FromNamedProperties((NodeObjectTreeItem)current, (NodeObjectTreeItem)next);
             }
