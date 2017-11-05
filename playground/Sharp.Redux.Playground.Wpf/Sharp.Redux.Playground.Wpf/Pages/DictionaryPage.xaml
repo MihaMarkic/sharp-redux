@@ -4,17 +4,20 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:vm="clr-namespace:Sharp.Redux.Playground.Engine.ViewModels;assembly=Sharp.Redux.Playground.Engine"
+             xmlns:cnv="clr-namespace:Sharp.Redux.Playground.Wpf.Converters"
       mc:Ignorable="d" 
     FontSize="30"
     d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type vm:DictionaryPageViewModel}}"
-    d:DesignHeight="300" d:DesignWidth="300">
-
+    d:DesignHeight="300" d:DesignWidth="600">
+    <UserControl.Resources>
+        <cnv:NotNullToBoolConverter x:Key="NotNullToBoolConverter" />
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ListView ItemsSource="{Binding Data}">
+        <ListView x:Name="List" ItemsSource="{Binding Data}" SelectedItem="{Binding SelectedItem}">
             <ListView.View>
                 <GridView AllowsColumnReorder="True">
                     <GridViewColumn DisplayMemberBinding="{Binding Key}" Header="Key" Width="100" />
@@ -23,7 +26,8 @@
             </ListView.View>
         </ListView>
         <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <Button Margin="0,6" Padding="4,0" Command="{Binding AddItem}">Add</Button>
+            <Button Margin="4,6" Padding="4,0" Command="{Binding AddItem}">Add</Button>
+            <Button Margin="4,6" Padding="4,0" Command="{Binding RemoveItem}">Remove Selected</Button>
         </StackPanel>
     </Grid>
 </UserControl>

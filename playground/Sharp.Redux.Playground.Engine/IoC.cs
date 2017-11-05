@@ -17,7 +17,7 @@ namespace Sharp.Redux.Playground.Engine
             // register root dispatcher and initialize statef
             builder.Register<IPlaygroundReduxDispatcher>(ctx => new PlaygroundReduxDispatcher(
                 initialState: new RootState(
-                    navigation: new NavigationState(NavigationPage.DictionaryPage, data: null, isNavigating: true), 
+                    navigation: new NavigationState(NavigationPage.DictionaryPage, data: null, isNavigating: false), 
                     firstPage: new FirstPageState(input: null, output: null),
                     dictionaryPage: new DictionaryPageState(ImmutableDictionary<int, string>.Empty)
                 ), 

@@ -16,24 +16,13 @@ namespace Sharp.Redux.Playground.Engine.Core
 
         public RelayCommand(Action execute, Func<bool> canExecute)
         {
-            if (execute == null)
-            {
-                throw new ArgumentNullException("execute");
-            }
-            this.execute = execute;
-            if (canExecute != null)
-            {
-                this.canExecute = new Func<bool>(canExecute);
-            }
+            this.execute = execute ?? throw new ArgumentNullException("execute");
+            this.canExecute = canExecute;
         }
 
         public virtual bool CanExecute(object parameter)
         {
-            if (canExecute == null)
-            {
-                return true;
-            }
-            return canExecute();
+            return canExecute?.Invoke() ?? true;
         }
 
         public virtual void Execute(object parameter)

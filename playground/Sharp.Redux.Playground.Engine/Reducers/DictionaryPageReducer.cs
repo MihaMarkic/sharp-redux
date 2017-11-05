@@ -11,6 +11,8 @@ namespace Sharp.Redux.Playground.Engine.Reducers
             {
                 case AddValueAction addValue:
                     return state.Clone(dictionary: state.Dictionary.Add(addValue.Key, addValue.Value));
+                case RemoveValueAction removeValue:
+                    return state.Clone(dictionary: state.Dictionary.Remove(removeValue.Key));
                 default:
                     return state;
             }

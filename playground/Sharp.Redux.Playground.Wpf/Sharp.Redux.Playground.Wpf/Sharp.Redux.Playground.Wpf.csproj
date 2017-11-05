@@ -159,6 +159,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\NotNullToBoolConverter.cs" />
     <Compile Include="Core\DisposableObject.cs" />
     <Compile Include="Core\NotificableObject.cs" />
     <Compile Include="Core\RelayCommand.cs" />
