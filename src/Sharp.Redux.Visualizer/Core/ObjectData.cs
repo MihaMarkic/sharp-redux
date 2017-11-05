@@ -17,9 +17,9 @@ namespace Sharp.Redux.Visualizer.Core
 
     public class PrimitiveData: ObjectData
     {
-        public object Value { get; set;  }
-        public readonly static PrimitiveData NullValue = new PrimitiveData("");
-        public PrimitiveData(string typeName, object value = default): base(typeName)
+        public object Value { get; }
+        public readonly static PrimitiveData NullValue = new PrimitiveData("", null);
+        public PrimitiveData(string typeName, object value): base(typeName)
         {
             Value = value;
         }
@@ -28,8 +28,8 @@ namespace Sharp.Redux.Visualizer.Core
 
     public class StateObjectData: ObjectData
     {
-        public ImmutableDictionary<string, ObjectData> Properties { get; set; }
-        public StateObjectData(string typeName, ImmutableDictionary<string, ObjectData> properties = default) : base(typeName)
+        public ImmutableDictionary<string, ObjectData> Properties { get; }
+        public StateObjectData(string typeName, ImmutableDictionary<string, ObjectData> properties) : base(typeName)
         {
             Properties = properties;
         }
@@ -37,8 +37,8 @@ namespace Sharp.Redux.Visualizer.Core
 
     public class ListData: ObjectData
     {
-        public ObjectData[] List { get; set; }
-        public ListData(string typeName, ObjectData[] list = default) : base(typeName)
+        public ObjectData[] List { get; }
+        public ListData(string typeName, ObjectData[] list) : base(typeName)
         {
             List = list;
         }
@@ -46,18 +46,10 @@ namespace Sharp.Redux.Visualizer.Core
 
     public class DictionaryData: ObjectData
     {
-        public IImmutableDictionary<object, ObjectData> Dictionary { get; set; }
-        public DictionaryData(string typeName, IImmutableDictionary<object, ObjectData> dictionary = default) : base(typeName)
+        public IImmutableDictionary<object, ObjectData> Dictionary { get;}
+        public DictionaryData(string typeName, IImmutableDictionary<object, ObjectData> dictionary) : base(typeName)
         {
             Dictionary = dictionary;
-        }
-    }
-    public class RecursiveObjectData : ObjectData
-    {
-        public object Source { get; }
-        public RecursiveObjectData(object source) : base("Recursive")
-        {
-            Source = source;
         }
     }
 }

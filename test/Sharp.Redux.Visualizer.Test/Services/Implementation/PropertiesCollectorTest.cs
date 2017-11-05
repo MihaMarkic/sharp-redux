@@ -134,24 +134,6 @@ namespace Sharp.Redux.Visualizer.Test.Services.Implementation
                 Assert.That(actual, Is.TypeOf<PrimitiveData>());
             }
         }
-        [TestFixture]
-        public class ToTreeHierarchy
-        {
-            [Test]
-            public void WhenRecursiveGraph_DoesNotRecourseIndefinitely()
-            {
-                var first = new RecursiveItem(1);
-                var second = new RecursiveItem(2);
-                var root = new RecursiveRoot(first, second);
-                first.Parent = root;
-                var task = Task.Run(() => PropertiesCollector.Collect(root), CancellationToken.None);
-
-                // wait .1s ... more than enough for the task
-                var success = task.Wait(TimeSpan.FromMilliseconds(100));
-
-                Assert.IsTrue(success, "Should end in limited time");
-            }
-        }
 
         [ReduxState]
         public class State
@@ -173,26 +155,6 @@ namespace Sharp.Redux.Visualizer.Test.Services.Implementation
         public class NotState
         {
             public int Number { get; set; }
-        }
-
-        // recursive sample
-        public class RecursiveRoot
-        {
-            public RecursiveItem[] Items { get; }
-            public RecursiveRoot(params RecursiveItem[] items)
-            {
-                Items = items;
-            }
-        }
-
-        public class RecursiveItem
-        {
-            public int Id { get; }
-            public RecursiveRoot Parent { get; set; }
-            public RecursiveItem(int id)
-            {
-                Id = id;
-            }
         }
     }
 }

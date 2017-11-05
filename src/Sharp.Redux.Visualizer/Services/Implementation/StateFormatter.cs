@@ -33,8 +33,6 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
                     return FormatDictionary(depth, propertyName, dictionary);
                 case PrimitiveData primitive:
                     return FormatPrimitive(depth, propertyName, primitive);
-                case RecursiveObjectData recursive:
-                    return new RecursiveObjectTreeItem(null, propertyName, recursive, isRoot: depth == 0);
                 default:
                     throw new Exception($"Unknown ObjectData {source.GetType()}");
             }

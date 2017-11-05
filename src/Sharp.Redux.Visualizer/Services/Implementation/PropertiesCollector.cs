@@ -47,7 +47,7 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
             // prevents recursion
             if (context.Cache.TryGetValue(source, out var data))
             {
-                return new RecursiveObjectData(data);
+                return data;
             }
             var typeMetadata = GetTypeMetadata(source);
             string typeName = source.GetType().FullName;
@@ -76,16 +76,17 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
         private static PrimitiveData CreatePrimitiveData(object source, string typeName, CollectContext context)
         {
             return CreateObjectData(source, context, null, typeName,
-                (src, tn) => new PrimitiveData(tn, source),
-                null
+                (src, ctx, tm, tn) => new PrimitiveData(tn, source)
             );
         }
 
         private static ListData CreateListData(IEnumerable source, string typeName, CollectContext context)
         {
             return CreateObjectData(source, context, null, typeName,
-                (src, tn) => new ListData(tn),
-                (src, tm, ctx, result) => result.List = CollectListValues(src, ctx)
+                (src, ctx, tm, tn) => new ListData(
+                    tn, 
+                    list: CollectListValues(src, ctx)
+                )
             );
         }
         public static ObjectData[] CollectListValues(IEnumerable enumerable, CollectContext context)
@@ -101,8 +102,10 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
         private static DictionaryData CreateDictionary(IDictionary source, string typeName, CollectContext context)
         {
             return CreateObjectData(source, context, null, typeName,
-                (src, tn) => new DictionaryData(tn),
-                (src, tm, ctx, result) => result.Dictionary = CollectDictionaryValues(src, ctx)
+                (src, ctx, tm, tn) => new DictionaryData(
+                    tn, 
+                    dictionary: CollectDictionaryValues(src, ctx)
+                )
             );
         }
         public static ImmutableDictionary<object, ObjectData> CollectDictionaryValues(IDictionary dictionary, CollectContext context)
@@ -127,23 +130,23 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
         public static StateObjectData CreateStateObject(object source, TypeMetadata typeMetadata, string typeName, CollectContext context)
         {
             return CreateObjectData(source, context, typeMetadata, typeName,
-                (src, tn) => new StateObjectData(tn),
-                (src, tm, ctx, result) => result.Properties = CollectProperties(tm.Properties, src, ctx.IncreaseDepth())
+                (src, ctx, tm, tn) => new StateObjectData(
+                    tn, 
+                    properties: CollectProperties(tm.Properties, src, ctx.IncreaseDepth())
+                )
             );
         }
 
         public static TResult CreateObjectData<TSource, TResult>(TSource source, CollectContext context, TypeMetadata typeMetadata, string typeName,
-            Func<object, string, TResult> factory,
-            Action<TSource, TypeMetadata, CollectContext, TResult> population)
+            Func<TSource, CollectContext, TypeMetadata, string, TResult> factory)
            where TResult: ObjectData
         {
             if (context.Cache.TryGetValue(source, out ObjectData cached))
             {
                 return (TResult)cached;
             }
-            var value = factory(source, typeName);
+            var value = factory(source, context, typeMetadata, typeName);
             context.Cache.TryAdd(source, value);
-            population?.Invoke(source, typeMetadata, context, value);
             return value;
         }
         public static ImmutableDictionary<string, ObjectData> CollectProperties(PropertyInfo[] properties, object source, CollectContext context)
