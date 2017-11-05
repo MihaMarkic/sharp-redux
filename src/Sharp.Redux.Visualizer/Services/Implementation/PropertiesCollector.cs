@@ -6,97 +6,111 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Sharp.Redux.Visualizer.Services.Implementation
 {
     public static class PropertiesCollector
     {
-        private static readonly ConcurrentDictionary<Type, TypeMetadata> metadata = new ConcurrentDictionary<Type, TypeMetadata>();
-        /// <summary>
-        /// Contains references to all ObjectData instances created.
-        /// </summary>
-        private static readonly ConcurrentDictionary<object, ObjectData> cache = new ConcurrentDictionary<object, ObjectData>();
-        public async static Task<ObjectData> CollectAsync(object source, CancellationToken ct)
+        public struct CollectContext
         {
+            public int Depth { get; }
+            public ConcurrentDictionary<object, ObjectData> Cache { get; }
+            public static readonly CollectContext Empty = 
+                new CollectContext(0, 
+                    new ConcurrentDictionary<object, ObjectData>());
+            private CollectContext(int depth, ConcurrentDictionary<object, ObjectData> cache)
+            {
+                Depth = depth;
+                Cache = cache;
+            }
+            public CollectContext IncreaseDepth()
+            {
+                return new CollectContext(Depth + 1, Cache);
+            }
+        }
+        public const int MaxDepth = 1000;
+        private static readonly ConcurrentDictionary<Type, TypeMetadata> metadata = new ConcurrentDictionary<Type, TypeMetadata>();
+        public static ObjectData Collect(object source)
+        {
+            return Collect(source, CollectContext.Empty);
+        }
+        public static ObjectData Collect(object source, CollectContext context)
+        {
+            if (context.Depth > MaxDepth)
+            {
+                throw new Exception("Object graph is too deep");
+            }
             if (ReferenceEquals(source, null))
             {
-                return new PrimitiveData("", null);
+                return PrimitiveData.NullValue;
+            }
+            // prevents recursion
+            if (context.Cache.TryGetValue(source, out var data))
+            {
+                return data;
             }
             var typeMetadata = GetTypeMetadata(source);
             string typeName = source.GetType().FullName;
             if (typeMetadata.IsState)
             {
-                return await CreateStateObjectAsync(source, typeMetadata, typeName, ct);
+                return CreateStateObject(source, typeMetadata, typeName, context.IncreaseDepth());
             }
             else if (source is IDictionary dictionary)
             {
-                return await CreateDictionaryAsync(typeName, dictionary, ct);
+                return CreateDictionary(dictionary, typeName, context.IncreaseDepth());
             }
             else if (source is IEnumerable enumerable && !(source is string))
             {
-                return await CreateListDataAsync(typeName, enumerable, ct);
+                return CreateListData(enumerable, typeName, context.IncreaseDepth());
             }
             else if (typeMetadata.IsPrimitive)
             {
-                return CreatePrimitiveData(source, typeName);
+                return CreatePrimitiveData(source, typeName, context);
             }
             else
             {
-                return await CreateStateObjectAsync(source, typeMetadata, typeName, ct);
+                return CreateStateObject(source, typeMetadata, typeName, context.IncreaseDepth());
             }
         }
 
-        private static PrimitiveData CreatePrimitiveData(object source, string typeName)
+        private static PrimitiveData CreatePrimitiveData(object source, string typeName, CollectContext context)
         {
-            return CreateObjectData(source,
-                        src =>
-                            new PrimitiveData(
-                                typeName,
-                                source
-                        ));
+            return CreateObjectData(source, context, null, typeName,
+                (src, tn) => new PrimitiveData(tn, source),
+                null
+            );
         }
 
-        private static Task<ListData> CreateListDataAsync(string typeName, IEnumerable enumerable, CancellationToken ct)
+        private static ListData CreateListData(IEnumerable source, string typeName, CollectContext context)
         {
-            return CreateObjectDataAsync(enumerable,
-                                async (src, ctoken) =>
-                                {
-                                    return new ListData(
-                                        typeName,
-                                        list: await CollectListValuesAsync(src, ctoken)
-                                    );
-                                }, ct);
+            return CreateObjectData(source, context, null, typeName,
+                (src, tn) => new ListData(tn),
+                (src, tm, ctx, result) => result.List = CollectListValues(src, ctx)
+            );
         }
-        public static async ValueTask<ObjectData[]> CollectListValuesAsync(IEnumerable enumerable, CancellationToken ct)
+        public static ObjectData[] CollectListValues(IEnumerable enumerable, CollectContext context)
         {
             var list = new List<ObjectData>();
             foreach (var item in enumerable)
             {
-                list.Add(await CollectAsync(item, ct));
+                list.Add(Collect(item, context.IncreaseDepth()));
             }
             return list.ToArray();
         }
 
-        private static Task<DictionaryData> CreateDictionaryAsync(string typeName, IDictionary dictionary, CancellationToken ct)
+        private static DictionaryData CreateDictionary(IDictionary source, string typeName, CollectContext context)
         {
-            return CreateObjectDataAsync(dictionary,
-                                async (src, ctoken) =>
-                                {
-                                    return new DictionaryData(
-                                        typeName,
-                                        dictionary: await CollectDictionaryValuesAsync(src, ctoken)
-                                    );
-                                }, ct
-                            );
+            return CreateObjectData(source, context, null, typeName,
+                (src, tn) => new DictionaryData(tn),
+                (src, tm, ctx, result) => result.Dictionary = CollectDictionaryValues(src, ctx)
+            );
         }
-        public static async ValueTask<ImmutableDictionary<object, ObjectData>> CollectDictionaryValuesAsync(IDictionary dictionary, CancellationToken ct)
+        public static ImmutableDictionary<object, ObjectData> CollectDictionaryValues(IDictionary dictionary, CollectContext context)
         {
             var data = ImmutableDictionary.CreateBuilder<object, ObjectData>();
             foreach (DictionaryEntry pair in dictionary)
             {
-                data.Add(pair.Key, await CollectAsync(pair.Value, ct).ConfigureAwait(false));
+                data.Add(pair.Key, Collect(pair.Value, context.IncreaseDepth()));
             }
             return data.ToImmutableDictionary();
         }
@@ -110,57 +124,43 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
         /// <param name="ct"></param>
         /// <returns></returns>
         // TODO can parallelize
-        public static Task<StateObjectData> CreateStateObjectAsync(object source, TypeMetadata typeMetadata, string typeName, CancellationToken ct)
+        public static StateObjectData CreateStateObject(object source, TypeMetadata typeMetadata, string typeName, CollectContext context)
         {
-            return CreateObjectDataAsync(source,
-                        async (src, ctoken) =>
-                        {
-                            return new StateObjectData(
-                                typeName,
-                                properties: await CollectPropertiesAsync(typeMetadata.Properties, source, ctoken).ConfigureAwait(false)
-                            );
-                        }, ct
-                    );
+            return CreateObjectData(source, context, typeMetadata, typeName,
+                (src, tn) => new StateObjectData(tn),
+                (src, tm, ctx, result) => result.Properties = CollectProperties(tm.Properties, src, ctx.IncreaseDepth())
+            );
         }
 
-        public static async Task<TResult> CreateObjectDataAsync<TSource, TResult>(TSource source, Func<TSource, CancellationToken, Task<TResult>> factoryAsync, CancellationToken ct)
+        public static TResult CreateObjectData<TSource, TResult>(TSource source, CollectContext context, TypeMetadata typeMetadata, string typeName,
+            Func<object, string, TResult> factory,
+            Action<TSource, TypeMetadata, CollectContext, TResult> population)
            where TResult: ObjectData
         {
-            if (cache.TryGetValue(source, out ObjectData cached))
+            if (context.Cache.TryGetValue(source, out ObjectData cached))
             {
                 return (TResult)cached;
             }
-            return await factoryAsync(source, ct);
+            var value = factory(source, typeName);
+            context.Cache.TryAdd(source, value);
+            population?.Invoke(source, typeMetadata, context, value);
+            return value;
         }
-        public static  TResult CreateObjectData<TSource, TResult>(TSource source, Func<TSource, TResult> factory)
-           where TResult : ObjectData
+        public static ImmutableDictionary<string, ObjectData> CollectProperties(PropertyInfo[] properties, object source, CollectContext context)
         {
-            if (cache.TryGetValue(source, out ObjectData cached))
+            var builder = ImmutableDictionary.CreateBuilder<string, ObjectData>();
+            var query = from p in properties
+                        let propertyValue = p.GetValue(source)
+                        select new
+                        {
+                            PropertyName = p.Name,
+                            Value = Collect(propertyValue, context.IncreaseDepth())
+                        };
+            foreach (var pair in query)
             {
-                return (TResult)cached;
+                builder.Add(pair.PropertyName, pair.Value);
             }
-            return factory(source);
-        }
-
-        public static Task<ImmutableDictionary<string, ObjectData>> CollectPropertiesAsync(PropertyInfo[] properties, object source, CancellationToken ct)
-        {
-            return Task.Run(async () =>
-            {
-                var builder = ImmutableDictionary.CreateBuilder<string, ObjectData>();
-                var query = from p in properties
-                            let propertyValue = p.GetValue(source)
-                            select new
-                            {
-                                PropertyName = p.Name,
-                                ValueTask = CollectAsync(propertyValue, ct)
-                            };
-                await Task.WhenAll(query.Select(q => q.ValueTask));
-                foreach (var pair in query)
-                {
-                    builder.Add(pair.PropertyName, pair.ValueTask.Result);
-                }
-                return builder.ToImmutableDictionary();
-            });
+            return builder.ToImmutableDictionary();
         }
 
         /// <summary>

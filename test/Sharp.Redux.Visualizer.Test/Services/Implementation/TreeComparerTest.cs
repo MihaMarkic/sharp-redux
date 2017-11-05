@@ -2,19 +2,16 @@
 using Sharp.Redux.Visualizer.Core;
 using Sharp.Redux.Visualizer.Models;
 using Sharp.Redux.Visualizer.Services.Implementation;
-using System;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Sharp.Redux.Visualizer.Test.Services.Implementation
 {
     public class TreeComparerTest
     {
-        public static async Task<ObjectTreeItem> ToTreeItemAsync(object state)
+        public static ObjectTreeItem ToTreeItem(object state)
         {
-            var currentData = await PropertiesCollector.CollectAsync(state, CancellationToken.None);
+            var currentData = PropertiesCollector.Collect(state);
             return StateFormatter.ToTreeHierarchy(currentData);
         }
         [TestFixture]
@@ -73,12 +70,12 @@ namespace Sharp.Redux.Visualizer.Test.Services.Implementation
                 Assert.That(actual.DiffType, Is.EqualTo(DiffType.Modified));
             }
             [Test]
-            public async Task WhenLeafChangesAndNotReferenceEquals_OnlyLeafIsCollected()
+            public void WhenLeafChangesAndNotReferenceEquals_OnlyLeafIsCollected()
             {
                 var current = new Root { First = new FirstBranch { Alpha = "a", Omega = 1 } };
                 var next = new Root { First = new FirstBranch { Alpha = "ab", Omega = 1 } };
 
-                var actual = (DifferenceItemContainer)TreeComparer.CreateDifferenceTree(await ToTreeItemAsync(current), await ToTreeItemAsync(next));
+                var actual = (DifferenceItemContainer)TreeComparer.CreateDifferenceTree(ToTreeItem(current), ToTreeItem(next));
 
                 Assert.That(actual.DiffType, Is.EqualTo(DiffType.None));
                 var first = (DifferenceItemContainer)actual.Children[0];
@@ -88,21 +85,21 @@ namespace Sharp.Redux.Visualizer.Test.Services.Implementation
                 Assert.That(alpha.DiffType, Is.EqualTo(DiffType.Modified));
             }
             [Test]
-            public async Task WhenReferencesChangeButContentIsSame_NullIsReturned()
+            public void WhenReferencesChangeButContentIsSame_NullIsReturned()
             {
                 var current = new Root { First = new FirstBranch { Alpha = "a", Omega = 1 } };
                 var next = new Root { First = new FirstBranch { Alpha = "a", Omega = 1 } };
 
-                var actual = (DifferenceItemContainer)TreeComparer.CreateDifferenceTree(await ToTreeItemAsync(current), await ToTreeItemAsync(next));
+                var actual = (DifferenceItemContainer)TreeComparer.CreateDifferenceTree(ToTreeItem(current), ToTreeItem(next));
 
                 Assert.That(actual, Is.Null);
             }
             [Test]
-            public async Task WhenCurrentIsNull_ButNextIsNot_ReturnsWholeNextBranchAsAdded()
+            public void WhenCurrentIsNull_ButNextIsNot_ReturnsWholeNextBranchAsAdded()
             {
                 var next = new Root { First = new FirstBranch { Alpha = "a", Omega = 1 } };
 
-                var actual = (DifferenceItemContainer)TreeComparer.CreateDifferenceTree(null, await ToTreeItemAsync(next));
+                var actual = (DifferenceItemContainer)TreeComparer.CreateDifferenceTree(null, ToTreeItem(next));
 
                 Assert.That(actual.DiffType, Is.EqualTo(DiffType.Added));
                 Assert.That(actual.Children.Length, Is.EqualTo(2));

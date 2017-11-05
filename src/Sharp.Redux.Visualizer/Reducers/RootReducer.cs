@@ -18,8 +18,8 @@ namespace Sharp.Redux.Visualizer.Reducers
             {
                 case InsertNewAction insertNew:
                     int key = state.Steps.Length;
-                    var actionDataTask = PropertiesCollector.CollectAsync(insertNew.Action, ct);
-                    var stateDataTask = PropertiesCollector.CollectAsync(insertNew.State, ct);
+                    var actionDataTask = Task.Run(() =>PropertiesCollector.Collect(insertNew.Action), ct);
+                    var stateDataTask = Task.Run(() => PropertiesCollector.Collect(insertNew.State), ct);
                     await actionDataTask.ConfigureAwait(false);
                     var actionTreeItem = await Task.Run(() => {
                         string actionName = StateFormatter.GetActionName(insertNew.Action);
