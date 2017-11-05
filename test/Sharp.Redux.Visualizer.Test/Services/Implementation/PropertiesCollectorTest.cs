@@ -2,11 +2,8 @@
 using Sharp.Redux.Visualizer.Core;
 using Sharp.Redux.Visualizer.Services.Implementation;
 using Sharp.Redux.Visualizer.Test.Core;
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Sharp.Redux.Visualizer.Test.Services.Implementation
 {
