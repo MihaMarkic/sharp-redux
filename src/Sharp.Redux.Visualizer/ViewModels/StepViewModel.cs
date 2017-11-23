@@ -21,7 +21,6 @@ namespace Sharp.Redux.Visualizer.ViewModels
             OnPropertyChanged(nameof(DifferenceNode));
             OnPropertyChanged(nameof(ActionNode));
         }
-        public bool IsKeyEqualTo(IKeyedItem other) => State.IsKeyEqualTo(other);
         public int Key => State.Key;
         
         public string ActionContent => PropertiesCollector.DataToString(State.ActionData);

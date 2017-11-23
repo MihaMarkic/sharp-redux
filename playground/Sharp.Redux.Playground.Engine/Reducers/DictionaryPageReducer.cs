@@ -1,4 +1,4 @@
-﻿using Sharp.Redux.Playground.Engine.Actions.DIctionaryPage;
+﻿using Sharp.Redux.Playground.Engine.Actions.DictionaryPage;
 using Sharp.Redux.Playground.Engine.States;
 
 namespace Sharp.Redux.Playground.Engine.Reducers

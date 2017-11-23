@@ -10,3 +10,5 @@ State can be composed of following object types in the following order
 4. Primitive type
 
 Cyclic graphs aren't supported by visualizer but should work with redux core. Also features like save state might now work with cyclic graphs - depends how one stores them.
+
+IKeyedItem should implement Equal method.

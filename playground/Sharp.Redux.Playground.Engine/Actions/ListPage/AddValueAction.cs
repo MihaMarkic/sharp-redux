@@ -1,6 +1,6 @@
 ﻿using Righthand.Immutable;
 
-namespace Sharp.Redux.Playground.Engine.Actions.DictionaryPage
+namespace Sharp.Redux.Playground.Engine.Actions.ListPage
 {
     public class AddValueAction: ReduxAction
     {

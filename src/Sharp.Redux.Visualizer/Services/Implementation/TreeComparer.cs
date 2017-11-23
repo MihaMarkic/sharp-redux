@@ -82,6 +82,16 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
             }
             return null;
         }
+        public static bool AreKeysEqual(ObjectTreeItem left, ObjectTreeItem right)
+        {
+            var leftObjectSource = left.Source;
+            var rightObjectSource = right.Source;
+            if (leftObjectSource is null || rightObjectSource is null || leftObjectSource.GetType() != rightObjectSource.GetType())
+            {
+                return false;
+            }
+            return Equals(left, right);
+        }
 
         public static DifferenceItemContainer FromList(ListObjectTreeItem current, ListObjectTreeItem next)
         {
@@ -89,12 +99,10 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
             var nextChildren = new List<ObjectTreeItem>(next.Children);
             foreach (var item in current.Children)
             {
-                var itemKeyed = item as IKeyedItem;
-
                 ObjectTreeItem nextItem;
                 if (item != null)
                 {
-                    nextItem = next.Children.SingleOrDefault(i => itemKeyed.IsKeyEqualTo((IKeyedItem)i));
+                    nextItem = next.Children.SingleOrDefault(i => AreKeysEqual(item, i));
                 }
                 else
                 {

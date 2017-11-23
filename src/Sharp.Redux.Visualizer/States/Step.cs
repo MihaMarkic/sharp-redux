@@ -42,19 +42,5 @@ stateTreeItem.HasValue ? stateTreeItem.Value.Value : StateTreeItem,
 differenceItem.HasValue ? differenceItem.Value.Value : DifferenceItem,
 differenceCalculated.HasValue ? differenceCalculated.Value.Value : DifferenceCalculated);
         }
-
-        public bool IsKeyEqualTo(IKeyedItem other)
-        {
-            if (ReferenceEquals(other, null))
-            {
-                return false;
-            }
-            Step otherStep = other as Step;
-            if (ReferenceEquals(otherStep, null))
-            {
-                return false;
-            }
-            return otherStep.Key == Key;
-        }
     }
 }

@@ -5,8 +5,6 @@
         T Key { get; }
     }
 
-    public  interface IKeyedItem
-    {
-        bool IsKeyEqualTo(IKeyedItem other);
-    }
+    public interface IKeyedItem
+    {}
 }

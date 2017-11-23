@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using Sharp.Redux.Playground.Engine.Actions.DIctionaryPage;
+using Sharp.Redux.Playground.Engine.Actions.DictionaryPage;
 using Sharp.Redux.Playground.Engine.Core;
 using System.Collections.ObjectModel;
 using DictionaryItem = System.Collections.Generic.KeyValuePair<int, Sharp.Redux.Playground.Engine.ViewModels.DictionaryItemViewModel<string>>;
