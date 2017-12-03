@@ -100,12 +100,28 @@ namespace Sharp.Redux.Test
             }
         }
         [TestFixture]
-        public class ReplyActionsCoreAsnyc: ReduxDispatcherTest
+        public class ReplyActionsCoreAsync: ReduxDispatcherTest
         {
-            [Test]
-            public void Test()
+            [Test(Description = "Prevents infinite loops")]
+            public async Task WhenActionIsPassed_ReduceOnlyOnce()
             {
-                
+                int reduceCallsCount = 0;
+                reducer.ReduceAsync(null, null, default(CancellationToken)).ReturnsForAnyArgs(
+                    ci => {
+                        if (reduceCallsCount == 0)
+                        {
+                            reduceCallsCount++;
+                            return new RootState();
+                        }
+                        else
+                        {
+                            throw new Exception("Called more than once");
+                        }
+                    });
+
+                await dispatcher.ReplyActionsCoreAsync(new[] { new NoOpAction() }, progress: null, ct: default(CancellationToken));
+
+                Assert.Pass();
             }
         }
 

@@ -11,21 +11,34 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <v:PassthroughConverter x:Key="PassthroughConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
-    
+
     <Grid DataContext="{x:Static vis:ReduxVisualizer.MainViewModel}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <ListView HorizontalAlignment="Stretch" ItemsSource="{Binding Steps, Mode=OneTime}" SelectedItem="{Binding SelectedStep, Mode=TwoWay}">
-            <ListView.ItemTemplate>
-                <DataTemplate DataType="{x:Type vm:StepViewModel}">
-                    <v:StepView />
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <ListView HorizontalAlignment="Stretch" ItemsSource="{Binding Steps, Mode=OneTime}" SelectedItem="{Binding SelectedStep, Mode=TwoWay}">
+                <ListView.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:StepViewModel}">
+                        <v:StepView />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <ProgressBar Grid.Row="1" Maximum="{Binding ResetingActionsCount, Mode=OneWay}" Value="{Binding ResetingActionCurrent, Mode=OneWay}" 
+                         Visibility="{Binding IsResetingState, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="4,2">
+                <Button Command="{Binding GotoStepCommand,Mode=OneTime}" FontSize="20">Reset to state</Button>
+            </StackPanel>
+        </Grid>
         <GridSplitter Grid.Column="1"  HorizontalAlignment="Center"
                         VerticalAlignment="Stretch"
                         ShowsPreview="True"

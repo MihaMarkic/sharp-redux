@@ -11,7 +11,6 @@ namespace Sharp.Redux
         void Start();
         bool IsProcessorRunning { get; }
         Task StopAsync();
-        Task ReplayActionsAsync(ReduxAction[] actions, IProgress<int> progress, CancellationToken ct);
         Task ResetStateAsync(TState newState);
     }
 
@@ -19,5 +18,8 @@ namespace Sharp.Redux
     {
         event EventHandler<StateChangedEventArgs> StateChanged;
         object State { get; }
+        Task ResetStateAsync(object newState);
+        Task ResetToInitialStateAsync();
+        Task ReplayActionsAsync(ReduxAction[] actions, IProgress<int> progress, CancellationToken ct);
     }
 }

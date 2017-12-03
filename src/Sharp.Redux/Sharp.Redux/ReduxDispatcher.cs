@@ -13,13 +13,14 @@ namespace Sharp.Redux
         public event EventHandler<StateChangedEventArgs> StateChanged;
         private readonly BlockingCollection<ReduxAction> queue = new BlockingCollection<ReduxAction>();
         public TState State { get; private set; }
+        public TState InitialState { get; }
         object IReduxDispatcher.State => State;
         private TaskFactory notificationFactory;
         private CancellationTokenSource cts;
         private Task processor;
         public ReduxDispatcher(TState initialState, TReducer reducer, TaskScheduler notificationScheduler)
         {
-            State = initialState;
+            State = InitialState = initialState;
             this.reducer = reducer;
             notificationFactory = new TaskFactory(notificationScheduler);
         }
@@ -55,6 +56,20 @@ namespace Sharp.Redux
             await StopAsync();
             State = newState;
         }
+        public Task ResetToInitialStateAsync()
+        {
+            return ResetStateAsync(InitialState);
+        }
+        /// <summary>
+        /// Non typesafe method to reset state.
+        /// </summary>
+        /// <param name="newState"></param>
+        /// <returns></returns>
+        /// <remarks>Used by visualizer or other generic code.</remarks>
+        Task IReduxDispatcher.ResetStateAsync(object newState)
+        {
+            return ResetStateAsync((TState)newState);
+        }
         /// <summary>
         /// Replies a given set on actions.
         /// </summary>
@@ -73,7 +88,7 @@ namespace Sharp.Redux
             }
             if (actions?.Length > 0)
             {
-                return Task.Run(() => ReplyActionsCoreAsnyc(actions, progress, ct), ct);
+                return Task.Run(() => ReplyActionsCoreAsync(actions, progress, ct), ct);
             }
             else
             {
@@ -87,25 +102,22 @@ namespace Sharp.Redux
         /// <param name="progress">Progress feedback</param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        internal async Task ReplyActionsCoreAsnyc(ReduxAction[] actions, IProgress<int> progress, CancellationToken ct)
+        internal async Task ReplyActionsCoreAsync(ReduxAction[] actions, IProgress<int> progress, CancellationToken ct)
         {
             if (actions == null)
             {
                 throw new ArgumentNullException(nameof(actions));
             }
-            while (!ct.IsCancellationRequested)
+            var oldState = State;
+            for (int i = 0; i < actions.Length; i++)
             {
-                var oldState = State;
-                for(int i=0; i <actions.Length; i++)
-                {
-                    var action = actions[i];
-                    State = await reducer.ReduceAsync(State, action, ct);
-                    progress?.Report(i);
-                }
-                if (!ct.IsCancellationRequested && !ReferenceEquals(oldState, State))
-                {
-                    await notificationFactory.StartNew(() => OnStateChanged(new StateChangedEventArgs(actions[actions.Length - 1])));
-                }
+                var action = actions[i];
+                State = await reducer.ReduceAsync(State, action, ct);
+                progress?.Report(i);
+            }
+            if (!ct.IsCancellationRequested && !ReferenceEquals(oldState, State))
+            {
+                await notificationFactory.StartNew(() => OnStateChanged(new StateChangedEventArgs(actions[actions.Length - 1])));
             }
         }
         public void Dispatch(ReduxAction action)
