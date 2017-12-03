@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Sharp.Redux
@@ -10,6 +11,8 @@ namespace Sharp.Redux
         void Start();
         bool IsProcessorRunning { get; }
         Task StopAsync();
+        Task ReplayActionsAsync(ReduxAction[] actions, IProgress<int> progress, CancellationToken ct);
+        Task ResetStateAsync(TState newState);
     }
 
     public interface IReduxDispatcher
