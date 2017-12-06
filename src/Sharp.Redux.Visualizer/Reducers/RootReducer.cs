@@ -24,7 +24,7 @@ namespace Sharp.Redux.Visualizer.Reducers
                     var actionTreeItem = await Task.Run(() => {
                         string actionName = StateFormatter.GetActionName(insertNew.Action);
                         return StateFormatter.ToTreeHierarchy(actionDataTask.Result, actionName);
-                    });
+                    }).ConfigureAwait(false);
                     await stateDataTask.ConfigureAwait(false);
                     
                     result = state.Clone(steps: state.Steps.Spread(

@@ -11,6 +11,7 @@ namespace Sharp.Redux
     {
         private readonly TReducer reducer;
         public event EventHandler<StateChangedEventArgs> StateChanged;
+        public event EventHandler<RepliedActionsEventArgs> RepliedActions;
         private readonly BlockingCollection<ReduxAction> queue = new BlockingCollection<ReduxAction>();
         public TState State { get; private set; }
         public TState InitialState { get; }
@@ -55,6 +56,7 @@ namespace Sharp.Redux
         {
             await StopAsync();
             State = newState;
+            await notificationFactory.StartNew(() => OnStateChanged(new StateChangedEventArgs(new StateResetAction())));
         }
         public Task ResetToInitialStateAsync()
         {
@@ -109,15 +111,18 @@ namespace Sharp.Redux
                 throw new ArgumentNullException(nameof(actions));
             }
             var oldState = State;
+            var replied = new RepliedAction[actions.Length];
             for (int i = 0; i < actions.Length; i++)
             {
                 var action = actions[i];
                 State = await reducer.ReduceAsync(State, action, ct);
+                replied[i] = new RepliedAction(action, State);
                 progress?.Report(i);
             }
             if (!ct.IsCancellationRequested && !ReferenceEquals(oldState, State))
             {
-                await notificationFactory.StartNew(() => OnStateChanged(new StateChangedEventArgs(actions[actions.Length - 1])));
+                await notificationFactory.StartNew(() => OnRepliedActions(new RepliedActionsEventArgs(replied)));
+                await notificationFactory.StartNew(() => OnStateChanged(new StateChangedEventArgs(null)));
             }
         }
         public void Dispatch(ReduxAction action)
@@ -163,7 +168,7 @@ namespace Sharp.Redux
                 Debug.WriteLine($"Failed procesing state changed event: {ex.Message}");
             }
         }
-
+        protected virtual void OnRepliedActions(RepliedActionsEventArgs e) => RepliedActions?.Invoke(this, e);
         public void Dispose()
         {
             StopAsync().ConfigureAwait(false).GetAwaiter().GetResult();

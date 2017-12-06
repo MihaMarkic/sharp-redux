@@ -1,7 +1,6 @@
 ﻿using Sharp.Redux.Visualizer.Actions;
 using Sharp.Redux.Visualizer.Core;
 using Sharp.Redux.Visualizer.States;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -22,10 +21,10 @@ namespace Sharp.Redux.Visualizer.ViewModels
         {
             this.sourceDispatcher = sourceDispatcher;
             sourceDispatcher.StateChanged += SourceDispatcher_StateChanged;
+            sourceDispatcher.RepliedActions += SourceDispatcher_RepliedActions;
             dispatcher.StateChanged += Default_StateChanged;
             GotoStepCommand = new RelayCommand(GotoStep, () => selectedStep != null && !IsResetingState);
         }
-
         public async void GotoStep()
         {
             IsResetingState = true;
@@ -39,6 +38,7 @@ namespace Sharp.Redux.Visualizer.ViewModels
                 ResetingActionsCount = actions.Length;
                 ResetingActionCurrent = 0;
                 await sourceDispatcher.ReplayActionsAsync(actions, new UISyncedProgress<int>(p => ResetingActionCurrent = p), ct: default);
+                sourceDispatcher.Start();
             }
             finally
             {
@@ -86,7 +86,18 @@ namespace Sharp.Redux.Visualizer.ViewModels
 
         private void SourceDispatcher_StateChanged(object sender, StateChangedEventArgs e)
         {
-            dispatcher.Dispatch(new InsertNewAction(e.Action, sourceDispatcher.State));
+            // action can be null when replay dispatches StateChanged event at the end
+            if (e.Action != null)
+            {
+                dispatcher.Dispatch(new InsertNewAction(e.Action, sourceDispatcher.State));
+            }
+        }
+        private void SourceDispatcher_RepliedActions(object sender, RepliedActionsEventArgs e)
+        {
+            foreach (var pair in e.Actions)
+            {
+                dispatcher.Dispatch(new InsertNewAction(pair.Action, pair.State));
+            }
         }
     }
 }

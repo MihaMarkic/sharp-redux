@@ -79,6 +79,10 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
 
         public static string GetActionName(ReduxAction action)
         {
+            if (action is StateResetAction)
+            {
+                return "Reset";
+            }
             const string Suffix = "Action";
             var name = action.GetType().FullName;
             foreach (string prefix in ReduxVisualizer.IgnoredNamespacePrefixes)
