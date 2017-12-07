@@ -7,6 +7,19 @@
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
+  <PropertyGroup>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageId>Righthand.SharpRedux</PackageId>
+    <Authors>Miha Markic</Authors>
+    <Company>Righthand</Company>
+    <Description>Redux implemenation for .net.</Description>
+    <PackageProjectUrl>https://github.com/MihaMarkic/sharp-redux</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/MihaMarkic/sharp-redux/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageTags>c# redux</PackageTags>
+    <IncludeSymbols>true</IncludeSymbols>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <Version>0.9.0</Version>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>

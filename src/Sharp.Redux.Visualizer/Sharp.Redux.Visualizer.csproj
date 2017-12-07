@@ -7,6 +7,25 @@
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
+  <PropertyGroup>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageId>Righthand.SharpRedux.Visualizer</PackageId>
+    <Authors>Miha Markic</Authors>
+    <Company>Righthand</Company>
+    <Description>Visualizer for Righthand.SharpRedux.</Description>
+    <PackageProjectUrl>https://github.com/MihaMarkic/sharp-redux</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/MihaMarkic/sharp-redux/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageTags>c# redux visualizer core</PackageTags>
+    <IncludeSymbols>true</IncludeSymbols>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <Version>0.9.0</Version>
+    <Dependencies>
+      <dependency id="Righthand.SharpRedux" Version ="0.9.0" />
+      <Dependency id="Righthand.Immutable" Version="1.0.0" />
+      <Dependency id="System.Collections.Immutable" Version="1.4.0" />
+      <Dependency id="System.Threading.Tasks.Extensions" Version="4.4.0" />
+    </Dependencies>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>

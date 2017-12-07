@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+VisualStudioVersion = 15.0.27130.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Playground.Wpf", "Sharp.Redux.Playground.Wpf\Sharp.Redux.Playground.Wpf.csproj", "{0B921B19-AC3A-4861-A40E-3DDD31D30BE3}"
 EndProject
@@ -22,7 +22,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{F382383E-E
 		..\..\docs\specs.md = ..\..\docs\specs.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Test", "..\..\test\Sharp.Redux.Test\Sharp.Redux.Test.csproj", "{9663A5CD-792F-4C4D-81FC-816879E93316}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharp.Redux.Test", "..\..\test\Sharp.Redux.Test\Sharp.Redux.Test.csproj", "{9663A5CD-792F-4C4D-81FC-816879E93316}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuspec", "Nuspec", "{DBC0FB20-886F-4B98-8DB8-0F8C6CED782F}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\src\Sharp.Redux.Visualizer.Wpf\Sharp.Redux.Visualizer.Wpf.nuspec = ..\..\src\Sharp.Redux.Visualizer.Wpf\Sharp.Redux.Visualizer.Wpf.nuspec
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

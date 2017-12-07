@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Righthand.SharpRedux.Visualizer.Wpf</id>
+    <version>0.9.0</version>
+    <authors>Miha Markic</authors>
+    <owners>Miha Markic</owners>
+	<company>Righthand</company>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/MihaMarkic/sharp-redux/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/MihaMarkic/sharp-redux</projectUrl>
+    <description>ProtobufTools Addin for runing Google's Protobuf protoc tool.</description>
+    <tags>c# redux visualizer core wpf</tags>
+    <repository type="GitHub" url="https://github.com/MihaMarkic/sharp-redux" />
+	<dependencies>
+    <dependency id="Righthand.SharpRedux" Version ="0.9.0" />
+		<dependency id="Righthand.SharpRedux.Visualizer" Version ="0.9.0" />
+		<dependency id="Righthand.Immutable" Version="1.0.0" />
+		<dependency id="System.Collections.Immutable" Version="1.4.0" />
+		<dependency id="System.Threading.Tasks.Extensions" Version="4.4.0" />
+	</dependencies>
+  </metadata>
+  <files>
+    <file src="Sharp.Redux.Visualizer.Wpf.dll" target="lib/net46" />
+  </files>
+</package>
