@@ -1,6 +1,6 @@
 #addin "Cake.FileHelpers"
 
-var configuration = Argument("Configuration", "Release");
+var configuration = Argument("BuildConfiguration", "Release");
 var newBuildVersion = Argument<string>("BuildVersion", null);
 
 var Src = Directory("./src");
@@ -78,17 +78,23 @@ Task("Pack")
 			Configuration = configuration,
 			OutputDirectory = nupkg,
 			NoBuild = true,
-			MSBuildSettings = new DotNetCoreMSBuildSettings ().WithProperty("PackageVersion", "1.1.0-beta")
+			MSBuildSettings = new DotNetCoreMSBuildSettings ().WithProperty("PackageVersion", buildVersion)
 		});	
 	}
 	// separately pack wpf visualizer since it's not a .netstandard or .netcore project
 	NuGetPack (visualizerWpfNuSpec, new NuGetPackSettings { 
-		Version = "1.0.0-alpha1",
+		Version = buildVersion,
 		Verbosity = NuGetVerbosity.Normal,
 		OutputDirectory = nupkg,
 		BasePath = VisualizerWpf,
 		Symbols=true,
 	});	
 });
+
+Task("Default")
+	.Does(() => {
+		Information("Targets: ReadVersion, SetVersion, Restore, Build, UnitTest, Pack");
+		Information("Arguments: BuildConfiguration (default is Release), BuildVersion (required when using SetVersion");
+	});
 
 RunTarget (target);

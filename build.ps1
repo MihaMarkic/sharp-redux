@@ -42,6 +42,7 @@ https://cakebuild.net
 [CmdletBinding()]
 Param(
     [string]$Script = "build.cake",
+    [ValidateSet("ReadVersion", "SetVersion", "Restore", "Build", "UnitTest", "Pack")]
     [string]$Target,
     [string]$Configuration,
     [ValidateSet("Quiet", "Minimal", "Normal", "Verbose", "Diagnostic")]
@@ -53,7 +54,9 @@ Param(
     [switch]$Mono,
     [switch]$SkipToolPackageRestore,
     [Parameter(Position=0,Mandatory=$false,ValueFromRemainingArguments=$true)]
-    [string[]]$ScriptArgs
+    [string[]]$ScriptArgs,
+    [string]$BuildVersion,
+    [string]$BuildConfiguration
 )
 
 [Reflection.Assembly]::LoadWithPartialName("System.Security") | Out-Null
@@ -227,6 +230,8 @@ if ($ShowDescription) { $cakeArguments += "-showdescription" }
 if ($DryRun) { $cakeArguments += "-dryrun" }
 if ($Experimental) { $cakeArguments += "-experimental" }
 if ($Mono) { $cakeArguments += "-mono" }
+if ($BuildVersion) { $cakeArguments += "-buildVersion=$BuildVersion"}
+if ($BuildConfiguration) { $cakeArguments += "-buildConfiguration=$BuildConfiguration"}
 $cakeArguments += $ScriptArgs
 
 # Start Cake
