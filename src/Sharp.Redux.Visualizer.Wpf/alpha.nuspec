@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>MyPackage</id>
+        <version>1.0.0</version>
+        <authors>miha</authors>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>My package description.</description>
+		
+	<dependencies>
+		<dependency id="Righthand.SharpRedux" version ="0.9.0" />
+		
+	</dependencies>
+    </metadata>
+    <files />
+</package>

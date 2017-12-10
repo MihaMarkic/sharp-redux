@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.0
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Playground.Wpf", "Sharp.Redux.Playground.Wpf\Sharp.Redux.Playground.Wpf.csproj", "{0B921B19-AC3A-4861-A40E-3DDD31D30BE3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharp.Redux", "..\..\src\Sharp.Redux\Sharp.Redux\Sharp.Redux.csproj", "{AFCC6737-A684-4682-A7EF-22A72958350C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharp.Redux", "..\..\src\Sharp.Redux\Sharp.Redux.csproj", "{AFCC6737-A684-4682-A7EF-22A72958350C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharp.Redux.Playground.Engine", "..\Sharp.Redux.Playground.Engine\Sharp.Redux.Playground.Engine.csproj", "{ED042917-7AF2-467D-8FDF-9B580F4D8384}"
 EndProject
@@ -27,6 +27,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuspec", "Nuspec", "{DBC0FB20-886F-4B98-8DB8-0F8C6CED782F}"
 	ProjectSection(SolutionItems) = preProject
 		..\..\src\Sharp.Redux.Visualizer.Wpf\Sharp.Redux.Visualizer.Wpf.nuspec = ..\..\src\Sharp.Redux.Visualizer.Wpf\Sharp.Redux.Visualizer.Wpf.nuspec
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{0D327A35-B537-44A6-895F-BE5E65F3C5F9}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\build.cake = ..\..\build.cake
 	EndProjectSection
 EndProject
 Global

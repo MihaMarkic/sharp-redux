@@ -113,7 +113,7 @@
       <Project>{d0c5108f-d8bc-406c-900c-63356a097975}</Project>
       <Name>Sharp.Redux.Visualizer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Sharp.Redux\Sharp.Redux\Sharp.Redux.csproj">
+    <ProjectReference Include="..\Sharp.Redux\Sharp.Redux.csproj">
       <Project>{afcc6737-a684-4682-a7ef-22a72958350c}</Project>
       <Name>Sharp.Redux</Name>
     </ProjectReference>

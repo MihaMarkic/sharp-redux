@@ -18,9 +18,16 @@
     <PackageTags>c# redux</PackageTags>
     <IncludeSymbols>true</IncludeSymbols>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <Version>0.9.0</Version>
+    <Version>1.0.0-alpha1</Version>
+    <files>
+      <file src="bin\Release\netstandard1.2\Sharp.Redux.xml" target="lib/net46" />
+    </files>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup>
     <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard1.2\Sharp.Redux.xml</DocumentationFile>
+    <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
 </Project>

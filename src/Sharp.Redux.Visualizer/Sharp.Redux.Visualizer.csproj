@@ -18,15 +18,15 @@
     <PackageTags>c# redux visualizer core</PackageTags>
     <IncludeSymbols>true</IncludeSymbols>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <Version>0.9.0</Version>
+    <Version>1.0.0-alpha1</Version>
     <Dependencies>
-      <dependency id="Righthand.SharpRedux" Version ="0.9.0" />
+      <dependency id="Righthand.SharpRedux" Version="1.0.0-alpha1" />
       <Dependency id="Righthand.Immutable" Version="1.0.0" />
       <Dependency id="System.Collections.Immutable" Version="1.4.0" />
       <Dependency id="System.Threading.Tasks.Extensions" Version="4.4.0" />
     </Dependencies>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup>
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <ItemGroup>
@@ -35,6 +35,6 @@
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.4.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sharp.Redux\Sharp.Redux\Sharp.Redux.csproj" />
+    <ProjectReference Include="..\Sharp.Redux\Sharp.Redux.csproj" />
   </ItemGroup>
 </Project>

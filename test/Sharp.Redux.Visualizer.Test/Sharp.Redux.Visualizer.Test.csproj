@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Sharp.Redux.Visualizer\Sharp.Redux.Visualizer.csproj" />
-    <ProjectReference Include="..\..\src\Sharp.Redux\Sharp.Redux\Sharp.Redux.csproj" />
+    <ProjectReference Include="..\..\src\Sharp.Redux\Sharp.Redux.csproj" />
   </ItemGroup>
 
 </Project>

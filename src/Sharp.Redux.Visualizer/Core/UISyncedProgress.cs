@@ -17,6 +17,7 @@ namespace Sharp.Redux.Visualizer.Core
         public UISyncedProgress(Action<T> handler, Func<T, bool> shouldReport = null)
         {
             this.handler = handler;
+            this.shouldReport = shouldReport;
             uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
         }
         public void Report(T value)
