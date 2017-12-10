@@ -1,6 +1,7 @@
 #addin "Cake.FileHelpers"
 
 var configuration = Argument("Configuration", "Release");
+var newBuildVersion = Argument<string>("BuildVersion", null);
 
 var Src = Directory("./src");
 var SharpRedux = Src + Directory("./Sharp.Redux/");
@@ -16,6 +17,8 @@ var SharpReduxTest = Test + File("Sharp.Redux.Test/Sharp.Redux.Test.csproj");
 var SharpReduxVisualizerTest = Test + File("Sharp.Redux.Visualizer.Test/Sharp.Redux.Visualizer.Test.csproj");
 
 var solution = Src + File("Sharp.Redux.sln");
+var version = File("./version.xml");
+string buildVersion;
 
 var nupkg = Directory("./nupkg");
 
@@ -48,17 +51,34 @@ Task("UnitTest")
 		});
 	});
 
+Task("ReadVersion")
+	.Does(() => {
+		buildVersion = XmlPeek(version, "build/@version");
+		Information($"Build version is {buildVersion}");
+	});
+
+Task("SetVersion")
+	.Does(() => {
+		XmlPoke(version, "build/@version", newBuildVersion);
+	});
+
 Task("Pack")
+	.IsDependentOn("ReadVersion")
 	.IsDependentOn("UnitTest")
 	.Does (() =>
 {
+	if (string.IsNullOrEmpty(buildVersion))
+	{
+		throw new Exception($"Build version not set. Check {version} file, it should contain node <build version=\"[version]\"");
+	}
 	CreateDirectory(nupkg);
 	foreach (var project in new []{ SharpReduxCsproj, SharpVisualizerReduxCsproj })
 	{
 		DotNetCorePack (project, new DotNetCorePackSettings { 
 			Configuration = configuration,
 			OutputDirectory = nupkg,
-			NoBuild = true
+			NoBuild = true,
+			MSBuildSettings = new DotNetCoreMSBuildSettings ().WithProperty("PackageVersion", "1.1.0-beta")
 		});	
 	}
 	// separately pack wpf visualizer since it's not a .netstandard or .netcore project

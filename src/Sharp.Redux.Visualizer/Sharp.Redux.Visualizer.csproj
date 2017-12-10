@@ -11,7 +11,7 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageId>Righthand.SharpRedux.Visualizer</PackageId>
     <Authors>Miha Markic</Authors>
-    <Company>Righthand</Company>
+    <Copyright>(c) 2017 Miha Markic</Copyright>
     <Description>Visualizer for Righthand.SharpRedux.</Description>
     <PackageProjectUrl>https://github.com/MihaMarkic/sharp-redux</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/MihaMarkic/sharp-redux/blob/master/LICENSE</PackageLicenseUrl>
