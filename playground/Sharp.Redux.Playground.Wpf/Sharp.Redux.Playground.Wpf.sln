@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2003
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Playground.Wpf", "Sharp.Redux.Playground.Wpf\Sharp.Redux.Playground.Wpf.csproj", "{0B921B19-AC3A-4861-A40E-3DDD31D30BE3}"
 EndProject
@@ -32,6 +32,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{0D327A35-B537-44A6-895F-BE5E65F3C5F9}"
 	ProjectSection(SolutionItems) = preProject
 		..\..\build.cake = ..\..\build.cake
+		..\..\build.ps1 = ..\..\build.ps1
 	EndProjectSection
 EndProject
 Global
