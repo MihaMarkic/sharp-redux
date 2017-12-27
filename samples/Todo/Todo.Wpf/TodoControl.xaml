@@ -1,0 +1,97 @@
+﻿<UserControl x:Class="Todo.Wpf.TodoControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:cnv="clr-namespace:Todo.Wpf.Converters"
+             xmlns:vm="clr-namespace:Todo.Engine.ViewModels;assembly=Todo.Engine"
+             xmlns:core="clr-namespace:Todo.Engine.Core;assembly=Todo.Engine"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type=vm:MainViewModel}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.Resources>
+            <cnv:ItemsFilterToBoolConverter x:Key="AllItems" TrueValue="All" />
+            <cnv:ItemsFilterToBoolConverter x:Key="ActiveItems" TrueValue="Active" />
+            <cnv:ItemsFilterToBoolConverter x:Key="Completedtems" TrueValue="Complete" />
+            <DataTemplate x:Key="TodoItemDisplayTemplate" DataType="vm:TodoItemViewModel">
+                <Grid Margin="0,2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <CheckBox IsChecked="{Binding IsChecked}" VerticalAlignment="Center" Margin="4,0" />
+                    <TextBlock Grid.Column="1" Margin="2,0,0,0" FontSize="20" Text="{Binding Text}" VerticalAlignment="Center">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding StartItemEditCommand}" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="TodoItemEditTemplate" DataType="vm:TodoItemViewModel">
+                <TextBox Grid.Column="1" Margin="24,0,0,0" FontSize="20" Text="{Binding EditText, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center">
+                    <TextBox.InputBindings>
+                        <KeyBinding Key="Enter" Command="{Binding Path=EndItemEditCommand}" />
+                        <KeyBinding Key="Esc" Command="{Binding Path=CancelItemEditCommand}" />
+                    </TextBox.InputBindings>
+                </TextBox>
+            </DataTemplate>
+            <DataTemplate x:Key="TodoItemTemplate" DataType="vm:TodoItemViewModel">
+                <ContentControl Content="{Binding}">
+                    <ContentControl.Style>
+                        <Style TargetType="{x:Type ContentControl}">
+                            <Setter Property="ContentTemplate" Value="{StaticResource TodoItemDisplayTemplate}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                    <Setter Property="ContentTemplate" Value="{StaticResource TodoItemEditTemplate}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                </ContentControl>
+            </DataTemplate>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.ColumnSpan="3" FontSize="30" HorizontalAlignment="Center" Foreground="Coral">todos</TextBlock>
+        <CheckBox Grid.Row="1" VerticalAlignment="Center" Margin="4,0"  FontSize="20" IsChecked="{Binding AllChecked}" />
+        <TextBox Grid.Row="1" Grid.Column="1" FontSize="20" Text="{Binding NewItemText, UpdateSourceTrigger=PropertyChanged}">
+            <TextBox.InputBindings>
+                <KeyBinding Key="Enter" Command="{Binding Path=AddItemCommand}" />
+            </TextBox.InputBindings>
+        </TextBox>
+        <Button Grid.Row="1" Grid.Column="2" FontSize="20" Padding="4,0" Command="{Binding AddItemCommand}">Add</Button>
+        <ItemsControl Grid.Row="2" Grid.ColumnSpan="3" ItemsSource="{Binding Items}" ItemTemplate="{StaticResource TodoItemTemplate}" />
+        <Grid Grid.Row="3" Grid.ColumnSpan="3" TextBlock.FontSize="16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock VerticalAlignment="Center" Text="{Binding ItemsLeftInfo}" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="6,0">
+                <StackPanel.Resources>
+                    <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
+                        <Setter Property="Padding" Value="6,0" />
+                    </Style>
+                </StackPanel.Resources>
+                <RadioButton GroupName="State" IsChecked="{Binding Filter,Converter={StaticResource AllItems}, Mode=OneWay}" 
+                             Command="{Binding SetFilterCommand}" CommandParameter="{x:Static core:ItemsFilter.All}">All</RadioButton>
+                <RadioButton GroupName="State" IsChecked="{Binding Filter, Converter={StaticResource ActiveItems}, Mode=OneWay}"
+                             Command="{Binding SetFilterCommand}" CommandParameter="{x:Static core:ItemsFilter.Active}">Active</RadioButton>
+                <RadioButton GroupName="State" IsChecked="{Binding Filter, Converter={StaticResource Completedtems}, Mode=OneWay}"
+                             Command="{Binding SetFilterCommand}" CommandParameter="{x:Static core:ItemsFilter.Complete}">Completed</RadioButton>
+            </StackPanel>
+            <Button Grid.Column="2" HorizontalAlignment="Right" Command="{Binding RemoveCompletedCommand}">Clear completed</Button>
+        </Grid>
+    </Grid>
+</UserControl>

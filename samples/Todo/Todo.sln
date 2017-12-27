@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.Engine", "Todo.Engine\Todo.Engine.csproj", "{9C6A78A5-EC7B-44E5-A61F-2D2A4EE0543D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.Wpf", "Todo.Wpf\Todo.Wpf.csproj", "{0B921B19-AC3A-4861-A40E-3DDD31D30BE3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharpRedux", "SharpRedux", "{C751071F-2537-4C6F-82FB-321C2064358C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharp.Redux", "..\..\src\Sharp.Redux\Sharp.Redux.csproj", "{9FA9B707-99A7-4BB9-B684-4513E0A6205C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharp.Redux.Visualizer", "..\..\src\Sharp.Redux.Visualizer\Sharp.Redux.Visualizer.csproj", "{78ADF8D9-876D-4101-8F02-74965FEF4050}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Visualizer.Wpf", "..\..\src\Sharp.Redux.Visualizer.Wpf\Sharp.Redux.Visualizer.Wpf.csproj", "{72C58239-221F-4DA3-99E3-3DC0C27114BC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9C6A78A5-EC7B-44E5-A61F-2D2A4EE0543D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C6A78A5-EC7B-44E5-A61F-2D2A4EE0543D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C6A78A5-EC7B-44E5-A61F-2D2A4EE0543D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C6A78A5-EC7B-44E5-A61F-2D2A4EE0543D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B921B19-AC3A-4861-A40E-3DDD31D30BE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B921B19-AC3A-4861-A40E-3DDD31D30BE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B921B19-AC3A-4861-A40E-3DDD31D30BE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B921B19-AC3A-4861-A40E-3DDD31D30BE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FA9B707-99A7-4BB9-B684-4513E0A6205C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FA9B707-99A7-4BB9-B684-4513E0A6205C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FA9B707-99A7-4BB9-B684-4513E0A6205C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FA9B707-99A7-4BB9-B684-4513E0A6205C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78ADF8D9-876D-4101-8F02-74965FEF4050}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78ADF8D9-876D-4101-8F02-74965FEF4050}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78ADF8D9-876D-4101-8F02-74965FEF4050}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78ADF8D9-876D-4101-8F02-74965FEF4050}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72C58239-221F-4DA3-99E3-3DC0C27114BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72C58239-221F-4DA3-99E3-3DC0C27114BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72C58239-221F-4DA3-99E3-3DC0C27114BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72C58239-221F-4DA3-99E3-3DC0C27114BC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9FA9B707-99A7-4BB9-B684-4513E0A6205C} = {C751071F-2537-4C6F-82FB-321C2064358C}
+		{78ADF8D9-876D-4101-8F02-74965FEF4050} = {C751071F-2537-4C6F-82FB-321C2064358C}
+		{72C58239-221F-4DA3-99E3-3DC0C27114BC} = {C751071F-2537-4C6F-82FB-321C2064358C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7A8FFCF9-54A3-4668-83E0-4B1B7A651A86}
+	EndGlobalSection
+EndGlobal
