@@ -41,13 +41,13 @@ namespace Sharp.Redux
         }
         public static MergeResult MergeList<TKey, TSource, TTarget>(IEnumerable<TSource> source, IList<TTarget> target, Func<TSource, TTarget> creator)
             where TSource: IKeyedItem<TKey>
-            where TTarget : IKeyedItem<TKey>, IBoundViewModel<TSource>
+            where TTarget : IBoundViewModel<TSource>
         {
             MergeResult result = new MergeResult();
             List<TSource> current = new List<TSource>(source);
             for (int i = target.Count - 1; i >= 0; i--)
             {
-                TKey targetKey = target[i].Key;
+                TKey targetKey = target[i].State.Key;
                 if (!Find(targetKey, source, out var match))
                 {
                     target.RemoveAt(i);
