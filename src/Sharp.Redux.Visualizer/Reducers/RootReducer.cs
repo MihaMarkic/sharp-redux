@@ -40,8 +40,8 @@ namespace Sharp.Redux.Visualizer.Reducers
                         {
                             if (selectedStep.StateTreeItem is null)
                             {
-                                var hierachy = StateFormatter.ToTreeHierarchy(selectedStep.StateData);
-                                Step updated = selectedStep.Clone(stateTreeItem: hierachy);
+                                var hierarchy = StateFormatter.ToTreeHierarchy(selectedStep.StateData);
+                                Step updated = selectedStep.Clone(stateTreeItem: hierarchy);
                                 result = result.Clone(steps: state.Steps.Replace(selectedStep, updated), selectedStep: updated);
                                 selectedStep = updated;
                             }
