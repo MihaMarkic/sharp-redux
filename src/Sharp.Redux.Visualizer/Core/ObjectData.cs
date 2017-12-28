@@ -28,9 +28,13 @@ namespace Sharp.Redux.Visualizer.Core
 
     public class StateObjectData: ObjectData
     {
+        public object Key { get; }
+        public bool HasKey { get; }
         public ImmutableDictionary<string, ObjectData> Properties { get; }
-        public StateObjectData(string typeName, ImmutableDictionary<string, ObjectData> properties) : base(typeName)
+        public StateObjectData(string typeName, ImmutableDictionary<string, ObjectData> properties, bool hasKey, object key) : base(typeName)
         {
+            HasKey = hasKey;
+            Key = key;
             Properties = properties;
         }
     }

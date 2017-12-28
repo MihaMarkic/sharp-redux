@@ -1,20 +1,38 @@
-﻿using Righthand.Immutable;
-using Sharp.Redux.Visualizer.Core;
+﻿using Sharp.Redux.Visualizer.Core;
+using Sharp.Redux.Visualizer.Services.Implementation;
+using System;
+using System.Collections.Generic;
 
 namespace Sharp.Redux.Visualizer.Models
 {
-    public class DictionaryObjectTreeItem : NodeObjectTreeItem
+    public class DictionaryObjectTreeItem : ObjectTreeItem, INodeObjectTreeItem
     {
-        public DictionaryObjectTreeItem(ObjectTreeItem[] children, string propertyName, ObjectData source, bool isRoot) : base(children, propertyName, source, isRoot)
+        public ObjectTreeItem[] Children { get; }
+        public DictionaryObjectTreeItem(ObjectTreeItem parent, string propertyName, DictionaryData source, int depth) : base(parent, propertyName, source)
         {
+            var builder = new List<ObjectTreeItem>(source.Dictionary.Count);
+            foreach (var item in source.Dictionary)
+            {
+                builder.Add(StateFormatter.ToTreeHierarchy(this, item.Value, depth + 1, Convert.ToString(item.Key)));
+            }
+            Children = builder.ToArray();
         }
-
-        public DictionaryObjectTreeItem Clone(Param<ObjectTreeItem[]>? children = null, Param<string>? propertyName = null, Param<ObjectData>? source = null, Param<bool>? isRoot = null)
+        public override string ValueHeader => "";
+        public override string DescriptionHeader
         {
-            return new DictionaryObjectTreeItem(children.HasValue ? children.Value.Value : Children,
-propertyName.HasValue ? propertyName.Value.Value : PropertyName,
-source.HasValue ? source.Value.Value : Source,
-isRoot.HasValue ? isRoot.Value.Value : IsRoot);
+            get
+            {
+                string result;
+                if (!string.IsNullOrEmpty(PropertyName))
+                {
+                    result = PropertyName;
+                }
+                else
+                {
+                    result = null;
+                }
+                return result;
+            }
         }
     }
 }

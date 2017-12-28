@@ -50,9 +50,15 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
                 return new DifferenceItemContainer(new[] { removed, added }, current, next, DiffType.Modified);
             }
             // from this point both states are same type
-            else if (current is StateObjectTreeItem || current is DictionaryObjectTreeItem)
+            else if (current is StateObjectTreeItem currentState)
             {
-                return FromNamedProperties((NodeObjectTreeItem)current, (NodeObjectTreeItem)next);
+                var nextState = (StateObjectTreeItem)next;
+                return FromNamedProperties(currentState, nextState);
+            }
+            else if (current is DictionaryObjectTreeItem currentDictionary)
+            {
+                var nextDictionary = (DictionaryObjectTreeItem)next;
+                return FromNamedProperties(currentDictionary, nextDictionary);
             }
             else if (current is ListObjectTreeItem)
             {
@@ -90,6 +96,14 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
             {
                 return false;
             }
+            // state objects might implement keys
+            var leftStateObject = left as StateObjectTreeItem;
+            var rightStateObject = right as StateObjectTreeItem;
+            if (!(leftStateObject is null) && !(rightStateObject is null))
+            {
+                return Equals(leftStateObject.Key, rightStateObject.Key);
+            }
+            // just check for equality
             return Equals(left, right);
         }
 
@@ -114,9 +128,10 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
                 }
                 else
                 {
-                    if (!ReferenceEquals(item, nextItem))
+                    DifferenceItem differenceTree = CreateDifferenceTree(item, nextItem);
+                    if (differenceTree != null && differenceTree.DiffType != DiffType.None)
                     {
-                        modifications.Add(CreateDifferenceTree(item, nextItem));
+                        modifications.Add(differenceTree);
                     }
                     nextChildren.Remove(nextItem);
                 }
@@ -132,7 +147,8 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
             return null;
         }
 
-        public static DifferenceItemContainer FromNamedProperties(NodeObjectTreeItem current, NodeObjectTreeItem next)
+        public static DifferenceItemContainer FromNamedProperties<T>(T current, T next)
+            where T: ObjectTreeItem, INodeObjectTreeItem
         {
             List<DifferenceItem> modifications = new List<DifferenceItem>();
             var nextChildren = next.Children.ToDictionary(c => c.PropertyName, c => c);
@@ -157,18 +173,17 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
             }
             if (modifications.Count > 0)
             {
-                return new DifferenceItemContainer(modifications.ToArray(), current, next, DiffType.None);
+                return new DifferenceItemContainer(modifications.ToArray(), current, next, DiffType.Modified);
             }
             return null;
         }
 
         public static DifferenceItem FromBranchModified(ObjectTreeItem current, ObjectTreeItem next)
         {
-            if (next is NodeObjectTreeItem node)
+            if (next is INodeObjectTreeItem node)
             {
                 var children = node.Children.Select(n => FromBranchAdded(n)).ToArray();
                 return new DifferenceItemContainer(children, current, next, DiffType.None);
-                //return 
             }
             else
             {
@@ -177,7 +192,7 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
         }
         public static DifferenceItem FromBranchAdded(ObjectTreeItem source)
         {
-            if (source is NodeObjectTreeItem node)
+            if (source is INodeObjectTreeItem node)
             {
                 var children = node.Children.Select(n => FromBranchAdded(n)).ToArray();
                 return new DifferenceItemContainer(children, null, source, DiffType.Added);
@@ -189,7 +204,7 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
         }
         public static DifferenceItem FromBranchRemoved(ObjectTreeItem source)
         {
-            if (source is NodeObjectTreeItem node)
+            if (source is INodeObjectTreeItem node)
             {
                 var children = node.Children.Select(n => FromBranchRemoved(n)).ToArray();
                 return new DifferenceItemContainer(children, source, null, DiffType.Removed);

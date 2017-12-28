@@ -1,7 +1,6 @@
 ﻿using Sharp.Redux.Visualizer.Core;
 using Sharp.Redux.Visualizer.Models;
 using System;
-using System.Collections.Generic;
 
 namespace Sharp.Redux.Visualizer.Services.Implementation
 {
@@ -15,9 +14,9 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
         public const int MaxDepth = 1000;
         public static ObjectTreeItem ToTreeHierarchy(ObjectData source, string propertyName = DefaultPropertyName)
         {
-            return ToTreeHierarchy(source, 0, propertyName);
+            return ToTreeHierarchy(null, source, 0, propertyName);
         }
-        public static ObjectTreeItem ToTreeHierarchy(ObjectData source, int depth, string propertyName)
+        public static ObjectTreeItem ToTreeHierarchy(ObjectTreeItem parent, ObjectData source, int depth, string propertyName)
         {
             if (depth > MaxDepth)
             {
@@ -26,38 +25,28 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
             switch (source)
             {
                 case StateObjectData state:
-                    return FormatState(depth, propertyName, state);
+                    return FormatState(parent, depth, propertyName, state);
                 case ListData list:
-                    return FormatList(depth, propertyName, list);
+                    return FormatList(parent, depth, propertyName, list);
                 case DictionaryData dictionary:
-                    return FormatDictionary(depth, propertyName, dictionary);
+                    return FormatDictionary(parent, depth, propertyName, dictionary);
                 case PrimitiveData primitive:
-                    return FormatPrimitive(depth, propertyName, primitive);
+                    return FormatPrimitive(parent, depth, propertyName, primitive);
                 default:
                     throw new Exception($"Unknown ObjectData {source.GetType()}");
             }
         }
-        public static PrimitiveObjectTreeItem FormatPrimitive(int depth, string propertyName, PrimitiveData source)
+        public static PrimitiveObjectTreeItem FormatPrimitive(ObjectTreeItem parent, int depth, string propertyName, PrimitiveData source)
         {
-           return new PrimitiveObjectTreeItem(source.Value, propertyName, source, isRoot: depth==0);
+           return new PrimitiveObjectTreeItem(source.Value, parent, propertyName, source);
         }
-        public static ListObjectTreeItem FormatList(int depth, string propertyName, ListData source)
+        public static ListObjectTreeItem FormatList(ObjectTreeItem parent, int depth, string propertyName, ListData source)
         {
-            var builder = new List<ObjectTreeItem>(source.List.Length);
-            foreach (var item in source.List)
-            {
-                builder.Add(ToTreeHierarchy(item, depth+1, null));
-            }
-            return new ListObjectTreeItem(builder.ToArray(), propertyName, source, isRoot: depth == 0);
+            return new ListObjectTreeItem(parent, propertyName, source, depth);
         }
-        public static DictionaryObjectTreeItem FormatDictionary(int depth, string propertyName, DictionaryData source)
+        public static DictionaryObjectTreeItem FormatDictionary(ObjectTreeItem parent, int depth, string propertyName, DictionaryData source)
         {
-            var builder = new List<ObjectTreeItem>(source.Dictionary.Count);
-            foreach (var item in source.Dictionary)
-            {
-                builder.Add(ToTreeHierarchy(item.Value, depth+1, Convert.ToString(item.Key)));
-            }
-            return new DictionaryObjectTreeItem(builder.ToArray(), propertyName, source, isRoot: depth == 0);
+            return new DictionaryObjectTreeItem(parent, propertyName, source, depth);
         }
         /// <summary>
         /// Creates <see cref=" StateObjectTreeItem"/>. Besides properties it could implement either a <see cref="IDictionary"/> or <see cref="IEnumerable"/>
@@ -67,14 +56,9 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
         /// <param name="propertyName"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static StateObjectTreeItem FormatState(int depth, string propertyName, StateObjectData source)
+        public static StateObjectTreeItem FormatState(ObjectTreeItem parent, int depth, string propertyName, StateObjectData source)
         {
-            var properties = new List<ObjectTreeItem>(source.Properties.Count);
-            foreach (var item in source.Properties)
-            {
-                properties.Add(ToTreeHierarchy(item.Value, depth+1, item.Key));
-            }
-            return new StateObjectTreeItem(properties.ToArray(), propertyName, source, isRoot: depth == 0);
+            return new StateObjectTreeItem(parent, propertyName, source, depth);
         }
 
         public static string GetActionName(ReduxAction action)

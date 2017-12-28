@@ -131,8 +131,10 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
         {
             return CreateObjectData(source, context, typeMetadata, typeName,
                 (src, ctx, tm, tn) => new StateObjectData(
-                    tn, 
-                    properties: CollectProperties(tm.Properties, src, ctx.IncreaseDepth())
+                    tn,
+                    properties: CollectProperties(tm.Properties, src, ctx.IncreaseDepth()),
+                    hasKey: tm.HasKey,
+                    key: tm.HasKey ? tm.KeyProperty.GetValue(src): null
                 )
             );
         }
@@ -183,28 +185,39 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
                 return result;
             }
             TypeInfo typeInfo = type.GetTypeInfo();
+            bool isKeyedItem = typeInfo.GetInterfaces().Any(x =>
+              x.GetTypeInfo().IsGenericType &&
+              x.GetGenericTypeDefinition() == typeof(IKeyedItem<>));
             bool isState = source is ReduxAction || typeInfo.CustomAttributes.Any(cad => cad.AttributeType == typeof(ReduxStateAttribute));
             if (isState)
             {
                 var properties = typeInfo.GetProperties();
-                result = new TypeMetadata(true, false, properties);
+                var keyProperty = isKeyedItem ? GetKeyProperty(properties) : null;
+                result = new TypeMetadata(true, false, properties, keyProperty);
             }
             else
             {
                 bool isPrimitive = IsPrimitiveType(typeInfo, type);
                 PropertyInfo[] properties;
+                PropertyInfo keyProperty;
                 if (isPrimitive)
                 {
                     properties = null;
+                    keyProperty = null;
                 }
                 else
                 {
                     properties = typeInfo.GetProperties();
+                    keyProperty = isKeyedItem ? GetKeyProperty(properties) : null;
                 }
-                result = new TypeMetadata(false, isPrimitive, properties);
+                result = new TypeMetadata(false, isPrimitive, properties, keyProperty);
             }
             metadata.TryAdd(type, result);
             return result;
+        }
+        public static PropertyInfo GetKeyProperty(PropertyInfo[] properties)
+        {
+            return properties.Single(p => p.Name == "Key");
         }
 
         public static bool IsPrimitiveType(TypeInfo typeInfo, Type type) =>

@@ -1,19 +1,64 @@
-﻿using Righthand.Immutable;
+﻿using Sharp.Redux.Visualizer.Core;
+using Sharp.Redux.Visualizer.Services.Implementation;
+using System;
+using System.Collections.Generic;
 
 namespace Sharp.Redux.Visualizer.Models
 {
-    public class StateObjectTreeItem : NodeObjectTreeItem
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>Don't auto recreate immutable type.</remarks>
+    public class StateObjectTreeItem : ObjectTreeItem, INodeObjectTreeItem
     {
-        public StateObjectTreeItem(Sharp.Redux.Visualizer.Models.ObjectTreeItem[] children, string propertyName, Sharp.Redux.Visualizer.Core.ObjectData source, bool isRoot) : base(children, propertyName, source, isRoot)
+        public ObjectTreeItem[] Children { get; }
+        public StateObjectTreeItem(ObjectTreeItem parent, string propertyName, StateObjectData source, int depth) : 
+            base(parent, propertyName, source)
         {
+            var properties = new List<ObjectTreeItem>(source.Properties.Count);
+            foreach (var item in source.Properties)
+            {
+                properties.Add(StateFormatter.ToTreeHierarchy(this, item.Value, depth + 1, item.Key));
+            }
+            Children = properties.ToArray();
         }
-
-        public StateObjectTreeItem Clone(Param<Sharp.Redux.Visualizer.Models.ObjectTreeItem[]>? children = null, Param<string>? propertyName = null, Param<Sharp.Redux.Visualizer.Core.ObjectData>? source = null, Param<bool>? isRoot = null)
+        
+        public new StateObjectData Source => (StateObjectData)base.Source;
+        public object Key => Source.Key;
+        public bool HasKey => Source.HasKey;
+        public override string ValueHeader => "";
+        public override string DescriptionHeader
         {
-            return new StateObjectTreeItem(children.HasValue ? children.Value.Value : Children,
-propertyName.HasValue ? propertyName.Value.Value : PropertyName,
-source.HasValue ? source.Value.Value : Source,
-isRoot.HasValue ? isRoot.Value.Value : IsRoot);
+            get
+            {
+                string result;
+                if (!string.IsNullOrEmpty(PropertyName))
+                {
+                    result = PropertyName;
+                }
+                else
+                {
+                    result = Identifier;
+                }
+                return result;
+            }
         }
+        /// <summary>
+        /// StateObjectTreeItem is the only type that can have a key as an identifier.
+        /// However <see cref="IdentifierType.Index"/> has precedence over key.
+        /// </summary>
+        public override IdentifierType IdentifierType
+        {
+            get
+            {
+                var id = base.IdentifierType;
+                if (HasKey)
+                {
+                    id |= IdentifierType.Key;
+                }
+                return id;
+            }
+        }
+        public override string KeyIdentifier => Convert.ToString(Key);
     }
 }

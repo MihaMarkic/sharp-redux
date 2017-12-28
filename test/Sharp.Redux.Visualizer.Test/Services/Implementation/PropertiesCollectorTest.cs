@@ -130,8 +130,23 @@ namespace Sharp.Redux.Visualizer.Test.Services.Implementation
                 var actual = PropertiesCollector.Collect("yolo");
                 Assert.That(actual, Is.TypeOf<PrimitiveData>());
             }
-        }
+            [Test]
+            public void WhenKeyItem_HasKey()
+            {
+                var actual = (StateObjectData)PropertiesCollector.Collect(new WithKey(1, "One"));
+                
+                Assert.That(actual.HasKey, Is.True);
+                Assert.That(actual.Key, Is.EqualTo(1));
+            }
+            [Test]
+            public void WhenNotKeyItem_HasKeyIsFalse()
+            {
+                var actual = (StateObjectData)PropertiesCollector.Collect(new State());
 
+                Assert.That(actual.HasKey, Is.False);
+                Assert.That(actual.Key, Is.Null);
+            }
+        }
         [ReduxState]
         public class State
         {
@@ -152,6 +167,16 @@ namespace Sharp.Redux.Visualizer.Test.Services.Implementation
         public class NotState
         {
             public int Number { get; set; }
+        }
+        public class WithKey : IKeyedItem<int>
+        {
+            public int Key { get; }
+            public string Text { get; }
+            public WithKey(int key, string text)
+            {
+                Key = key;
+                Text = text;
+            }
         }
     }
 }

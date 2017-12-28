@@ -1,5 +1,4 @@
-﻿using Righthand.Immutable;
-using Sharp.Redux.Visualizer.Core;
+﻿using Sharp.Redux.Visualizer.Core;
 using System.Diagnostics;
 
 namespace Sharp.Redux.Visualizer.Models
@@ -18,11 +17,20 @@ namespace Sharp.Redux.Visualizer.Models
             DiffType = diffType;
         }
 
-        public DifferenceItem Clone(Param<ObjectTreeItem>? current = null, Param<ObjectTreeItem>? next = null, Param<DiffType>? diffType = null)
+        public string Id
         {
-            return new DifferenceItem(current.HasValue ? current.Value.Value : Current,
-next.HasValue ? next.Value.Value : Next,
-diffType.HasValue ? diffType.Value.Value : DiffType);
+            get
+            {
+                switch (DiffType)
+                {
+                    case DiffType.Removed:
+                        return Current.ValueHeader;
+                    case DiffType.Modified:
+                        return $"{Current?.ValueHeader} -> {Next?.ValueHeader}";
+                    default:
+                        return Next.ValueHeader;
+                }
+            }
         }
 
         public string ValueHeader
@@ -34,7 +42,14 @@ diffType.HasValue ? diffType.Value.Value : DiffType);
                     case DiffType.Removed:
                         return Current.ValueHeader;
                     case DiffType.Modified:
-                        return $"{Current?.ValueHeader} -> {Next?.ValueHeader}";
+                        if (Current is PrimitiveObjectTreeItem || Next is PrimitiveObjectTreeItem)
+                        {
+                            return $"{Current?.ValueHeader} -> {Next?.ValueHeader}";
+                        }
+                        else
+                        {
+                            return "";
+                        }
                     default:
                         return Next.ValueHeader;
                 }

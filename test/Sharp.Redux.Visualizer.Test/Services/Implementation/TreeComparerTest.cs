@@ -20,9 +20,9 @@ namespace Sharp.Redux.Visualizer.Test.Services.Implementation
             [Test]
             public void WhenSimpleState_IsEqual_ReturnsNull()
             {
-                var objectData = new PrimitiveData("tn", 5);
-                var current = new StateObjectTreeItem(new ObjectTreeItem[0], "pn", objectData, isRoot: true);
-                var next = new StateObjectTreeItem(new ObjectTreeItem[0], "pn", objectData, isRoot: true);
+                var objectData = new StateObjectData("tn", ImmutableDictionary<string, ObjectData>.Empty, hasKey: false, key: null);
+                var current = new StateObjectTreeItem(null, "pn", objectData, depth: 0);
+                var next = new StateObjectTreeItem(null, "pn", objectData, depth: 0);
 
                 var actual = TreeComparer.CreateDifferenceTree(current, next);
 
@@ -77,7 +77,7 @@ namespace Sharp.Redux.Visualizer.Test.Services.Implementation
 
                 var actual = (DifferenceItemContainer)TreeComparer.CreateDifferenceTree(ToTreeItem(current), ToTreeItem(next));
 
-                Assert.That(actual.DiffType, Is.EqualTo(DiffType.None));
+                Assert.That(actual.DiffType, Is.EqualTo(DiffType.Modified));
                 var first = (DifferenceItemContainer)actual.Children[0];
                 Assert.That(first.Children.Length, Is.EqualTo(1));
                 var alpha = first.Children[0];
@@ -117,8 +117,8 @@ namespace Sharp.Redux.Visualizer.Test.Services.Implementation
             public void WhenSameSourceSamePropertySameValue_ReturnsNull()
             {
                 var source = new PrimitiveData("tn", 1);
-                var current = new PrimitiveObjectTreeItem(source.Value, "pn", source, isRoot: false);
-                var next = new PrimitiveObjectTreeItem(source.Value, "pn", source, isRoot: false);
+                var current = new PrimitiveObjectTreeItem(source.Value, null, "pn", source);
+                var next = new PrimitiveObjectTreeItem(source.Value, null, "pn", source);
 
                 var actual = TreeComparer.FromPrimitive(current, next);
 
@@ -129,8 +129,8 @@ namespace Sharp.Redux.Visualizer.Test.Services.Implementation
             {
                 var currentSource = new PrimitiveData("tn", 1);
                 var nextSource = new PrimitiveData("tn", 1);
-                var current = new PrimitiveObjectTreeItem(currentSource.Value, "pn", currentSource, isRoot: false);
-                var next = new PrimitiveObjectTreeItem(nextSource.Value, "pn", nextSource, isRoot: false);
+                var current = new PrimitiveObjectTreeItem(currentSource.Value, null, "pn", currentSource);
+                var next = new PrimitiveObjectTreeItem(nextSource.Value, null, "pn", nextSource);
 
                 var actual = TreeComparer.FromPrimitive(current, next);
 
@@ -141,8 +141,8 @@ namespace Sharp.Redux.Visualizer.Test.Services.Implementation
             {
                 var currentSource = new PrimitiveData("tn", 1);
                 var nextSource = new PrimitiveData("tn", 2);
-                var current = new PrimitiveObjectTreeItem(currentSource.Value, "pn", currentSource, isRoot: false);
-                var next = new PrimitiveObjectTreeItem(nextSource.Value, "pn", nextSource, isRoot: false);
+                var current = new PrimitiveObjectTreeItem(currentSource.Value, null, "pn", currentSource);
+                var next = new PrimitiveObjectTreeItem(nextSource.Value, null, "pn", nextSource);
 
                 var actual = TreeComparer.FromPrimitive(current, next);
 
@@ -153,8 +153,8 @@ namespace Sharp.Redux.Visualizer.Test.Services.Implementation
             {
                 var currentSource = new PrimitiveData("tn", 1);
                 var nextSource = new PrimitiveData("tn", 2);
-                var current = new PrimitiveObjectTreeItem(currentSource.Value, "pn", currentSource, isRoot: false);
-                var next = new PrimitiveObjectTreeItem(nextSource.Value, "pn", nextSource, isRoot: false);
+                var current = new PrimitiveObjectTreeItem(currentSource.Value, null, "pn", currentSource);
+                var next = new PrimitiveObjectTreeItem(nextSource.Value, null, "pn", nextSource);
 
                 var actual = TreeComparer.FromPrimitive(current, next);
 
@@ -166,8 +166,8 @@ namespace Sharp.Redux.Visualizer.Test.Services.Implementation
             {
                 var currentSource = new PrimitiveData("tn", 1);
                 var nextSource = new PrimitiveData("tn", 2);
-                var current = new PrimitiveObjectTreeItem(currentSource.Value, "pn", currentSource, isRoot: false);
-                var next = new PrimitiveObjectTreeItem(nextSource.Value, "pn", nextSource, isRoot: false);
+                var current = new PrimitiveObjectTreeItem(currentSource.Value, null, "pn", currentSource);
+                var next = new PrimitiveObjectTreeItem(nextSource.Value, null, "pn", nextSource);
 
                 var actual = TreeComparer.FromPrimitive(current, next);
 
@@ -228,6 +228,19 @@ namespace Sharp.Redux.Visualizer.Test.Services.Implementation
                 Assert.That(actual.Children[0].Current, Is.SameAs(current.Children[0]));
                 Assert.That(actual.Children[0].Next, Is.Null);
                 Assert.That(actual.Children[0].DiffType, Is.EqualTo(DiffType.Removed));
+            }
+            [Test]
+            public void WhenKeyItemChanges_MarkItAsModified()
+            {
+                var first = CreateStateObjectTreeItem(CreateNamedPrimitiveTreeItem("Text", "a"));
+                var modified = CreateStateObjectTreeItem(CreateNamedPrimitiveTreeItem("Text", "b"));
+                var current = CreateListTreeItem(first);
+                var next = CreateListTreeItem(modified);
+
+                var actual = TreeComparer.FromList(current, next);
+
+                Assert.That(actual.Children.Length, Is.EqualTo(1));
+                Assert.That(actual.DiffType, Is.EqualTo(DiffType.Modified));
             }
         }
 
@@ -347,19 +360,30 @@ namespace Sharp.Redux.Visualizer.Test.Services.Implementation
         public PrimitiveObjectTreeItem CreatePrimitiveTreeItem(object value)
         {
             var data = new PrimitiveData("tn", value);
-            return new PrimitiveObjectTreeItem(data.Value, $"pn{value}", data, isRoot: false);
+            return new PrimitiveObjectTreeItem(data.Value, null, $"pn{value}", data);
+        }
+        public PrimitiveObjectTreeItem CreateNamedPrimitiveTreeItem(string propertyName, object value)
+        {
+            var data = new PrimitiveData("tn", value);
+            return new PrimitiveObjectTreeItem(data.Value, null, propertyName, data);
         }
 
-        public ListObjectTreeItem CreateListTreeItem(params PrimitiveObjectTreeItem[] children)
+        public ListObjectTreeItem CreateListTreeItem(params ObjectTreeItem[] children)
         {
             var data = new ListData("tn", children.Select(c => c.Source).ToArray());
-            return new ListObjectTreeItem(children, "pn", data, isRoot: false);
+            return new ListObjectTreeItem(null, "pn", data, depth: 0);
         }
 
         public StateObjectTreeItem CreateStateObjectTreeItem(params PrimitiveObjectTreeItem[] children)
         {
-            var data = new StateObjectData("tn", children.ToImmutableDictionary(c => c.PropertyName, c => c.Source));
-            return new StateObjectTreeItem(children, "sn", data, isRoot: false);
+            var data = new StateObjectData("tn", children.ToImmutableDictionary(c => c.PropertyName, c => c.Source), hasKey: false, key: null);
+            return new StateObjectTreeItem(null, "sn", data, depth: 0);
+        }
+
+        public StateObjectTreeItem CreateKeyedStateObjectTreeItem(object key, params PrimitiveObjectTreeItem[] children)
+        {
+            var data = new StateObjectData("tn", children.ToImmutableDictionary(c => c.PropertyName, c => c.Source), hasKey: true, key: key);
+            return new StateObjectTreeItem(null, "sn", data, depth: 0);
         }
     }
 

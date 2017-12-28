@@ -1,5 +1,4 @@
-﻿using Righthand.Immutable;
-using Sharp.Redux.Visualizer.Core;
+﻿using Sharp.Redux.Visualizer.Core;
 using System;
 
 namespace Sharp.Redux.Visualizer.Models
@@ -8,17 +7,9 @@ namespace Sharp.Redux.Visualizer.Models
     {
         public object Value { get; }
 
-        public PrimitiveObjectTreeItem(object value, string propertyName, ObjectData source, bool isRoot) : base(propertyName, source, isRoot)
+        public PrimitiveObjectTreeItem(object value, ObjectTreeItem parent, string propertyName, ObjectData source) : base(parent, propertyName, source)
         {
             Value = value;
-        }
-
-        public PrimitiveObjectTreeItem Clone(Param<object>? value = null, Param<string>? propertyName = null, Param<ObjectData>? source = null, Param<bool>? isRoot = null)
-        {
-            return new PrimitiveObjectTreeItem(value.HasValue ? value.Value.Value : Value,
-propertyName.HasValue ? propertyName.Value.Value : PropertyName,
-source.HasValue ? source.Value.Value : Source,
-isRoot.HasValue ? isRoot.Value.Value : IsRoot);
         }
         /// <summary>
         /// Not used, but exists to make Wpf binding happy.

@@ -1,20 +1,38 @@
-﻿using Righthand.Immutable;
-using Sharp.Redux.Visualizer.Core;
+﻿using Sharp.Redux.Visualizer.Core;
+using Sharp.Redux.Visualizer.Services.Implementation;
+using System.Collections.Generic;
 
 namespace Sharp.Redux.Visualizer.Models
 {
-    public class ListObjectTreeItem : NodeObjectTreeItem
+    public class ListObjectTreeItem : ObjectTreeItem, INodeObjectTreeItem
     {
-        public ListObjectTreeItem(ObjectTreeItem[] children, string propertyName, ObjectData source, bool isRoot) : base(children, propertyName, source, isRoot)
+        public ObjectTreeItem[] Children { get; }
+        public ListObjectTreeItem(ObjectTreeItem parent, string propertyName, ListData source, int depth) : 
+            base(parent, propertyName, source)
         {
+            var builder = new List<ObjectTreeItem>(source.List.Length);
+            foreach (var item in source.List)
+            {
+                builder.Add(StateFormatter.ToTreeHierarchy(this, item, depth + 1, null));
+            }
+            Children = builder.ToArray();
         }
-
-        public ListObjectTreeItem Clone(Param<ObjectTreeItem[]>? children = null, Param<string>? propertyName = null, Param<ObjectData>? source = null, Param<bool>? isRoot = null)
+        public override string ValueHeader => "";
+        public override string DescriptionHeader
         {
-            return new ListObjectTreeItem(children.HasValue ? children.Value.Value : Children,
-propertyName.HasValue ? propertyName.Value.Value : PropertyName,
-source.HasValue ? source.Value.Value : Source,
-isRoot.HasValue ? isRoot.Value.Value : IsRoot);
+            get
+            {
+                string result;
+                if (!string.IsNullOrEmpty(PropertyName))
+                {
+                    result = PropertyName;
+                }
+                else
+                {
+                    result = null;
+                }
+                return result;
+            }
         }
     }
 }
