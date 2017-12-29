@@ -1,8 +1,8 @@
 # sharp-redux
 
-[![NuGet](https://img.shields.io/nuget/v/Righthand.SharpRedux.svg)](https://www.nuget.org/packages/Righthand.SharpRedux)
-[![NuGet](https://img.shields.io/nuget/v/Righthand.SharpRedux.Visualizer.svg)](https://www.nuget.org/packages/Righthand.SharpRedux.Visualizer)
-[![NuGet](https://img.shields.io/nuget/v/Righthand.SharpRedux.Visualizer.Wpf.svg)](https://www.nuget.org/packages/Righthand.SharpRedux.Visualizer.Wpf)
+|                SharpRedux                |                Visualizer                |              Visualizer.Wpf              |
+| :--------------------------------------: | :--------------------------------------: | :--------------------------------------: |
+| [![NuGet](https://img.shields.io/nuget/v/Righthand.SharpRedux.svg)](https://www.nuget.org/packages/Righthand.SharpRedux) | [![NuGet](https://img.shields.io/nuget/v/Righthand.SharpRedux.Visualizer.svg)](https://www.nuget.org/packages/Righthand.SharpRedux.Visualizer) | [![NuGet](https://img.shields.io/nuget/v/Righthand.SharpRedux.Visualizer.Wpf.svg)](https://www.nuget.org/packages/Righthand.SharpRedux.Visualizer.Wpf) |
 
 Experimental .net implementation of Redux philosophy. Initial effort is concentrated on MVVM/WPF.  
 
