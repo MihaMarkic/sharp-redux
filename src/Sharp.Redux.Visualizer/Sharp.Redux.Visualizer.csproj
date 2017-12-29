@@ -20,8 +20,8 @@
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Version>1.0.0-alpha1</Version>
     <Dependencies>
-      <dependency id="Righthand.SharpRedux" Version="1.0.0" />
-      <Dependency id="Righthand.Immutable" Version="1.0.0" />
+      <dependency id="Righthand.SharpRedux" Version="1.0.1" />
+      <Dependency id="Righthand.Immutable" Version="1.0.1" />
       <Dependency id="System.Collections.Immutable" Version="1.4.0" />
       <Dependency id="System.Threading.Tasks.Extensions" Version="4.4.0" />
     </Dependencies>
