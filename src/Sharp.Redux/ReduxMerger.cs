@@ -3,8 +3,21 @@ using System.Collections.Generic;
 
 namespace Sharp.Redux
 {
+    /// <summary>
+    /// Represents helper methods to synchronize target types with redux state. Common target types are view models.
+    /// </summary>
     public static class ReduxMerger
     {
+        /// <summary>
+        /// Merges a dictionary.
+        /// </summary>
+        /// <typeparam name="TKey">Type of key.</typeparam>
+        /// <typeparam name="TValue">Type of dictionary value.</typeparam>
+        /// <typeparam name="TTargetValue">Type of target value.</typeparam>
+        /// <param name="source">Redux state type.</param>
+        /// <param name="target">Target type linked to <paramref name="source"/>.</param>
+        /// <param name="creator">Creator function that creates new instances of target types.</param>
+        /// <returns>Merge result.</returns>
         public static MergeResult MergeDictionary<TKey, TValue, TTargetValue>(
             IDictionary<TKey, TValue> source, 
             IList<KeyValuePair<TKey, TTargetValue>> target, 
@@ -86,11 +99,22 @@ namespace Sharp.Redux
             return false;
         }
     }
-
+    /// <summary>
+    /// Represents merge result.
+    /// </summary>
     public struct MergeResult
     {
+        /// <summary>
+        /// Number of target instances added.
+        /// </summary>
         public int Added { get; set; }
+        /// <summary>
+        /// Number of target instances removed.
+        /// </summary>
         public int Removed { get; set; }
+        /// <summary>
+        /// Number of target instances modified.
+        /// </summary>
         public int Updated { get; set; }
     }
 }
