@@ -52,6 +52,16 @@ namespace Sharp.Redux
             }
             return result;
         }
+        /// <summary>
+        /// Merges a list.
+        /// </summary>
+        /// <typeparam name="TKey">Type of key.</typeparam>
+        /// <typeparam name="TSource">State type.</typeparam>
+        /// <typeparam name="TTarget">Target type.</typeparam>
+        /// <param name="source">Redux state type.</param>
+        /// <param name="target">Target type linked to <paramref name="source"/>.</param>
+        /// <param name="creator">Creator function that creates new instances of target types.</param>
+        /// <returns>Merge result.</returns>
         public static MergeResult MergeList<TKey, TSource, TTarget>(IEnumerable<TSource> source, IList<TTarget> target, Func<TSource, TTarget> creator)
             where TSource: IKeyedItem<TKey>
             where TTarget : IBoundViewModel<TSource>
@@ -61,17 +71,18 @@ namespace Sharp.Redux
             for (int i = target.Count - 1; i >= 0; i--)
             {
                 TKey targetKey = target[i].State.Key;
-                if (!Find(targetKey, source, out var match))
+                var findResult = Find(targetKey, source);
+                if (!findResult.Found)
                 {
                     target.RemoveAt(i);
                     result.Removed++;
                 }
                 else
                 {
-                    current.Remove(match);
-                    if (!ReferenceEquals(match, target[i].State))
+                    current.Remove(findResult.Match);
+                    if (!ReferenceEquals(findResult.Match, target[i].State))
                     {
-                        target[i].Update(match);
+                        target[i].Update(findResult.Match);
                         result.Updated++;
                     }
                 }
@@ -83,20 +94,45 @@ namespace Sharp.Redux
             }
             return result;
         }
-
-        public static bool Find<TKey, TSource>(TKey key, IEnumerable<TSource> items, out TSource match)
+        /// <summary>
+        /// Finds target instance with the given key.
+        /// </summary>
+        /// <typeparam name="TKey">Type of key.</typeparam>
+        /// <typeparam name="TSource">State type.</typeparam>
+        /// <param name="key">Key to search for.</param>
+        /// <param name="items">Items to search for given key.</param>
+        /// <returns>An instance of <see cref="FindResult{T}"/>.</returns>
+        public static FindResult<TSource> Find<TKey, TSource>(TKey key, IEnumerable<TSource> items)
             where TSource: IKeyedItem<TKey>
         {
             foreach (var item in items)
             {
                 if (Equals(item.Key, key))
                 {
-                    match = item;
-                    return true;
+                    return new FindResult<TSource>(true, item);
                 }
             }
-            match = default(TSource);
-            return false;
+            return new FindResult<TSource>(false, default(TSource));
+        }
+        /// <summary>
+        /// Represents Find results.
+        /// </summary>
+        /// <typeparam name="T">Type of matched item.</typeparam>
+        public struct FindResult<T>
+        {
+            /// <summary>
+            /// Gets whether the find was successful.
+            /// </summary>
+            public  bool Found { get; }
+            /// <summary>
+            /// Gets the found item when result was successful. Otherwise the default value for the type.
+            /// </summary>
+            public T Match { get; }
+            public FindResult(bool found, T match)
+            {
+                Found = found;
+                Match = match;
+            }
         }
     }
     /// <summary>

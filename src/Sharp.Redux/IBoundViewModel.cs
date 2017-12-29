@@ -7,7 +7,14 @@
     /// <typeparam name="TState">Type of the state.</typeparam>
     public interface IBoundViewModel<TState>
     {
+        /// <summary>
+        /// Linked state.
+        /// </summary>
         TState State { get; }
+        /// <summary>
+        /// Updates target type given the new state.
+        /// </summary>
+        /// <param name="state"></param>
         void Update(TState state);
     }
 }
