@@ -94,7 +94,7 @@ Task("Pack")
 Task("Default")
 	.Does(() => {
 		Information("Targets: ReadVersion, SetVersion, Restore, Build, UnitTest, Pack");
-		Information("Arguments: BuildConfiguration (default is Release), BuildVersion (required when using SetVersion");
+		Information("Arguments: BuildConfiguration (default is Release), BuildVersion (required when using SetVersion)");
 	});
 
 RunTarget (target);
