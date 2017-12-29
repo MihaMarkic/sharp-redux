@@ -63,7 +63,7 @@ namespace Sharp.Redux
             return ResetStateAsync(InitialState);
         }
         /// <summary>
-        /// Non typesafe method to reset state.
+        /// Non type safe method to reset state.
         /// </summary>
         /// <param name="newState"></param>
         /// <returns></returns>
@@ -165,7 +165,7 @@ namespace Sharp.Redux
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Failed procesing state changed event: {ex.Message}");
+                Debug.WriteLine($"Failed processing state changed event: {ex.Message}");
             }
         }
         protected virtual void OnRepliedActions(RepliedActionsEventArgs e) => RepliedActions?.Invoke(this, e);
