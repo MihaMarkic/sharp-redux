@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>Righthand.SharpRedux.TodoSample</id>
+        <version>1.0.0</version>
+        <title>Todo sample for Righthand.SharpRedux</title>
+        <authors>mihies</authors>
+        <owners>mihies</owners>
+        <licenseUrl>https://github.com/MihaMarkic/sharp-redux/blob/master/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/MihaMarkic/sharp-redux</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>My package description.</description>
+        <summary>TODO Sample application demonstrating SharpRedux and its WPF visualizer.</summary>
+        <releaseNotes>Initial release</releaseNotes>
+        <copyright>Miha Markic</copyright>
+        <language>en</language>
+        <tags>redux todo csharp</tags>
+    </metadata>
+    <files>
+        <file src="Todo.Wpf\bin\Release\Autofac.dll" target="lib\net45\Autofac.dll" />
+        <file src="Todo.Wpf\bin\Release\Microsoft.Win32.Primitives.dll" target="lib\net45\Microsoft.Win32.Primitives.dll" />
+        <file src="Todo.Wpf\bin\Release\netstandard.dll" target="lib\net45\netstandard.dll" />
+        <file src="Todo.Wpf\bin\Release\Righthand.Immutable.dll" target="lib\net45\Righthand.Immutable.dll" />
+        <file src="Todo.Wpf\bin\Release\Sharp.Redux.dll" target="lib\net45\Sharp.Redux.dll" />
+        <file src="Todo.Wpf\bin\Release\Sharp.Redux.Visualizer.dll" target="lib\net45\Sharp.Redux.Visualizer.dll" />
+        <file src="Todo.Wpf\bin\Release\Sharp.Redux.Visualizer.Wpf.dll" target="lib\net45\Sharp.Redux.Visualizer.Wpf.dll" />
+        <file src="Todo.Wpf\bin\Release\System.AppContext.dll" target="lib\net45\System.AppContext.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Collections.Concurrent.dll" target="lib\net45\System.Collections.Concurrent.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Collections.dll" target="lib\net45\System.Collections.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Collections.Immutable.dll" target="lib\net45\System.Collections.Immutable.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Collections.NonGeneric.dll" target="lib\net45\System.Collections.NonGeneric.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Collections.Specialized.dll" target="lib\net45\System.Collections.Specialized.dll" />
+        <file src="Todo.Wpf\bin\Release\System.ComponentModel.dll" target="lib\net45\System.ComponentModel.dll" />
+        <file src="Todo.Wpf\bin\Release\System.ComponentModel.EventBasedAsync.dll" target="lib\net45\System.ComponentModel.EventBasedAsync.dll" />
+        <file src="Todo.Wpf\bin\Release\System.ComponentModel.Primitives.dll" target="lib\net45\System.ComponentModel.Primitives.dll" />
+        <file src="Todo.Wpf\bin\Release\System.ComponentModel.TypeConverter.dll" target="lib\net45\System.ComponentModel.TypeConverter.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Console.dll" target="lib\net45\System.Console.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Data.Common.dll" target="lib\net45\System.Data.Common.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Diagnostics.Contracts.dll" target="lib\net45\System.Diagnostics.Contracts.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Diagnostics.Debug.dll" target="lib\net45\System.Diagnostics.Debug.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Diagnostics.FileVersionInfo.dll" target="lib\net45\System.Diagnostics.FileVersionInfo.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Diagnostics.Process.dll" target="lib\net45\System.Diagnostics.Process.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Diagnostics.StackTrace.dll" target="lib\net45\System.Diagnostics.StackTrace.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Diagnostics.TextWriterTraceListener.dll" target="lib\net45\System.Diagnostics.TextWriterTraceListener.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Diagnostics.Tools.dll" target="lib\net45\System.Diagnostics.Tools.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Diagnostics.TraceSource.dll" target="lib\net45\System.Diagnostics.TraceSource.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Diagnostics.Tracing.dll" target="lib\net45\System.Diagnostics.Tracing.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Drawing.Primitives.dll" target="lib\net45\System.Drawing.Primitives.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Dynamic.Runtime.dll" target="lib\net45\System.Dynamic.Runtime.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Globalization.Calendars.dll" target="lib\net45\System.Globalization.Calendars.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Globalization.dll" target="lib\net45\System.Globalization.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Globalization.Extensions.dll" target="lib\net45\System.Globalization.Extensions.dll" />
+        <file src="Todo.Wpf\bin\Release\System.IO.Compression.dll" target="lib\net45\System.IO.Compression.dll" />
+        <file src="Todo.Wpf\bin\Release\System.IO.Compression.ZipFile.dll" target="lib\net45\System.IO.Compression.ZipFile.dll" />
+        <file src="Todo.Wpf\bin\Release\System.IO.dll" target="lib\net45\System.IO.dll" />
+        <file src="Todo.Wpf\bin\Release\System.IO.FileSystem.dll" target="lib\net45\System.IO.FileSystem.dll" />
+        <file src="Todo.Wpf\bin\Release\System.IO.FileSystem.DriveInfo.dll" target="lib\net45\System.IO.FileSystem.DriveInfo.dll" />
+        <file src="Todo.Wpf\bin\Release\System.IO.FileSystem.Primitives.dll" target="lib\net45\System.IO.FileSystem.Primitives.dll" />
+        <file src="Todo.Wpf\bin\Release\System.IO.FileSystem.Watcher.dll" target="lib\net45\System.IO.FileSystem.Watcher.dll" />
+        <file src="Todo.Wpf\bin\Release\System.IO.IsolatedStorage.dll" target="lib\net45\System.IO.IsolatedStorage.dll" />
+        <file src="Todo.Wpf\bin\Release\System.IO.MemoryMappedFiles.dll" target="lib\net45\System.IO.MemoryMappedFiles.dll" />
+        <file src="Todo.Wpf\bin\Release\System.IO.Pipes.dll" target="lib\net45\System.IO.Pipes.dll" />
+        <file src="Todo.Wpf\bin\Release\System.IO.UnmanagedMemoryStream.dll" target="lib\net45\System.IO.UnmanagedMemoryStream.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Linq.dll" target="lib\net45\System.Linq.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Linq.Expressions.dll" target="lib\net45\System.Linq.Expressions.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Linq.Parallel.dll" target="lib\net45\System.Linq.Parallel.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Linq.Queryable.dll" target="lib\net45\System.Linq.Queryable.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Net.Http.dll" target="lib\net45\System.Net.Http.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Net.NameResolution.dll" target="lib\net45\System.Net.NameResolution.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Net.NetworkInformation.dll" target="lib\net45\System.Net.NetworkInformation.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Net.Ping.dll" target="lib\net45\System.Net.Ping.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Net.Primitives.dll" target="lib\net45\System.Net.Primitives.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Net.Requests.dll" target="lib\net45\System.Net.Requests.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Net.Security.dll" target="lib\net45\System.Net.Security.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Net.Sockets.dll" target="lib\net45\System.Net.Sockets.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Net.WebHeaderCollection.dll" target="lib\net45\System.Net.WebHeaderCollection.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Net.WebSockets.Client.dll" target="lib\net45\System.Net.WebSockets.Client.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Net.WebSockets.dll" target="lib\net45\System.Net.WebSockets.dll" />
+        <file src="Todo.Wpf\bin\Release\System.ObjectModel.dll" target="lib\net45\System.ObjectModel.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Reflection.dll" target="lib\net45\System.Reflection.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Reflection.Extensions.dll" target="lib\net45\System.Reflection.Extensions.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Reflection.Primitives.dll" target="lib\net45\System.Reflection.Primitives.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Resources.Reader.dll" target="lib\net45\System.Resources.Reader.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Resources.ResourceManager.dll" target="lib\net45\System.Resources.ResourceManager.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Resources.Writer.dll" target="lib\net45\System.Resources.Writer.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Runtime.CompilerServices.VisualC.dll" target="lib\net45\System.Runtime.CompilerServices.VisualC.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Runtime.dll" target="lib\net45\System.Runtime.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Runtime.Extensions.dll" target="lib\net45\System.Runtime.Extensions.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Runtime.Handles.dll" target="lib\net45\System.Runtime.Handles.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Runtime.InteropServices.dll" target="lib\net45\System.Runtime.InteropServices.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Runtime.InteropServices.RuntimeInformation.dll" target="lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Runtime.Numerics.dll" target="lib\net45\System.Runtime.Numerics.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Runtime.Serialization.Formatters.dll" target="lib\net45\System.Runtime.Serialization.Formatters.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Runtime.Serialization.Json.dll" target="lib\net45\System.Runtime.Serialization.Json.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Runtime.Serialization.Primitives.dll" target="lib\net45\System.Runtime.Serialization.Primitives.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Runtime.Serialization.Xml.dll" target="lib\net45\System.Runtime.Serialization.Xml.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Security.Claims.dll" target="lib\net45\System.Security.Claims.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Security.Cryptography.Algorithms.dll" target="lib\net45\System.Security.Cryptography.Algorithms.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Security.Cryptography.Csp.dll" target="lib\net45\System.Security.Cryptography.Csp.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Security.Cryptography.Encoding.dll" target="lib\net45\System.Security.Cryptography.Encoding.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Security.Cryptography.Primitives.dll" target="lib\net45\System.Security.Cryptography.Primitives.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Security.Cryptography.X509Certificates.dll" target="lib\net45\System.Security.Cryptography.X509Certificates.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Security.Principal.dll" target="lib\net45\System.Security.Principal.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Security.SecureString.dll" target="lib\net45\System.Security.SecureString.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Text.Encoding.dll" target="lib\net45\System.Text.Encoding.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Text.Encoding.Extensions.dll" target="lib\net45\System.Text.Encoding.Extensions.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Text.RegularExpressions.dll" target="lib\net45\System.Text.RegularExpressions.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Threading.dll" target="lib\net45\System.Threading.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Threading.Overlapped.dll" target="lib\net45\System.Threading.Overlapped.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Threading.Tasks.dll" target="lib\net45\System.Threading.Tasks.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Threading.Tasks.Extensions.dll" target="lib\net45\System.Threading.Tasks.Extensions.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Threading.Tasks.Parallel.dll" target="lib\net45\System.Threading.Tasks.Parallel.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Threading.Thread.dll" target="lib\net45\System.Threading.Thread.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Threading.ThreadPool.dll" target="lib\net45\System.Threading.ThreadPool.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Threading.Timer.dll" target="lib\net45\System.Threading.Timer.dll" />
+        <file src="Todo.Wpf\bin\Release\System.ValueTuple.dll" target="lib\net45\System.ValueTuple.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Xml.ReaderWriter.dll" target="lib\net45\System.Xml.ReaderWriter.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Xml.XDocument.dll" target="lib\net45\System.Xml.XDocument.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Xml.XmlDocument.dll" target="lib\net45\System.Xml.XmlDocument.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Xml.XmlSerializer.dll" target="lib\net45\System.Xml.XmlSerializer.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Xml.XPath.dll" target="lib\net45\System.Xml.XPath.dll" />
+        <file src="Todo.Wpf\bin\Release\System.Xml.XPath.XDocument.dll" target="lib\net45\System.Xml.XPath.XDocument.dll" />
+        <file src="Todo.Wpf\bin\Release\Todo.Engine.dll" target="lib\net45\Todo.Engine.dll" />
+        <file src="Todo.Wpf\bin\Release\Todo.Wpf.exe" target="lib\net45\Todo.Wpf.exe" />
+        <file src="Todo.Wpf\bin\Release\Todo.Wpf.exe.config" target="lib\net45\Todo.Wpf.exe.config" />
+    </files>
+</package>
