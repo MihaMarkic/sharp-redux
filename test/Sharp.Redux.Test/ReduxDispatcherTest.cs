@@ -46,10 +46,12 @@ namespace Sharp.Redux.Test
             public async Task WhenGivenNewState_StateIsAssignedToDispatcher()
             {
                 var newState = new RootState();
+                bool isStateSame = false;
 
+                dispatcher.StateChanged += (s, e) => isStateSame = ReferenceEquals(e.State, newState);
                 await dispatcher.ResetStateAsync(newState);
 
-                Assert.That(dispatcher.State, Is.SameAs(newState));
+                Assert.That(isStateSame, Is.True);
             }
             [Test]
             public async Task WhenProcessorIsRunning_ProcessorIsStopped()

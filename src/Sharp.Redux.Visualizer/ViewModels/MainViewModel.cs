@@ -31,7 +31,7 @@ namespace Sharp.Redux.Visualizer.ViewModels
             try
             {
                 await sourceDispatcher.ResetToInitialStateAsync();
-                var actions = dispatcher.State.Steps
+                var actions = dispatcher.InitialState.Steps
                     .TakeWhile(s => !Equals(s, selectedStep.State)).Union(new[] { selectedStep.State })
                     .Select(s => s.Action)
                     .ToArray();
@@ -77,9 +77,9 @@ namespace Sharp.Redux.Visualizer.ViewModels
             base.OnPropertyChanged(name);
         }
 
-        private void Default_StateChanged(object sender, StateChangedEventArgs e)
+        private void Default_StateChanged(object sender, StateChangedEventArgs<RootState> e)
         {
-            RootState state = VisualizerDispatcher.Default.State;
+            RootState state = e.State;
             ReduxMerger.MergeList<int, Step, StepViewModel>(state.Steps, Steps, step => new StepViewModel(step));
             SelectedStep = state.SelectedStep != null ? Steps.Single(s => s.Key == state.SelectedStep.Key): null;
         }
@@ -89,7 +89,7 @@ namespace Sharp.Redux.Visualizer.ViewModels
             // action can be null when replay dispatches StateChanged event at the end
             if (e.Action != null)
             {
-                dispatcher.Dispatch(new InsertNewAction(e.Action, sourceDispatcher.State));
+                dispatcher.Dispatch(new InsertNewAction(e.Action, e.State));
             }
         }
         private void SourceDispatcher_RepliedActions(object sender, RepliedActionsEventArgs e)

@@ -6,15 +6,16 @@ namespace Sharp.Redux
 {
     public interface IReduxDispatcher<TState>: IReduxDispatcher, IDisposable
     {
-        /// <summary>
-        /// Current state.
-        /// </summary>
-        new TState State { get; }
+        ///// <summary>
+        ///// Current state.
+        ///// </summary>
+        //new TState State { get; }
         /// <summary>
         /// Resets state to given <paramref name="newState"/>.
         /// </summary>
         /// <returns>An instance of <see cref="Task"/>.</returns>
         Task ResetStateAsync(TState newState);
+        new event EventHandler<StateChangedEventArgs<TState>> StateChanged;
     }
 
     public interface IReduxDispatcher
@@ -49,10 +50,10 @@ namespace Sharp.Redux
         /// </summary>
         /// <returns>A task representing the stop process.</returns>
         Task StopAsync();
-        /// <summary>
-        /// Current state.
-        /// </summary>
-        object State { get; }
+        ///// <summary>
+        ///// Current state.
+        ///// </summary>
+        //object State { get; }
         /// <summary>
         /// Resets state to given <paramref name="newState"/>.
         /// </summary>

@@ -22,7 +22,12 @@ namespace Sharp.Redux
         /// Event that signals that state has changed.
         /// </summary>
         /// <remarks>Runs on given TaskScheduler.</remarks>
-        public event EventHandler<StateChangedEventArgs> StateChanged;
+        public event EventHandler<StateChangedEventArgs<TState>> StateChanged;
+        /// <summary>
+        /// The non generic state changed event.
+        /// </summary>
+        EventHandler<StateChangedEventArgs> stateChanged;
+        event EventHandler<StateChangedEventArgs> IReduxDispatcher.StateChanged { add { stateChanged += value; } remove { stateChanged -= value; } }
         /// <summary>
         /// Event that signals that one ore more actions have been replayed.
         /// </summary>
@@ -35,12 +40,11 @@ namespace Sharp.Redux
         /// <summary>
         /// Current state.
         /// </summary>
-        public TState State { get; private set; }
+        TState state;
         /// <summary>
         /// Initial state.
         /// </summary>
         public TState InitialState { get; }
-        object IReduxDispatcher.State => State;
         /// <summary>
         /// Task factory for invoking synchronized code (events).
         /// </summary>
@@ -63,7 +67,7 @@ namespace Sharp.Redux
         /// <param name="notificationScheduler">A scheduler for events.</param>
         public ReduxDispatcher(TState initialState, TReducer reducer, TaskScheduler notificationScheduler)
         {
-            State = InitialState = initialState;
+            state = InitialState = initialState;
             this.reducer = reducer;
             notificationFactory = new TaskFactory(notificationScheduler);
         }
@@ -105,8 +109,8 @@ namespace Sharp.Redux
         public async Task ResetStateAsync(TState newState)
         {
             await StopAsync();
-            State = newState;
-            await notificationFactory.StartNew(() => OnStateChanged(new StateChangedEventArgs(new StateResetAction())));
+            state = newState;
+            await notificationFactory.StartNew(st => OnStateChanged(new StateChangedEventArgs<TState>(new StateResetAction(), (TState)st)), state);
         }
         /// <summary>
         /// Resets state to initial state.
@@ -164,19 +168,19 @@ namespace Sharp.Redux
             {
                 throw new ArgumentNullException(nameof(actions));
             }
-            var oldState = State;
+            var oldState = state;
             var replied = new RepliedAction[actions.Length];
             for (int i = 0; i < actions.Length; i++)
             {
                 var action = actions[i];
-                State = await reducer.ReduceAsync(State, action, ct);
-                replied[i] = new RepliedAction(action, State);
+                state = await reducer.ReduceAsync(state, action, ct);
+                replied[i] = new RepliedAction(action, state);
                 progress?.Report(i);
             }
-            if (!ct.IsCancellationRequested && !ReferenceEquals(oldState, State))
+            if (!ct.IsCancellationRequested && !ReferenceEquals(oldState, state))
             {
                 await notificationFactory.StartNew(() => OnRepliedActions(new RepliedActionsEventArgs(replied)));
-                await notificationFactory.StartNew(() => OnStateChanged(new StateChangedEventArgs(null)));
+                await notificationFactory.StartNew(st => OnStateChanged(new StateChangedEventArgs<TState>(null, (TState)st)), state);
             }
         }
         /// <summary>
@@ -210,18 +214,18 @@ namespace Sharp.Redux
             {}
         }
         /// <summary>
-        /// Procesesses single action.
+        /// Processes single action.
         /// </summary>
         /// <param name="action">An action to be processed.</param>
         /// <param name="ct">A cancellation token that can be used to cancel the work</param>
         /// <returns>A task that represents action process.</returns>
         internal async Task ProcessActionAsync(ReduxAction action, CancellationToken ct)
         {
-            var oldState = State;
-            State = await reducer.ReduceAsync(State, action, CancellationToken.None);
-            if (!ct.IsCancellationRequested && !ReferenceEquals(oldState, State))
+            var oldState = state;
+            state = await reducer.ReduceAsync(state, action, CancellationToken.None);
+            if (!ct.IsCancellationRequested && !ReferenceEquals(oldState, state))
             {
-                await notificationFactory.StartNew(() => OnStateChanged(new StateChangedEventArgs(action)));
+                await notificationFactory.StartNew(() => OnStateChanged(new StateChangedEventArgs<TState>(action, state)));
             }
         }
         /// <summary>
@@ -229,11 +233,12 @@ namespace Sharp.Redux
         /// </summary>
         /// <param name="e">Arguments.</param>
         /// <remarks>Exceptions are swallowed.</remarks>
-        /// <remarks>Runs on given scheduler thread.</remarks>
-        protected virtual void OnStateChanged(StateChangedEventArgs e)
+        /// <remarks>Runs on given scheduler thread. Fires both non-generic and generic (state type) events.</remarks>
+        protected virtual void OnStateChanged(StateChangedEventArgs<TState> e)
         {
             try
             {
+                stateChanged?.Invoke(this, e);
                 StateChanged?.Invoke(this, e);
             }
             catch (Exception ex)
