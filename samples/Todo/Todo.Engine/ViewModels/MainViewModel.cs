@@ -22,33 +22,33 @@ namespace Todo.Engine.ViewModels
         public RelayCommand AddItemCommand { get; }
         public RelayCommand RemoveCompletedCommand { get; }
         bool isUpdatingState;
+        RootState state;
         public MainViewModel(ITodoReduxDispatcher dispatcher, Func<TodoItem, TodoItemViewModel> todoItemViewModelFactory)
         {
             this.dispatcher = dispatcher;
             this.todoItemViewModelFactory = todoItemViewModelFactory;
             dispatcher.StateChanged += UpdateReduxState;
-            SetFilterCommand = new RelayCommand<ItemsFilter>(SetFilter, f => !State.IsEditing);
-            AddItemCommand = new RelayCommand(AddItem, () => !string.IsNullOrEmpty(State.NewItemText));
-            RemoveCompletedCommand = new RelayCommand(RemoveCompleted, () => State.HasCompleted && !State.IsEditing);
+            SetFilterCommand = new RelayCommand<ItemsFilter>(SetFilter, f => !state?.IsEditing ?? false);
+            AddItemCommand = new RelayCommand(AddItem, () => !string.IsNullOrEmpty(state?.NewItemText));
+            RemoveCompletedCommand = new RelayCommand(RemoveCompleted, () => (state?.HasCompleted ?? false) && !(state?.IsEditing ?? false));
         }
 
         public void Start()
         {
             dispatcher.Start();
-            UpdateReduxState(this, EventArgs.Empty);
         }
-        RootState State => dispatcher.State;
-        void UpdateReduxState(object sender, EventArgs e)
+        void UpdateReduxState(object sender, StateChangedEventArgs<RootState> e)
         {
             isUpdatingState = true;
             try
             {
-                AllChecked = State.AllChecked;
-                NewItemText = State.NewItemText;
-                int itemsLeft = State.Items.Count(i => !i.IsChecked);
+                state = e.State;
+                AllChecked = e.State.AllChecked;
+                NewItemText = e.State.NewItemText;
+                int itemsLeft = e.State.Items.Count(i => !i.IsChecked);
                 ItemsLeftInfo = $"{itemsLeft} item{(itemsLeft != 1 ? "s" : "")} left";
-                ReduxMerger.MergeList<int, TodoItem, TodoItemViewModel>(State.FilteredItems, Items, i => todoItemViewModelFactory(i));
-                Filter = State.Filter;
+                ReduxMerger.MergeList<int, TodoItem, TodoItemViewModel>(e.State.FilteredItems, Items, i => todoItemViewModelFactory(i));
+                Filter = e.State.Filter;
                 AddItemCommand.RaiseCanExecuteChanged();
                 RemoveCompletedCommand.RaiseCanExecuteChanged();
                 SetFilterCommand.RaiseCanExecuteChanged();
@@ -64,7 +64,7 @@ namespace Todo.Engine.ViewModels
         }
         void AddItem()
         {
-            int maxItemId = State.Items.Count > 0 ? dispatcher.State.Items.Max(i => i.Key) : 0;
+            int maxItemId = Items.Count > 0 ? Items.Max(i => i.State.Key) : 0;
             dispatcher.Dispatch(new AddItemAction(maxItemId + 1, NewItemText));
         }
         void RemoveCompleted()
@@ -82,7 +82,8 @@ namespace Todo.Engine.ViewModels
                         break;
                     case nameof(AllChecked):
                         dispatcher.Dispatch(new ToggleAllIsCheckedAction(AllChecked));
-                        break;                }
+                        break;
+                }
             }
             base.OnPropertyChanged(name);
         }

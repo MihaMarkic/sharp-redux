@@ -1,4 +1,5 @@
-﻿using Sharp.Redux.Visualizer.Core;
+﻿using Sharp.Redux.Actions;
+using Sharp.Redux.Visualizer.Core;
 using Sharp.Redux.Visualizer.Models;
 using System;
 
@@ -63,9 +64,10 @@ namespace Sharp.Redux.Visualizer.Services.Implementation
 
         public static string GetActionName(ReduxAction action)
         {
-            if (action is StateResetAction)
+            if (action is SpecialReduxAction)
             {
-                return "Reset";
+                var fullName = action.GetType().Name;
+                return fullName.Substring(0, fullName.Length - "Action".Length);
             }
             const string Suffix = "Action";
             var name = action.GetType().FullName;

@@ -6,10 +6,10 @@ namespace Sharp.Redux
 {
     public interface IReduxDispatcher<TState>: IReduxDispatcher, IDisposable
     {
-        ///// <summary>
-        ///// Current state.
-        ///// </summary>
-        //new TState State { get; }
+        /// <summary>
+        /// Initial state.
+        /// </summary>
+        TState InitialState { get; }
         /// <summary>
         /// Resets state to given <paramref name="newState"/>.
         /// </summary>

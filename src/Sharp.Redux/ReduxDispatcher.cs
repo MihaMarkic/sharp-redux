@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sharp.Redux.Actions;
+using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading;
@@ -180,7 +181,7 @@ namespace Sharp.Redux
             if (!ct.IsCancellationRequested && !ReferenceEquals(oldState, state))
             {
                 await notificationFactory.StartNew(() => OnRepliedActions(new RepliedActionsEventArgs(replied)));
-                await notificationFactory.StartNew(st => OnStateChangedAsync(new StateChangedEventArgs<TState>(null, (TState)st)), state).Unwrap();
+                await notificationFactory.StartNew(st => OnStateChangedAsync(new StateChangedEventArgs<TState>(new ActionsRepliedAction(), (TState)st)), state).Unwrap();
             }
         }
         /// <summary>
@@ -202,6 +203,7 @@ namespace Sharp.Redux
         {
             try
             {
+                await OnStateChangedAsync(new StateChangedEventArgs<TState>(new InitAction(), state));
                 while (!ct.IsCancellationRequested)
                 {
                     if (queue.TryTake(out var action, -1, ct))
