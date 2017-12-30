@@ -10,14 +10,14 @@ namespace Sharp.Redux.Test
     {
         protected RootState initialState;
         protected IReduxReducer<RootState> reducer;
-        protected ReduxDispatcher<RootState, IReduxReducer<RootState>> dispatcher;
+        protected TestDispatcher dispatcher;
 
         [SetUp]
         public void SetUp()
         {
             initialState = new RootState();
             reducer = Substitute.For<IReduxReducer<RootState>>();
-            dispatcher = new ReduxDispatcher<RootState, IReduxReducer<RootState>>(initialState, reducer, TaskScheduler.Current);
+            dispatcher = new TestDispatcher(initialState, reducer, TaskScheduler.Current);
         }
         [TestFixture]
         public class IsProcessorRunning: ReduxDispatcherTest
@@ -126,11 +126,60 @@ namespace Sharp.Redux.Test
                 Assert.Pass();
             }
         }
+        [TestFixture]
+        public class OnStateChanged: ReduxDispatcherTest
+        {
+            [Test]
+            public void WhenRunningTaskAreAddedAndDoNotEnd_WaitIndefinitely()
+            {
+                var tcs = new TaskCompletionSource<bool>();
+                dispatcher.StateChanged += (s, e) =>
+                {
+                    e.AddRunningTask(tcs.Task);
+                };
+                var ignore = Task.Run(async () =>
+                {
+                    await Task.Delay(10);
+                });
+
+                var result = dispatcher.FireOnStateChangedAsync(new StateChangedEventArgs<RootState>(new NoOpAction(), new RootState())).Wait(100);
+
+                Assert.That(result, Is.False);
+            }
+            [Test]
+            public void WhenRunningTaskAreAdded_WaitForThem()
+            {
+                var tcs = new TaskCompletionSource<bool>();
+                bool isCompleted = false;
+                dispatcher.StateChanged += (s, e) =>
+                {
+                    e.AddRunningTask(tcs.Task);
+                };
+                var ignore = Task.Run(async () =>
+                {
+                    await Task.Delay(200);
+                    isCompleted = true;
+                    tcs.SetResult(true);
+                });
+
+                var result = dispatcher.FireOnStateChangedAsync(new StateChangedEventArgs<RootState>(new NoOpAction(), new RootState())).Wait(500);
+
+                Assert.That(result, Is.True);
+                Assert.That(isCompleted, Is.True);
+            }
+        }
 
         public class RootState
         {}
 
         public class NoOpAction: ReduxAction
         {}
+
+        public class TestDispatcher : ReduxDispatcher<RootState, IReduxReducer<RootState>>
+        {
+            public TestDispatcher(RootState initialState, IReduxReducer<RootState> reducer, TaskScheduler notificationScheduler) : base(initialState, reducer, notificationScheduler)
+            { }
+            public Task FireOnStateChangedAsync(StateChangedEventArgs<RootState> e) => OnStateChangedAsync(e);
+        }
     }
 }

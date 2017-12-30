@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Sharp.Redux
 {
@@ -13,6 +14,10 @@ namespace Sharp.Redux
         public readonly ReduxAction Action;
         public readonly object State;
         /// <summary>
+        /// Client can signal that it is processing asynchronous actions and that dispatcher shall wait before processing next action.
+        /// </summary>
+        public Task[] RunningTasks { get; private set; }
+        /// <summary>
         /// Initializes a new instance of <see cref="StateChangedEventArgs"/> containing action that triggered change.
         /// </summary>
         /// <param name="action">Action that triggered this state change.</param>
@@ -21,6 +26,21 @@ namespace Sharp.Redux
         {
             Action = action;
             State = state;
+        }
+        /// <summary>
+        /// Adds a new task to the list of tasks to wait for. Dispatcher will wait for this task to end before processing next action.
+        /// </summary>
+        /// <param name="task">An instance of task to await.</param>
+        public void AddRunningTask(Task task)
+        {
+            if (RunningTasks == null)
+            {
+                RunningTasks = new Task[] { task };
+            }
+            else
+            {
+                RunningTasks = RunningTasks.Spread(task);
+            }
         }
     }
     /// <summary>

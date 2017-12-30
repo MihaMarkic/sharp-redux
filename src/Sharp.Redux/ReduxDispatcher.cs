@@ -110,7 +110,7 @@ namespace Sharp.Redux
         {
             await StopAsync();
             state = newState;
-            await notificationFactory.StartNew(st => OnStateChanged(new StateChangedEventArgs<TState>(new StateResetAction(), (TState)st)), state);
+            await notificationFactory.StartNew(st => OnStateChangedAsync(new StateChangedEventArgs<TState>(new StateResetAction(), (TState)st)), state).Unwrap();
         }
         /// <summary>
         /// Resets state to initial state.
@@ -180,7 +180,7 @@ namespace Sharp.Redux
             if (!ct.IsCancellationRequested && !ReferenceEquals(oldState, state))
             {
                 await notificationFactory.StartNew(() => OnRepliedActions(new RepliedActionsEventArgs(replied)));
-                await notificationFactory.StartNew(st => OnStateChanged(new StateChangedEventArgs<TState>(null, (TState)st)), state);
+                await notificationFactory.StartNew(st => OnStateChangedAsync(new StateChangedEventArgs<TState>(null, (TState)st)), state).Unwrap();
             }
         }
         /// <summary>
@@ -197,14 +197,14 @@ namespace Sharp.Redux
         /// </summary>
         /// <param name="ct">A cancellation token that can be used to cancel the work</param>
         /// <returns>A task that represents the processor.</returns>
+        /// <remarks>Runs in a background thread.</remarks>
         internal async Task ProcessorAsync(CancellationToken ct)
         {
             try
             {
                 while (!ct.IsCancellationRequested)
                 {
-                    ReduxAction action;
-                    if (queue.TryTake(out action, -1, ct))
+                    if (queue.TryTake(out var action, -1, ct))
                     {
                         await ProcessActionAsync(action, ct: ct);
                     }
@@ -225,26 +225,32 @@ namespace Sharp.Redux
             state = await reducer.ReduceAsync(state, action, CancellationToken.None);
             if (!ct.IsCancellationRequested && !ReferenceEquals(oldState, state))
             {
-                await notificationFactory.StartNew(() => OnStateChanged(new StateChangedEventArgs<TState>(action, state)));
+                await notificationFactory.StartNew(st => OnStateChangedAsync(new StateChangedEventArgs<TState>(action, (TState)st)), state).Unwrap();
             }
         }
+        readonly static Task defaultOnStateChangedResult = Task.FromResult(true);
         /// <summary>
         /// Raises <see cref="StateChanged"/> event.
         /// </summary>
         /// <param name="e">Arguments.</param>
         /// <remarks>Exceptions are swallowed.</remarks>
         /// <remarks>Runs on given scheduler thread. Fires both non-generic and generic (state type) events.</remarks>
-        protected virtual void OnStateChanged(StateChangedEventArgs<TState> e)
+        protected virtual Task OnStateChangedAsync(StateChangedEventArgs<TState> e)
         {
             try
             {
                 stateChanged?.Invoke(this, e);
                 StateChanged?.Invoke(this, e);
+                if (e.RunningTasks?.Length > 0)
+                {
+                    return Task.WhenAll(e.RunningTasks);
+                }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Failed processing state changed event: {ex.Message}");
             }
+            return defaultOnStateChangedResult;
         }
         /// <summary>
         /// Raises <see cref="RepliedAction"/> event.
