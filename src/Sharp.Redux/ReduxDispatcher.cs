@@ -230,7 +230,8 @@ namespace Sharp.Redux
         }
         readonly static Task defaultOnStateChangedResult = Task.FromResult(true);
         /// <summary>
-        /// Raises <see cref="StateChanged"/> event.
+        /// Raises <see cref="StateChanged"/> event. Client can add Tasks to event arguments for dispatcher to await their completion before 
+        /// processing next action. See <see cref="StateChangedEventArgs.AddRunningTask(Task)"/> method.
         /// </summary>
         /// <param name="e">Arguments.</param>
         /// <remarks>Exceptions are swallowed.</remarks>
@@ -241,6 +242,7 @@ namespace Sharp.Redux
             {
                 stateChanged?.Invoke(this, e);
                 StateChanged?.Invoke(this, e);
+                // await client tasks if any
                 if (e.RunningTasks?.Length > 0)
                 {
                     return Task.WhenAll(e.RunningTasks);
