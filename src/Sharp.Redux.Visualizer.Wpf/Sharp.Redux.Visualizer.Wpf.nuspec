@@ -11,8 +11,8 @@
     <description>WPF implementation of visualizer for Righthand.SharpRedux.</description>
     <tags>c# redux visualizer core wpf</tags>
 	<dependencies>
-    <dependency id="Righthand.SharpRedux" version ="1.0.1" />
-		<dependency id="Righthand.SharpRedux.Visualizer" version ="1.0.1" />
+    <dependency id="Righthand.SharpRedux" version ="1.0.2" />
+		<dependency id="Righthand.SharpRedux.Visualizer" version ="1.0.2" />
 		<dependency id="Righthand.Immutable" version="1.0.1" />
 		<dependency id="System.Collections.Immutable" version="1.4.0" />
 		<dependency id="System.Threading.Tasks.Extensions" version="4.4.0" />
