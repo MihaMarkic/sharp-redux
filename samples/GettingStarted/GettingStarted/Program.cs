@@ -90,7 +90,7 @@ namespace GettingStarted
                     return Task.FromResult(new RootState(state.Counter - 1));
                 default:
                     // reducer doesn't process this state, simply return state 
-                    // withput modifications
+                    // without modifications
                     return Task.FromResult(state);
             }
         }
