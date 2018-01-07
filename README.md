@@ -1,7 +1,7 @@
 # sharp-redux
 
-| SharpRedux                                                                                                               | Visualizer                                                                                                                                     | Visualizer.Wpf                                                                                                                                         |
-| :----------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------: |
+|                SharpRedux                |                Visualizer                |              Visualizer.Wpf              |
+| :--------------------------------------: | :--------------------------------------: | :--------------------------------------: |
 | [![NuGet](https://img.shields.io/nuget/v/Righthand.SharpRedux.svg)](https://www.nuget.org/packages/Righthand.SharpRedux) | [![NuGet](https://img.shields.io/nuget/v/Righthand.SharpRedux.Visualizer.svg)](https://www.nuget.org/packages/Righthand.SharpRedux.Visualizer) | [![NuGet](https://img.shields.io/nuget/v/Righthand.SharpRedux.Visualizer.Wpf.svg)](https://www.nuget.org/packages/Righthand.SharpRedux.Visualizer.Wpf) |
 
 Experimental .net implementation of Redux philosophy. Initial effort is concentrated on MVVM/WPF scenario.
@@ -10,9 +10,9 @@ Experimental .net implementation of Redux philosophy. Initial effort is concentr
 
 | Package        | Min. .NET Standard | Min. .NET |
 | -------------- | :----------------: | :-------: |
-| SharpRedux     | 1.2                | 4.5       |
-| Visualizer     | 1.5                | 4.5       |
-| Visualizer.WPF | -                  | 4.6       |
+| SharpRedux     |        1.2         |    4.5    |
+| Visualizer     |        1.5         |    4.5    |
+| Visualizer.WPF |         -          |    4.6    |
 
 ## Features
 
@@ -42,7 +42,7 @@ Reducer is responsible for calculating new state based on dispatched action and 
 * Mutate its arguments;
 * Perform side effects like API calls and routing transitions;
 * Call non-pure functions, e.g. DateTime.Now or Random.Next().
-Basically the next state should depend only on previous state and action.
+  Basically the next state should depend only on previous state and action.
 
 ## The benefits
 
@@ -54,6 +54,7 @@ There are quite some benefits using SharpRedux although it is another layer.
 * Actions can be replayed,
 * Powerfull unit testing on reducers,
 * Clear flow,
+* Easy undo/redo implementation,
 * and, I'm sure, plenty of others.
 
 ## Samples
@@ -66,8 +67,8 @@ There is also **Playground** project but is not a sample, it's rather used to te
 This is a minimal .NET Core console application showing the core of SharpRedux in action. I'll guide you to create it from scratch.
 
 1. Create new .NET Core console application.
-1. Add NuGet reference to Righthand.SharpRedux. At the time of the writting the version 1.0.2 is actual.
-1. Create new class RootState.
+2. Add NuGet reference to Righthand.SharpRedux. At the time of the writting the version 1.0.2 is actual.
+3. Create new class RootState.
 
 ```csharp
 class RootState
