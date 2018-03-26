@@ -62,6 +62,8 @@ There are quite some benefits using SharpRedux although it is another layer.
 There are currently two samples: **GettingStarted** and **Todo** which is a reimplementation of TodoMvc website. GettingStarted is a simple as it gets to start with SharpRedux. Todo is a WPF/MVVM and has basic funcationallity, plus it shows visualizer in action. Both are found in *samples* folder.
 There is also **Playground** project but is not a sample, it's rather used to test more advanced scenarios and won't be stable.
 
+Check also [experimentation](https://github.com/MihaMarkic/BlazorWithSharpReduxSample) with [Blazor](https://github.com/aspnet/Blazor).
+
 ### Getting started
 
 This is a minimal .NET Core console application showing the core of SharpRedux in action. I'll guide you to create it from scratch.
