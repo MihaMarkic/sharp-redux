@@ -24,6 +24,9 @@
       <file src="bin\Release\Sharp.Redux.xml" target="lib/netstandard2.0" />
       <file src="bin\Release\Sharp.Redux.xml" target="lib/net45" />
     </files>
+    <Dependencies>
+      <Dependency id="System.Threading.Tasks.Dataflow" Version="4.8.0" />
+    </Dependencies>
   </PropertyGroup>
   <PropertyGroup>
     <LangVersion>7.1</LangVersion>
@@ -32,4 +35,7 @@
     <DocumentationFile>bin\Release\Sharp.Redux.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.8.0" />
+  </ItemGroup>
 </Project>

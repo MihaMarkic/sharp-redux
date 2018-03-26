@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 
 namespace Sharp.Redux
 {
@@ -37,7 +38,7 @@ namespace Sharp.Redux
         /// <summary>
         /// Queue for actions.
         /// </summary>
-        private readonly BlockingCollection<ReduxAction> queue = new BlockingCollection<ReduxAction>();
+        private readonly BufferBlock<ReduxAction> queue = new BufferBlock<ReduxAction>();
         /// <summary>
         /// Current state.
         /// </summary>
@@ -191,7 +192,7 @@ namespace Sharp.Redux
         /// <remarks>All actions have to be dispatched through this method.</remarks>
         public void Dispatch(ReduxAction action)
         {
-            queue.Add(action);
+            queue.Post(action);
         }
         /// <summary>
         /// The action processor. Handles the action queue and processes actions sequentially.
@@ -204,12 +205,10 @@ namespace Sharp.Redux
             try
             {
                 await OnStateChangedAsync(new StateChangedEventArgs<TState>(new InitAction(), state));
-                while (!ct.IsCancellationRequested)
+                while (await queue.OutputAvailableAsync(ct))
                 {
-                    if (queue.TryTake(out var action, -1, ct))
-                    {
-                        await ProcessActionAsync(action, ct: ct);
-                    }
+                    var action = queue.Receive(ct);
+                    await ProcessActionAsync(action, ct: ct);
                 }
             }
             catch (OperationCanceledException)
