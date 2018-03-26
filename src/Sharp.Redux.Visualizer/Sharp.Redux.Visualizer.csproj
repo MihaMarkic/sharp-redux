@@ -27,10 +27,10 @@
     </Dependencies>
   </PropertyGroup>
   <PropertyGroup>
-    <LangVersion>7.1</LangVersion>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Righthand.Immutable" Version="1.0.1" />
+    <PackageReference Include="Righthand.Immutable" Version="1.0.2" />
     <PackageReference Include="System.Collections.Immutable" Version="1.4.0" />
   </ItemGroup>
   <ItemGroup>
