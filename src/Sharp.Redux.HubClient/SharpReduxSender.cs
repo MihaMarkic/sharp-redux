@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Sharp.Redux.HubClient.Services.Abstract;
+using Sharp.Redux.HubClient.Services.Implementation;
+using Sharp.Redux.Shared.Models;
+using System;
 using System.Collections.Concurrent;
-using System.Net.Http;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,12 +14,13 @@ namespace Sharp.Redux.HubClient
         bool isDisposed;
         readonly string projectId;
         readonly IReduxDispatcher dispatcher;
-        readonly bool persistData;
-        readonly HttpClient httpClient;
+        readonly SharpReduxSenderSettings settings;
+        readonly ICommunicator communicator;
         public static SharpReduxSender Default { get; private set; }
         readonly CancellationTokenSource cts;
         Task processor;
-        readonly BlockingCollection<string> queue;
+        readonly BlockingCollection<Step> buffer;
+        Persister persister;
         public static void Start(string projectId, Uri serverUri, IReduxDispatcher dispatcher, SharpReduxSenderSettings settings)
         {
             Default = new SharpReduxSender(projectId, serverUri, dispatcher, settings);
@@ -27,28 +31,87 @@ namespace Sharp.Redux.HubClient
             this.projectId = projectId;
             this.dispatcher = dispatcher;
             dispatcher.StateChanged += Dispatcher_StateChanged;
-            persistData = settings?.PersistData ?? false;
-            httpClient = new HttpClient { BaseAddress = serverUri };
+            this.settings = settings;
             cts = new CancellationTokenSource();
+            buffer = new BlockingCollection<Step>();
+            communicator = new Communicator(projectId, serverUri, settings.WaitForConnection);
         }
 
         private void Dispatcher_StateChanged(object sender, StateChangedEventArgs e)
         {
-            
+            var step = new Step
+            {
+                Id = Guid.NewGuid(),
+                Action = e.Action,
+                State = e.State,
+                Time = DateTimeOffset.Now
+            };
+            if (settings.PersistData)
+            {
+                persister.Save(step);
+            }
+            buffer.Add(step);
         }
 
         public void Start()
         {
-            processor = Task.Run(() => Processor(cts.Token), cts.Token);
+            if (processor != null)
+            {
+                throw new Exception("Processor already running");
+            }
+            if (settings.PersistData)
+            {
+                persister = new Persister();
+                persister.Start();
+            }
+            processor = Task.Run(() => ProcessorAsync(cts.Token), cts.Token);
         }
 
-        async Task Processor(CancellationToken ct)
+        async Task ProcessorAsync(CancellationToken ct)
         {
-
+            List<Step> steps = new List<Step>(settings.BatchSize);
+            while (!ct.IsCancellationRequested)
+            {
+                if (WaitForBatch(buffer, steps, settings.BatchSize, settings.CollectionSpan, ct))
+                {
+                    await communicator.UploadStepsAsync(steps.ToArray(), ct);
+                }
+            }
         }
-
+        internal static bool WaitForBatch(BlockingCollection<Step> buffer, List<Step> steps, int batchSize, TimeSpan waitSpan, CancellationToken ct)
+        {
+            try
+            {
+                steps.Add(buffer.Take(ct));
+            }
+            catch (OperationCanceledException)
+            {
+                // we are done
+                return false;
+            }
+            using (var cts = new CancellationTokenSource(waitSpan))
+            using (var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(ct, cts.Token))
+            {
+                try
+                {
+                    while (steps.Count < batchSize)
+                    {
+                        steps.Add(buffer.Take(linkedSource.Token));
+                    }
+                }
+                catch (OperationCanceledException ex)
+                {
+                    if (ex.CancellationToken == ct)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
         public Task StopAsync()
         {
+            dispatcher.StateChanged -= Dispatcher_StateChanged;
             cts.Cancel();
             return processor;
         }
@@ -58,9 +121,9 @@ namespace Sharp.Redux.HubClient
             if (!isDisposed)
             {
                 var ignore = StopAsync();
+                persister?.Dispose();
                 isDisposed = true;
-                dispatcher.StateChanged -= Dispatcher_StateChanged;
-                httpClient.Dispose();
+                communicator.Dispose();
             }
         }
     }
