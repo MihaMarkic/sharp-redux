@@ -20,13 +20,17 @@ namespace Sharp.Redux.HubClient
         readonly CancellationTokenSource cts;
         Task processor;
         readonly BlockingCollection<Step> buffer;
-        Persister persister;
+        readonly IPersister persister;
         public static void Start(string projectId, Uri serverUri, IReduxDispatcher dispatcher, SharpReduxSenderSettings settings)
         {
-            Default = new SharpReduxSender(projectId, serverUri, dispatcher, settings);
+            if (Default != null)
+            {
+                throw new Exception("Sender already running");
+            }
+            Default = new SharpReduxSender(projectId, serverUri, dispatcher, settings, settings.PersistData ? new Persister() : null);
             Default.Start();
         }
-        private SharpReduxSender(string projectId, Uri serverUri, IReduxDispatcher dispatcher, SharpReduxSenderSettings settings)
+        internal SharpReduxSender(string projectId, Uri serverUri, IReduxDispatcher dispatcher, SharpReduxSenderSettings settings, IPersister persister)
         {
             this.projectId = projectId;
             this.dispatcher = dispatcher;
@@ -59,14 +63,10 @@ namespace Sharp.Redux.HubClient
             {
                 throw new Exception("Processor already running");
             }
-            if (settings.PersistData)
-            {
-                persister = new Persister();
-                persister.Start();
-            }
+            persister?.Start(settings.DataFile);
             processor = Task.Run(() => ProcessorAsync(cts.Token), cts.Token);
         }
-
+        public bool IsRunning => processor != null;
         async Task ProcessorAsync(CancellationToken ct)
         {
             List<Step> steps = new List<Step>(settings.BatchSize);
@@ -109,11 +109,12 @@ namespace Sharp.Redux.HubClient
             }
             return true;
         }
-        public Task StopAsync()
+        public async Task StopAsync()
         {
             dispatcher.StateChanged -= Dispatcher_StateChanged;
             cts.Cancel();
-            return processor;
+            await processor;
+            processor = null;
         }
 
         public void Dispose()

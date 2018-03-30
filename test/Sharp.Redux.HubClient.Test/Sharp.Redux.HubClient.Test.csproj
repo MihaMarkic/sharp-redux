@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.6.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.6.2" />
     <PackageReference Include="NSubstitute" Version="3.1.0" />
     <PackageReference Include="NUnit" Version="3.10.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
@@ -12,6 +12,8 @@
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.4.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Sharp.Redux.HubClient\Sharp.Redux.HubClient.csproj" />
+    <ProjectReference Include="..\..\src\Sharp.Redux.Shared\Sharp.Redux.Shared.csproj" />
     <ProjectReference Include="..\..\src\Sharp.Redux\Sharp.Redux.csproj" />
   </ItemGroup>
 </Project>
