@@ -34,6 +34,7 @@ namespace Sharp.Redux.HubClient
         {
             this.projectId = projectId;
             this.dispatcher = dispatcher;
+            this.persister = persister;
             dispatcher.StateChanged += Dispatcher_StateChanged;
             this.settings = settings;
             cts = new CancellationTokenSource();
@@ -101,7 +102,7 @@ namespace Sharp.Redux.HubClient
                 }
                 catch (OperationCanceledException ex)
                 {
-                    if (ex.CancellationToken == ct)
+                    if (ct.IsCancellationRequested)
                     {
                         return false;
                     }
