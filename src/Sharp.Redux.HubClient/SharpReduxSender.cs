@@ -22,7 +22,7 @@ namespace Sharp.Redux.HubClient
         Task processor;
         readonly BlockingCollection<Step> buffer;
         readonly IPersister persister;
-        int counter;
+        int counter = 1;
         readonly Session session;
         public SessionInfo SessionInfo { get; private set; }
         public static void Start(string projectId, Uri serverUri, IReduxDispatcher dispatcher, SessionInfo sessionInfo, SharpReduxSenderSettings settings)

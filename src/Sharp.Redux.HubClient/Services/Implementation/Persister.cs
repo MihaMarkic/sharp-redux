@@ -3,6 +3,7 @@ using Sharp.Redux.HubClient.Core;
 using Sharp.Redux.HubClient.Services.Abstract;
 using Sharp.Redux.Shared.Models;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace Sharp.Redux.HubClient.Services.Implementation
@@ -15,6 +16,15 @@ namespace Sharp.Redux.HubClient.Services.Implementation
         public void Start(string dataFile)
         {
             db = new LiteDatabase(dataFile);
+            Init();
+        }
+        public void Start(Stream stream)
+        {
+            db = new LiteDatabase(stream, disposeStream: true);
+            Init();
+        }
+        void Init()
+        {
             steps = db.GetCollection<Step>("steps");
             steps.EnsureIndex(s => s.Id);
             sessions = db.GetCollection<Session>("sessions");
@@ -48,7 +58,7 @@ namespace Sharp.Redux.HubClient.Services.Implementation
             {
                 ids.Add(step.Id);
             }
-            int deleted = steps.Delete(Query.In(nameof(Step.Id), ids));
+            int deleted = steps.Delete(Query.In("_id", ids));
             if (deleted != ids.Count)
             {
                 throw new Exception("Failed to delete all items");
