@@ -18,7 +18,16 @@ namespace Sharp.Redux.HubClient.Services.Implementation
             httpClient = new HttpClient { BaseAddress = new Uri(serverUri, projectId) };
             this.waitForConnection = waitForConnection;
         }
-        public async Task UploadStepsAsync(Step[] steps, CancellationToken ct)
+        public Task UploadStepsAsync(Step[] steps, CancellationToken ct)
+        {
+            var batch = new UploadBatch { Steps = steps };
+            return UploadAsync("actions-batches", batch, ct);
+        }
+        public Task RegisterSessionAsync(Session session, CancellationToken ct)
+        {
+            return UploadAsync("sessions", session, ct);
+        }
+        async Task UploadAsync<T>(string relativeUrl, T data, CancellationToken ct)
         {
             HttpResponseMessage response;
             long retry = 0;
@@ -28,10 +37,10 @@ namespace Sharp.Redux.HubClient.Services.Implementation
                 {
                     await Task.Delay(TimeSpan.FromSeconds(5));
                 }
-                var batch = new UploadBatch { Steps = steps };
-                string body = JsonConvert.SerializeObject(batch);
+                string body = JsonConvert.SerializeObject(data);
                 var request = new HttpRequestMessage
                 {
+                    RequestUri = new Uri(relativeUrl),
                     Method = HttpMethod.Post,
                     Content = new StringContent(body, System.Text.Encoding.UTF8, "application/json"),
                 };

@@ -7,6 +7,7 @@ namespace Sharp.Redux.HubClient.Services.Abstract
 {
     public interface ICommunicator: IDisposable
     {
+        Task RegisterSessionAsync(Session session, CancellationToken ct);
         Task UploadStepsAsync(Step[] steps, CancellationToken ct);
     }
 }
