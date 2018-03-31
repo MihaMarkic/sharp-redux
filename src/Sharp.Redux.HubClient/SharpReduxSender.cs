@@ -22,7 +22,7 @@ namespace Sharp.Redux.HubClient
         Task processor;
         readonly BlockingCollection<Step> buffer;
         readonly IPersister persister;
-        int counter = 1;
+        int counter = 0;
         readonly Session session;
         public SessionInfo SessionInfo { get; private set; }
         public static void Start(string projectId, Uri serverUri, IReduxDispatcher dispatcher, SessionInfo sessionInfo, SharpReduxSenderSettings settings)
@@ -34,7 +34,11 @@ namespace Sharp.Redux.HubClient
             Default = new SharpReduxSender(projectId, serverUri, dispatcher, sessionInfo, settings, settings.PersistData ? new Persister() : null);
             Default.Start();
         }
-        internal SharpReduxSender(string projectId, Uri serverUri, IReduxDispatcher dispatcher, SessionInfo sessionInfo, SharpReduxSenderSettings settings, IPersister persister)
+        internal SharpReduxSender(string projectId, Uri serverUri, IReduxDispatcher dispatcher, SessionInfo sessionInfo, SharpReduxSenderSettings settings, IPersister persister):
+            this(projectId,serverUri, dispatcher,sessionInfo, settings, persister, new Communicator(projectId, serverUri, settings.WaitForConnection))
+        {}
+        internal SharpReduxSender(string projectId, Uri serverUri, IReduxDispatcher dispatcher, SessionInfo sessionInfo, SharpReduxSenderSettings settings, IPersister persister,
+            ICommunicator communicator)
         {
             this.projectId = projectId;
             this.dispatcher = dispatcher;
@@ -43,7 +47,7 @@ namespace Sharp.Redux.HubClient
             this.settings = settings;
             cts = new CancellationTokenSource();
             buffer = new BlockingCollection<Step>();
-            communicator = new Communicator(projectId, serverUri, settings.WaitForConnection);
+            this.communicator = communicator;
             SessionInfo = sessionInfo;
             session = new Session { Id = Guid.NewGuid(), ClientDateTime = DateTimeOffset.Now, AppVersion = sessionInfo.AppVersion, UserName = sessionInfo.UserName };
         }
@@ -58,19 +62,23 @@ namespace Sharp.Redux.HubClient
         }
         void Dispatcher_StateChanged(object sender, StateChangedEventArgs e)
         {
-            var step = new Step
-            {
-                SessionId = session.Id,
-                Id = counter++,
-                Action = e.Action,
-                State = e.State,
-                Time = DateTimeOffset.Now
-            };
+            var step = CreateStepFromStateChange(session.Id, counter++, settings, e);
             if (settings.PersistData)
             {
                 persister.Save(step);
             }
             buffer.Add(step);
+        }
+        internal static Step CreateStepFromStateChange(Guid sessionId, int counter, SharpReduxSenderSettings settings, StateChangedEventArgs e)
+        {
+            return new Step
+            {
+                SessionId = sessionId,
+                Id = counter,
+                Action = e.Action,
+                State = settings.IncludeState ? e.State: null,
+                Time = DateTimeOffset.Now
+            };
         }
 
         public void Start()
@@ -126,7 +134,6 @@ namespace Sharp.Redux.HubClient
                 } while (steps.Length > 0);
                 persister.RemoveSession(session.Id);
             }
-            await Task.Delay(100, ct);
         }
         internal static bool WaitForBatch(BlockingCollection<Step> buffer, List<Step> steps, int batchSize, TimeSpan waitSpan, CancellationToken ct)
         {

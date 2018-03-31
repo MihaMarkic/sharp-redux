@@ -16,6 +16,7 @@
     <PackageReference Include="LiteDB" Version="4.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Righthand.Immutable" Version="1.0.2" />
+    <PackageReference Include="NSubstitute" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>
