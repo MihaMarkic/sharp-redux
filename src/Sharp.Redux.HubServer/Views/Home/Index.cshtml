@@ -1,33 +1,36 @@
-﻿@inject SignInManager<ApplicationUser> SignInManager
-@model IndexViewModel
+﻿@model IndexViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="row">
-    @if (SignInManager.IsSignedIn(User))
+    @if (Model.IsSignedIn)
     {
         <h2>Projects</h2>
         @if (Model.Projects.Length > 0)
         {
-        <table class="table">
-            <caption>List of projects</caption>
-            <thead>
-                <tr class="m-0">
-                    <th scope="col" class="w-25">Id</th>
-                    <th scope="col" class="w-75">Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var project in Model.Projects)
-        {
-            <tr class="m-0">
-                <th scope="row" class="w-25">@project.Id</th>
-                <td class="w-75">@project.Description</td>
-        </tr>
-}
-            </tbody>
-        </table>
+            <table class="table">
+                <caption>List of projects</caption>
+                <thead>
+                    <tr class="m-0">
+                        <th scope="col" class="w-35">Id</th>
+                        <th scope="col" class="w-65">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var project in Model.Projects)
+                    {
+                        <tr class="m-0">
+                            <th scope="row" class="w-35">
+                                <a asp-area="" asp-controller="Home" asp-action="ProjectDetails" asp-route-id="@project.Id">
+                                    @project.Id
+                                </a>
+                            </th>
+                            <td class="w-65">@project.Description</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         }
         else
         {

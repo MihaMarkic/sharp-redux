@@ -33,3 +33,16 @@
         display: none;
     }
 }
+
+.w-40 {
+    width: 40% !important;
+}
+.w-60 {
+    width: 60% !important;
+}
+.w-35 {
+    width: 35% !important;
+}
+.w-65 {
+    width: 65% !important;
+}

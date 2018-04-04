@@ -1,4 +1,5 @@
 ﻿using Sharp.Redux.HubServer.Data;
+using System;
 
 namespace Sharp.Redux.HubServer.Services
 {
@@ -6,5 +7,6 @@ namespace Sharp.Redux.HubServer.Services
     {
         void AddProject(SharpReduxProject project);
         SharpReduxProject[] GetUserProjects(string userId);
+        SharpReduxProject GetUserProject(string userId, Guid projectId);
     }
 }

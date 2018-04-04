@@ -2,8 +2,14 @@
 
 namespace Sharp.Redux.HubServer.Models.Home
 {
-    public class IndexViewModel
+    public readonly struct IndexViewModel
     {
-        public SharpReduxProject[] Projects { get; set; }
+        public bool IsSignedIn { get;  }
+        public SharpReduxProject[] Projects { get; }
+        public IndexViewModel(bool isSignedIn, SharpReduxProject[] projects)
+        {
+            IsSignedIn = isSignedIn;
+            Projects = projects;
+        }
     }
 }

@@ -7,7 +7,7 @@
 <form asp-action="CreateProject" method="post">
     <div class="form-group">
         <label asp-for="Description">Description</label>
-        <input type="text" class="form-control" asp-for="Description" aria-describedby="project_description_help" placeholder="Enter project description">
+        <input type="text" class="form-control" asp-for="Description" aria-describedby="project_description_help" placeholder="Enter project description" autofocus>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-primary">Create</button>

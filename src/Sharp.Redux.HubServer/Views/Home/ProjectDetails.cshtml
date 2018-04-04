@@ -1,0 +1,14 @@
+﻿@model ProjectDetailsViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h2>Project details</h2>
+<form>
+    <div class="form-group">
+        <label asp-for="Id">Id</label>
+        <input type="text" class="form-control" asp-for="Id" value="@Model.Id" readonly>
+        <label asp-for="Description">Description</label>
+        <input type="text" class="form-control" asp-for="Description" value="@Model.Description" readonly>
+        </div>
+</form>

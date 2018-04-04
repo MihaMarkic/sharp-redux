@@ -12,26 +12,30 @@ using System.Threading.Tasks;
 namespace Sharp.Redux.HubServer.Controllers
 {
     [Authorize]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-        readonly UserManager<ApplicationUser> userManager;
         readonly IProjectStore projectStore;
-        public HomeController(IProjectStore projectStore, UserManager<ApplicationUser> userManager)
+        public HomeController(IProjectStore projectStore, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager):
+            base(userManager, signInManager)
         {
             this.projectStore = projectStore;
-            this.userManager = userManager;
         }
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var user = await userManager.GetUserAsync(User);
-            if (user == null)
+            SharpReduxProject[] projects;
+            bool isSignedIn = signInManager.IsSignedIn(User);
+            if (isSignedIn)
             {
-                throw new ApplicationException($"Unable to load user with ID '{userManager.GetUserId(User)}'.");
+                var user = await GetUserAsync();
+                projects = projectStore.GetUserProjects(user.Id);
             }
-            var projects = projectStore.GetUserProjects(user.Id);
-            IndexViewModel model = new IndexViewModel { Projects = projects };
+            else
+            {
+                projects = new SharpReduxProject[0];
+            }
+            IndexViewModel model = new IndexViewModel (isSignedIn, projects);
             return base.View(model);
         }
         [HttpGet]
@@ -39,15 +43,22 @@ namespace Sharp.Redux.HubServer.Controllers
         {
             return View(new NewProjectViewModel());
         }
+        [HttpGet]
+        public async Task<IActionResult> ProjectDetails(Guid id)
+        {
+            var user = await GetUserAsync();
+            var project = projectStore.GetUserProject(user.Id, id);
+            if (project == null)
+            {
+                throw new ArgumentException($"Couldn't find project {id}");
+            }
+            return View(new ProjectDetailsViewModel(project.Id, project.Description, null));
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateProject(NewProjectViewModel model)
         {
-            var user = await userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{userManager.GetUserId(User)}'.");
-            }
+            var user = await GetUserAsync();
 
             if (ModelState.IsValid)
             {

@@ -1,5 +1,6 @@
 ﻿using LiteDB;
 using Sharp.Redux.HubServer.Data;
+using System;
 using System.Linq;
 
 namespace Sharp.Redux.HubServer.Services
@@ -20,6 +21,18 @@ namespace Sharp.Redux.HubServer.Services
         public void AddProject(SharpReduxProject project)
         {
             projects.Insert(project);
+        }
+        public SharpReduxProject GetUserProject(string userId, Guid projectId)
+        {
+            var project = projects.FindById(projectId);
+            if (project.UserId == userId)
+            {
+                return project;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }
