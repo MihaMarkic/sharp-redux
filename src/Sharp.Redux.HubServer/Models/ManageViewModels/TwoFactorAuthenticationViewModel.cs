@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Sharp.Redux.HubServer.Models.ManageViewModels
+﻿namespace Sharp.Redux.HubServer.Models.ManageViewModels
 {
     public class TwoFactorAuthenticationViewModel
     {

@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using LiteDB;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Sharp.Redux.HubServer.Data;
 using Sharp.Redux.HubServer.Models;
 using Sharp.Redux.HubServer.Services;
 
@@ -26,11 +21,12 @@ namespace Sharp.Redux.HubServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
+            
+            services.AddScoped<IUserStore<ApplicationUser>, UserStore>();
+            services.AddScoped<IRoleStore<IdentityRole>, RoleStore>();
+            services.AddScoped<IProjectStore, ProjectStore>();
+            services.AddSingleton(new LiteDatabase("data.db"));
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             // Add application services.

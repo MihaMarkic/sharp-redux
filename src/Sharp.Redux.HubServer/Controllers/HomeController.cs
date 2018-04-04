@@ -1,34 +1,66 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Sharp.Redux.HubServer.Data;
 using Sharp.Redux.HubServer.Models;
+using Sharp.Redux.HubServer.Models.Home;
+using Sharp.Redux.HubServer.Services;
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Sharp.Redux.HubServer.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        readonly UserManager<ApplicationUser> userManager;
+        readonly IProjectStore projectStore;
+        public HomeController(IProjectStore projectStore, UserManager<ApplicationUser> userManager)
         {
-            return View();
+            this.projectStore = projectStore;
+            this.userManager = userManager;
         }
-
-        public IActionResult About()
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Index()
         {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
+            var user = await userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{userManager.GetUserId(User)}'.");
+            }
+            var projects = projectStore.GetUserProjects(user.Id);
+            IndexViewModel model = new IndexViewModel { Projects = projects };
+            return base.View(model);
         }
-
-        public IActionResult Contact()
+        [HttpGet]
+        public IActionResult CreateProject()
         {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
+            return View(new NewProjectViewModel());
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateProject(NewProjectViewModel model)
+        {
+            var user = await userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{userManager.GetUserId(User)}'.");
+            }
 
+            if (ModelState.IsValid)
+            {
+                var project = new SharpReduxProject
+                {
+                    Created = DateTimeOffset.Now,
+                    Description = model.Description,
+                    UserId = user.Id,
+                };
+                projectStore.AddProject(project);
+            }
+            return RedirectToAction(nameof(Index));
+        }
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
