@@ -13,9 +13,9 @@ namespace Sharp.Redux.HubClient.Services.Implementation
     {
         readonly HttpClient httpClient;
         readonly Func<CancellationToken, Task> waitForConnection;
-        public Communicator(string projectId, Uri serverUri, Func<CancellationToken, Task> waitForConnection)
+        public Communicator(Guid projectId, Uri serverUri, Func<CancellationToken, Task> waitForConnection)
         {
-            httpClient = new HttpClient { BaseAddress = new Uri(serverUri, projectId) };
+            httpClient = new HttpClient { BaseAddress = serverUri };
             this.waitForConnection = waitForConnection;
         }
         public Task UploadStepsAsync(Step[] steps, CancellationToken ct)
