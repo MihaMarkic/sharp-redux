@@ -25,6 +25,8 @@ namespace Sharp.Redux.HubServer
             services.AddScoped<IUserStore<ApplicationUser>, UserStore>();
             services.AddScoped<IRoleStore<IdentityRole>, RoleStore>();
             services.AddScoped<IProjectStore, ProjectStore>();
+            services.AddScoped<ISessionStore, SessionStore>();
+            services.AddScoped<IStepStore, StepStore>();
             services.AddSingleton(new LiteDatabase("data.db"));
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddDefaultTokenProviders();

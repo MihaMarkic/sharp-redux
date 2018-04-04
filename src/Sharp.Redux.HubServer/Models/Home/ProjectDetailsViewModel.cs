@@ -7,13 +7,23 @@ namespace Sharp.Redux.HubServer.Models.Home
     {
         public Guid Id { get; }
         public string Description { get; }
-        public Session[] Sessions { get; }
+        public SessionViewModel[] Sessions { get; }
 
-        public ProjectDetailsViewModel(Guid id, string description, Session[] sessions)
+        public ProjectDetailsViewModel(Guid id, string description, SessionViewModel[] sessions)
         {
             Id = id;
             Description = description;
             Sessions = sessions;
+        }
+    }
+    public readonly struct SessionViewModel
+    {
+        public Session Session { get; }
+        public int StepCount { get; }
+        public SessionViewModel(Session session, int stepCount)
+        {
+            Session = session;
+            StepCount = stepCount;
         }
     }
 }

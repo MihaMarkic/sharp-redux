@@ -34,5 +34,9 @@ namespace Sharp.Redux.HubServer.Services
                 return null;
             }
         }
+        public bool DoesExist(Guid id)
+        {
+            return projects.FindOne(p => p.Id == id) != null;
+        }
     }
 }

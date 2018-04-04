@@ -7,6 +7,7 @@ using Sharp.Redux.HubServer.Models.Home;
 using Sharp.Redux.HubServer.Services;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Sharp.Redux.HubServer.Controllers
@@ -15,10 +16,15 @@ namespace Sharp.Redux.HubServer.Controllers
     public class HomeController : BaseController
     {
         readonly IProjectStore projectStore;
-        public HomeController(IProjectStore projectStore, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager):
+        readonly ISessionStore sessionStore;
+        readonly IStepStore stepStore;
+        public HomeController(IProjectStore projectStore, ISessionStore sessionStore, IStepStore stepStore,
+            UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager):
             base(userManager, signInManager)
         {
             this.projectStore = projectStore;
+            this.sessionStore = sessionStore;
+            this.stepStore = stepStore;
         }
         [HttpGet]
         [AllowAnonymous]
@@ -52,7 +58,10 @@ namespace Sharp.Redux.HubServer.Controllers
             {
                 throw new ArgumentException($"Couldn't find project {id}");
             }
-            return View(new ProjectDetailsViewModel(project.Id, project.Description, null));
+            var sessions = (from s in sessionStore.GetLast(id, 10)
+                                select new SessionViewModel(s, stepStore.CountForSession(s.Id))
+                            ).ToArray();
+            return View(new ProjectDetailsViewModel(project.Id, project.Description, sessions));
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
