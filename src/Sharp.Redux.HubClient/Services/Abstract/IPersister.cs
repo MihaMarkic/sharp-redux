@@ -12,5 +12,6 @@ namespace Sharp.Redux.HubClient.Services.Abstract
         Step[] GetStepsFromSession(Guid sessionId, int maxCount);
         bool RemoveSession(Guid sessionId);
         Guid RegisterSession(Session session);
+        bool IsRunning { get; }
     }
 }

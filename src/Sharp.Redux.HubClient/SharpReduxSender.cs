@@ -1,4 +1,6 @@
-﻿using Sharp.Redux.HubClient.Models;
+﻿using Newtonsoft.Json;
+using Sharp.Redux.HubClient.Core;
+using Sharp.Redux.HubClient.Models;
 using Sharp.Redux.HubClient.Services.Abstract;
 using Sharp.Redux.HubClient.Services.Implementation;
 using Sharp.Redux.Shared.Models;
@@ -18,6 +20,7 @@ namespace Sharp.Redux.HubClient
         readonly SharpReduxSenderSettings settings;
         readonly ICommunicator communicator;
         public static SharpReduxSender Default { get; private set; }
+        public static HubClientSettings Settings { get; } = new HubClientSettings();
         readonly CancellationTokenSource cts;
         Task processor;
         readonly BlockingCollection<Step> buffer;
@@ -57,32 +60,38 @@ namespace Sharp.Redux.HubClient
                 AppVersion = sessionInfo.AppVersion,
                 UserName = sessionInfo.UserName
             };
+            Logger.Log(LogLevel.Info, $"Created session {session.Id}");
         }
+        bool IsPersisterRunning => persister?.IsRunning ?? false;
         public Task UpdateSessionInfoAsync(SessionInfo sessionInfo, CancellationToken ct)
         {
             SessionInfo = sessionInfo;
             session.AppVersion = sessionInfo.AppVersion;
             session.UserName = sessionInfo.UserName;
+            Logger.Log(LogLevel.Info, $"Updates session with appVersion:{sessionInfo.AppVersion} and UserName:{sessionInfo.UserName}");
             // update
+            return UploadSessionAsync(ct);
+        }
+        internal Task UploadSessionAsync(CancellationToken ct)
+        {
             persister?.RegisterSession(session);
             return communicator.RegisterSessionAsync(session, ct);
         }
         void Dispatcher_StateChanged(object sender, StateChangedEventArgs e)
         {
             var step = CreateStepFromStateChange(session.Id, counter++, settings, e);
-            if (settings.PersistData)
-            {
-                persister.Save(step);
-            }
+            persister?.Save(step);
             buffer.Add(step);
+            Logger.Log(LogLevel.Debug, $"Got action {e.Action.GetType().Name}");
         }
         internal static Step CreateStepFromStateChange(Guid sessionId, int counter, SharpReduxSenderSettings settings, StateChangedEventArgs e)
         {
             return new Step
             {
                 SessionId = sessionId,
-                Id = counter,
-                Action = e.Action,
+                Id = counter++,
+                ActionType = e.Action.GetType().FullName,
+                Action = JsonConvert.SerializeObject(e.Action),
                 State = settings.IncludeState ? e.State: null,
                 Time = DateTimeOffset.Now
             };
@@ -92,25 +101,31 @@ namespace Sharp.Redux.HubClient
         {
             if (processor != null)
             {
+                Logger.Log(LogLevel.Error, "Processor already running");
                 throw new Exception("Processor already running");
             }
             persister?.Start(settings.DataFile);
+            Logger.Log(LogLevel.Debug, "Starting processor");
             processor = Task.Run(() => ProcessorAsync(cts.Token), cts.Token);
         }
         public bool IsRunning => processor != null;
         async Task ProcessorAsync(CancellationToken ct)
         {
-            if (settings.PersistData)
+            if (IsPersisterRunning)
             {
                 await ProcessPersistedAsync(ct);
                 persister.RegisterSession(session);
             }
+            await UploadSessionAsync(ct);
             List<Step> steps = new List<Step>(settings.BatchSize);
             while (!ct.IsCancellationRequested)
             {
+                Logger.Log(LogLevel.Debug, "Waiting for batch");
                 if (WaitForBatch(buffer, steps, settings.BatchSize, settings.CollectionSpan, ct))
                 {
+                    Logger.Log(LogLevel.Info, $"Got batch of size {steps.Count}");
                     await UploadBatchAsync(steps.ToArray(), ct);
+                    steps.Clear();
                 }
             }
         }
@@ -118,6 +133,7 @@ namespace Sharp.Redux.HubClient
         {
             await communicator.UploadStepsAsync(steps, ct);
             persister?.Remove(steps);
+            Logger.Log(LogLevel.Info, "Batch upload complete");
         }
         /// <summary>
         /// Process not uploaded data.
@@ -146,6 +162,7 @@ namespace Sharp.Redux.HubClient
         {
             try
             {
+                Logger.Log(LogLevel.Debug, "Waiting for first action");
                 steps.Add(buffer.Take(ct));
             }
             catch (OperationCanceledException)
@@ -161,24 +178,29 @@ namespace Sharp.Redux.HubClient
                     while (steps.Count < batchSize)
                     {
                         steps.Add(buffer.Take(linkedSource.Token));
+                        Logger.Log(LogLevel.Debug, "Action added to batch");
                     }
                 }
-                catch (OperationCanceledException ex)
+                catch (OperationCanceledException)
                 {
                     if (ct.IsCancellationRequested)
                     {
                         return false;
                     }
+                    Logger.Log(LogLevel.Debug, $"Timeout expired for batch waiting, got {steps.Count}");
                 }
             }
             return true;
         }
         public async Task StopAsync()
         {
+            Logger.Log(LogLevel.Info, "Stopping");
             dispatcher.StateChanged -= Dispatcher_StateChanged;
             cts.Cancel();
             await processor;
             processor = null;
+            Logger.Log(LogLevel.Info, "Stopped");
+
         }
 
         public void Dispose()

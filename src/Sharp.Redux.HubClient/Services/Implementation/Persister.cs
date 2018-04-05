@@ -15,9 +15,20 @@ namespace Sharp.Redux.HubClient.Services.Implementation
         LiteCollection<Session> sessions;
         public void Start(string dataFile)
         {
-            db = new LiteDatabase(dataFile);
+            Core.Logger.Log(LogLevel.Debug, "Starting persister");
+            try
+            {
+                db = new LiteDatabase(dataFile);
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.Log(LogLevel.Error, ex, "Failed creating database, persister won't work");
+                throw;
+            }
             Init();
+            Core.Logger.Log(LogLevel.Info, "Persister start is complete");
         }
+        public bool IsRunning => db != null;
         public void Start(Stream stream)
         {
             db = new LiteDatabase(stream, disposeStream: true);
@@ -44,12 +55,18 @@ namespace Sharp.Redux.HubClient.Services.Implementation
         }
         public Guid RegisterSession(Session session)
         {
-            sessions.Insert(session);
+            if (IsRunning)
+            {
+                sessions.Insert(session);
+            }
             return session.Id;
         }
         public void Save(Step step)
         {
-            steps.Insert(step);
+            if (IsRunning)
+            {
+                steps.Insert(step);
+            }
         }
         public void Remove(Step[] stepsToDelete)
         {
@@ -61,6 +78,7 @@ namespace Sharp.Redux.HubClient.Services.Implementation
             int deleted = steps.Delete(Query.In("_id", ids));
             if (deleted != ids.Count)
             {
+                Core.Logger.Log(LogLevel.Error, "Failed deleting steps in persister");
                 throw new Exception("Failed to delete all items");
             }
         }
