@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharp.Redux.Visualizer", ".
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.Visualizer.Wpf", "..\..\src\Sharp.Redux.Visualizer.Wpf\Sharp.Redux.Visualizer.Wpf.csproj", "{72C58239-221F-4DA3-99E3-3DC0C27114BC}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharp.Redux.HubClient", "..\..\src\Sharp.Redux.HubClient\Sharp.Redux.HubClient.csproj", "{FFD914BB-62BA-4A1B-9EEE-4E7DE1A4DE8B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharp.Redux.Shared", "..\..\src\Sharp.Redux.Shared\Sharp.Redux.Shared.csproj", "{4C88DC2F-052B-467F-BBF2-F1336C006BDD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +45,14 @@ Global
 		{72C58239-221F-4DA3-99E3-3DC0C27114BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72C58239-221F-4DA3-99E3-3DC0C27114BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72C58239-221F-4DA3-99E3-3DC0C27114BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFD914BB-62BA-4A1B-9EEE-4E7DE1A4DE8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFD914BB-62BA-4A1B-9EEE-4E7DE1A4DE8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFD914BB-62BA-4A1B-9EEE-4E7DE1A4DE8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFD914BB-62BA-4A1B-9EEE-4E7DE1A4DE8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C88DC2F-052B-467F-BBF2-F1336C006BDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C88DC2F-052B-467F-BBF2-F1336C006BDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C88DC2F-052B-467F-BBF2-F1336C006BDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C88DC2F-052B-467F-BBF2-F1336C006BDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,6 +61,8 @@ Global
 		{9FA9B707-99A7-4BB9-B684-4513E0A6205C} = {C751071F-2537-4C6F-82FB-321C2064358C}
 		{78ADF8D9-876D-4101-8F02-74965FEF4050} = {C751071F-2537-4C6F-82FB-321C2064358C}
 		{72C58239-221F-4DA3-99E3-3DC0C27114BC} = {C751071F-2537-4C6F-82FB-321C2064358C}
+		{FFD914BB-62BA-4A1B-9EEE-4E7DE1A4DE8B} = {C751071F-2537-4C6F-82FB-321C2064358C}
+		{4C88DC2F-052B-467F-BBF2-F1336C006BDD} = {C751071F-2537-4C6F-82FB-321C2064358C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7A8FFCF9-54A3-4668-83E0-4B1B7A651A86}

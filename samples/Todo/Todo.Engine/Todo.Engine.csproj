@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
-    <TargetFramework>netstandard1.2</TargetFramework>
+    <TargetFramework>netstandard1.3</TargetFramework>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -10,12 +10,14 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.6.2" />
     <PackageReference Include="Fody" Version="2.3.8" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="PropertyChanged.Fody" Version="2.2.4" />
-    <PackageReference Include="Righthand.Immutable" Version="1.0.0" />
+    <PackageReference Include="Righthand.Immutable" Version="1.0.2" />
     <PackageReference Include="System.Collections.Immutable" Version="1.4.0" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.4.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Sharp.Redux.HubClient\Sharp.Redux.HubClient.csproj" />
     <ProjectReference Include="..\..\..\src\Sharp.Redux\Sharp.Redux.csproj" />
   </ItemGroup>
 </Project>

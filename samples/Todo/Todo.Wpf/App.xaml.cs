@@ -14,8 +14,10 @@ namespace Todo.Wpf
         {
             IoC.Init();
             // connect visualizer
+            var sourceDispatcher = IoCRegistrar.Container.Resolve<ITodoReduxDispatcher>();
+            Bootstrapper.Init(sourceDispatcher);
             ReduxVisualizer.Init(
-                IoCRegistrar.Container.Resolve<ITodoReduxDispatcher>(),
+                sourceDispatcher,
                 new string[] { "Todo.Engine.Actions" });
             base.OnStartup(e);
         }
