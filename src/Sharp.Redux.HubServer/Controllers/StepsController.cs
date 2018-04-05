@@ -23,10 +23,17 @@ namespace Sharp.Redux.HubServer.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("[controller]")]
-        public IActionResult CreateOrUpdate(UploadBatch batch)
+        public IActionResult CreateOrUpdate([FromBody]UploadBatch batch)
         {
-            SaveSteps(batch.Steps);
-            return Ok();
+            if (batch?.Steps?.Length > 0)
+            {
+                SaveSteps(batch.Steps);
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("No steps");
+            }
         }
         void SaveSteps(Step[] steps)
         {

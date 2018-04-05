@@ -34,8 +34,16 @@ namespace Sharp.Redux.HubServer.Controllers
             bool isSignedIn = signInManager.IsSignedIn(User);
             if (isSignedIn)
             {
-                var user = await GetUserAsync();
-                projects = projectStore.GetUserProjects(user.Id);
+                try
+                {
+                    var user = await GetUserAsync();
+                    projects = projectStore.GetUserProjects(user.Id);
+                }
+                catch (Exception ex)
+                {
+                    await signInManager.SignOutAsync();
+                    projects = new SharpReduxProject[0];
+                }
             }
             else
             {

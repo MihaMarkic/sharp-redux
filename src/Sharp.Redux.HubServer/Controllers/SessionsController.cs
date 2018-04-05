@@ -23,7 +23,7 @@ namespace Sharp.Redux.HubServer.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("[controller]")]
-        public IActionResult CreateOrUpdate(Session session)
+        public IActionResult CreateOrUpdate([FromBody]Session session)
         {
             if (!projectStore.DoesExist(session.ProjectId))
             {

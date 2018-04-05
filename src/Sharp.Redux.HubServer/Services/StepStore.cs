@@ -11,15 +11,12 @@ namespace Sharp.Redux.HubServer.Services
         public StepStore(LiteDatabase db)
         {
             steps = db.GetCollection<Step>();
-            steps.EnsureIndex(u => u.Id, unique: true);
+            steps.EnsureIndex(u => u.Id);
             steps.EnsureIndex(u => u.SessionId);
         }
         public void AddOrUpdate(Step step)
         {
-            if (!steps.Upsert(step))
-            {
-                throw new Exception("Failed upserting step");
-            }
+            steps.Upsert(step);
         }
         public Step[] GetLast(Guid sessionId, int max)
         {
