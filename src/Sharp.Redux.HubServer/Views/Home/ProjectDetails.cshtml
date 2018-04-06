@@ -1,6 +1,6 @@
 ﻿@model ProjectDetailsViewModel
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Project details";
 }
 
 <h2>Project details</h2>
@@ -11,21 +11,22 @@
         <label asp-for="Description">Description</label>
         <input type="text" class="form-control" asp-for="Description" value="@Model.Description" readonly>
     </div>
-    @if (Model.Sessions.Length > 0)
-    {
-        <table class="table">
-            <caption>List of sessions (max 10)</caption>
-            <thead>
-                <tr class="m-0">
-                    <th scope="col">Client Date</th>
-                    <th scope="col">App version</th>
-                    <th scope="col">Username</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var session in Model.Sessions)
-                {
+</form>
+@if (Model.Sessions.Length > 0)
+{
+    <table class="table">
+        <caption>List of sessions (max 10)</caption>
+        <thead>
+            <tr class="m-0">
+                <th scope="col">Client Date</th>
+                <th scope="col">App version</th>
+                <th scope="col">Username</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var session in Model.Sessions)
+            {
                 <tr class="m-0">
                     <th scope="row">
                         <a asp-area="" asp-controller="Home" asp-action="SessionDetails" asp-route-id="@session.Session.Id">
@@ -36,12 +37,11 @@
                     <td>@session.Session.UserName</td>
                     <td>@session.StepCount</td>
                 </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <div>No sessions yet.</div>
-    }
-</form>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div>No sessions yet.</div>
+}

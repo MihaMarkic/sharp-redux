@@ -8,8 +8,11 @@ namespace Sharp.Redux.HubServer.Services
     public class SessionStore : ISessionStore
     {
         readonly LiteCollection<Session> sessions;
-        public SessionStore(LiteDatabase db)
+        readonly IProjectStore projectStore;
+        public SessionStore(LiteDatabase db, IProjectStore projectStore)
         {
+            this.projectStore = projectStore;
+
             sessions = db.GetCollection<Session>();
             sessions.EnsureIndex(u => u.Id, unique: true);
             sessions.EnsureIndex(u => u.ClientDateTime);
@@ -24,11 +27,23 @@ namespace Sharp.Redux.HubServer.Services
         }
         public Session[] GetLast(Guid projectId, int max)
         {
-            return sessions.Find(s => s.ProjectId == projectId).OrderByDescending(s => s.ClientDateTime).ToArray();
+            return sessions.Find(s => s.ProjectId == projectId, limit: max).OrderByDescending(s => s.ClientDateTime).ToArray();
         }
         public bool DoesExist(Guid id)
         {
             return sessions.FindOne(p => p.Id == id) != null;
+        }
+        public Session Get(string userId, Guid sessionId)
+        {
+            var session = sessions.FindById(sessionId);
+            if (session != null)
+            {
+                if (projectStore.GetUserProject(userId, session.ProjectId) != null)
+                {
+                    return session;
+                }
+            }
+            return null;
         }
     }
 }

@@ -9,5 +9,6 @@ namespace Sharp.Redux.HubServer.Services
         void AddOrUpdate(Session session);
         Session[] GetLast(Guid projectId, int max);
         bool DoesExist(Guid id);
+        Session Get(string userId, Guid sessionId);
     }
 }

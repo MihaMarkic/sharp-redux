@@ -1,0 +1,45 @@
+﻿@model SessionDetailsViewModel
+@{
+    ViewData["Title"] = "Session details";
+}
+
+<h2>Session details</h2>
+<form>
+    <div class="form-group">
+        <label >Id</label>
+        <input type="text" class="form-control" value="@Model.Session.Id" readonly>
+        <label >Description</label>
+        <input type="text" class="form-control" value="@Model.Session.ClientDateTime" readonly>
+        <label >Application Version</label>
+        <input type="text" class="form-control" value="@Model.Session.AppVersion" readonly>
+        <label >Username</label>
+        <input type="text" class="form-control" value="@Model.Session.UserName" readonly>
+    </div>
+</form>
+@if (Model.Steps.Length > 0)
+{
+    <table class="table">
+        <caption>List of steps (max 10)</caption>
+        <thead>
+            <tr class="m-0">
+                <th scope="col">Client Date</th>
+                <th scope="col">Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var step in Model.Steps)
+            {
+                <tr class="m-0">
+                    <th scope="row">
+                        @step.Step.Time
+                    </th>
+                    <td>@step.NormalizedActionType</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div>No actions yet.</div>
+}

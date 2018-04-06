@@ -71,6 +71,20 @@ namespace Sharp.Redux.HubServer.Controllers
                             ).ToArray();
             return View(new ProjectDetailsViewModel(project.Id, project.Description, sessions));
         }
+        [HttpGet]
+        public async Task<IActionResult> SessionDetails(Guid id)
+        {
+            var user = await GetUserAsync();
+            var session = sessionStore.Get(user.Id, id);
+            if (session == null)
+            {
+                throw new ArgumentException($"Couldn't find session {id}");
+            }
+            var steps = (from s in stepStore.GetLast(id, 10)
+                            select new StepViewModel(s)
+                            ).ToArray();
+            return View(new SessionDetailsViewModel(session, steps));
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateProject(NewProjectViewModel model)

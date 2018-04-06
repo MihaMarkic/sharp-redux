@@ -25,7 +25,7 @@ namespace Sharp.Redux.HubServer.Services
         public SharpReduxProject GetUserProject(string userId, Guid projectId)
         {
             var project = projects.FindById(projectId);
-            if (project.UserId == userId)
+            if (project?.UserId == userId)
             {
                 return project;
             }

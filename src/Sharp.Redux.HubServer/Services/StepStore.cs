@@ -20,7 +20,7 @@ namespace Sharp.Redux.HubServer.Services
         }
         public Step[] GetLast(Guid sessionId, int max)
         {
-            return steps.Find(s => s.SessionId == sessionId).OrderByDescending(s => s.Id).ToArray();
+            return steps.Find(s => s.SessionId == sessionId, limit: max).OrderByDescending(s => s.Id).ToArray();
         }
         public int CountForSession(Guid sessionId)
         {
