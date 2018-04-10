@@ -153,7 +153,7 @@ namespace Sharp.Redux.HubClient.Test
                 dispatcher = Substitute.For<IReduxDispatcher>();
                 communicator = Substitute.For<ICommunicator>();
                 settings = new SharpReduxSenderSettings(true, false, dataFile: "test.file");
-                target = new SharpReduxSender(Guid.NewGuid(), serverUri: new Uri("https://blog.rthand.com/"), dispatcher,
+                target = new SharpReduxSender("token", serverUri: new Uri("https://blog.rthand.com/"), dispatcher,
                     new SessionInfo("tVersion", "user"),settings, persister, communicator);
             }
             [Test]

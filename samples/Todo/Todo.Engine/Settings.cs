@@ -14,7 +14,7 @@ namespace Todo.Engine
     {
         public static bool IsHubEnabled { get; private set; }
         public static Uri HubServer { get; private set; }
-        public static Guid ProjectId { get; private set; }
+        public static string Token { get; private set; }
         public static bool PersistData { get; private set; }
         public static string DataFile { get; private set; }
         public static bool IncludeState { get; private set; }

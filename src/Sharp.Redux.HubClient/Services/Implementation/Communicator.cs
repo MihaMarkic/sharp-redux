@@ -14,11 +14,12 @@ namespace Sharp.Redux.HubClient.Services.Implementation
         readonly HttpClient httpClient;
         readonly Func<CancellationToken, Task> waitForConnection;
         readonly Uri serverUri;
-        public Communicator(Guid projectId, Uri serverUri, Func<CancellationToken, Task> waitForConnection)
+        public Communicator(string token, Uri serverUri, Func<CancellationToken, Task> waitForConnection)
         {
             this.serverUri = serverUri;
             this.waitForConnection = waitForConnection;
             httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("X-Token", $"ReduxToken {token}");
         }
         public Task UploadStepsAsync(Step[] steps, CancellationToken ct)
         {

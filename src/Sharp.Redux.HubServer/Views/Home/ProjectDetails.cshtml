@@ -12,6 +12,38 @@
         <input type="text" class="form-control" asp-for="Description" value="@Model.Description" readonly>
     </div>
 </form>
+<h3>Upload tokens</h3>
+@if (Model.WriteTokens.Length > 0)
+{
+    foreach (var token in Model.WriteTokens)
+    {
+        <div>@token.Id</div>
+    }
+}
+else
+{
+    <div>No tokens.</div>
+}
+    <form asp-action="CreateWriteToken" method="post">
+        @Html.Hidden(nameof(CreateTokenViewModel.ProjectId), Model.Id)
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+<h3>Download tokens</h3>
+@if (Model.ReadTokens.Length > 0)
+{
+    foreach (var token in Model.ReadTokens)
+    {
+        <div>@token.Id</div>
+    }
+}
+else
+{
+    <div>No tokens.</div>
+}
+<form asp-action="CreateReadToken" method="post">
+    @Html.Hidden(nameof(CreateTokenViewModel.ProjectId), Model.Id)
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
 @if (Model.Sessions.Length > 0)
 {
     <table class="table">

@@ -15,7 +15,7 @@ namespace Sharp.Redux.HubClient
     public class SharpReduxSender: IDisposable
     {
         bool isDisposed;
-        readonly Guid projectId;
+        readonly string token;
         readonly IReduxDispatcher dispatcher;
         readonly SharpReduxSenderSettings settings;
         readonly ICommunicator communicator;
@@ -28,22 +28,22 @@ namespace Sharp.Redux.HubClient
         int counter = 0;
         readonly Session session;
         public SessionInfo SessionInfo { get; private set; }
-        public static void Start(Guid projectId, Uri serverUri, IReduxDispatcher dispatcher, SessionInfo sessionInfo, SharpReduxSenderSettings settings)
+        public static void Start(string token, Uri serverUri, IReduxDispatcher dispatcher, SessionInfo sessionInfo, SharpReduxSenderSettings settings)
         {
             if (Default != null)
             {
                 throw new Exception("Sender already running");
             }
-            Default = new SharpReduxSender(projectId, serverUri, dispatcher, sessionInfo, settings, settings.PersistData ? new Persister() : null);
+            Default = new SharpReduxSender(token, serverUri, dispatcher, sessionInfo, settings, settings.PersistData ? new Persister() : null);
             Default.Start();
         }
-        internal SharpReduxSender(Guid projectId, Uri serverUri, IReduxDispatcher dispatcher, SessionInfo sessionInfo, SharpReduxSenderSettings settings, IPersister persister):
-            this(projectId,serverUri, dispatcher,sessionInfo, settings, persister, new Communicator(projectId, serverUri, settings.WaitForConnection))
+        internal SharpReduxSender(string token, Uri serverUri, IReduxDispatcher dispatcher, SessionInfo sessionInfo, SharpReduxSenderSettings settings, IPersister persister):
+            this(token, serverUri, dispatcher,sessionInfo, settings, persister, new Communicator(token, serverUri, settings.WaitForConnection))
         {}
-        internal SharpReduxSender(Guid projectId, Uri serverUri, IReduxDispatcher dispatcher, SessionInfo sessionInfo, SharpReduxSenderSettings settings, IPersister persister,
+        internal SharpReduxSender(string token, Uri serverUri, IReduxDispatcher dispatcher, SessionInfo sessionInfo, SharpReduxSenderSettings settings, IPersister persister,
             ICommunicator communicator)
         {
-            this.projectId = projectId;
+            this.token = token;
             this.dispatcher = dispatcher;
             this.persister = persister;
             dispatcher.StateChanged += Dispatcher_StateChanged;
@@ -55,7 +55,6 @@ namespace Sharp.Redux.HubClient
             session = new Session
             {
                 Id = Guid.NewGuid(),
-                ProjectId = projectId,
                 ClientDateTime = DateTimeOffset.Now,
                 AppVersion = sessionInfo.AppVersion,
                 UserName = sessionInfo.UserName

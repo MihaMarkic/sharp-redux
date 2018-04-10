@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Sharp.Redux.HubServer.Authentication;
 using Sharp.Redux.HubServer.Models;
 using Sharp.Redux.HubServer.Services;
 
@@ -27,12 +28,20 @@ namespace Sharp.Redux.HubServer
             services.AddScoped<IProjectStore, ProjectStore>();
             services.AddScoped<ISessionStore, SessionStore>();
             services.AddScoped<IStepStore, StepStore>();
+            services.AddScoped<ITokenStore, TokenStore>();
             services.AddSingleton(new LiteDatabase("data.db"));
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddDefaultTokenProviders();
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddAuthentication().AddScheme<ReduxTokenAuthenticationOptions, ReduxTokenAuthentication>(
+                ReduxTokenAuthenticationOptions.AuthenticationScheme, 
+                options => 
+                {
+                    var builder = services.BuildServiceProvider();
+                    options.TokenStore = builder.GetRequiredService<ITokenStore>();
+                });
 
             services.AddMvc();
         }

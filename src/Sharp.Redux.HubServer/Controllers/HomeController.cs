@@ -18,13 +18,15 @@ namespace Sharp.Redux.HubServer.Controllers
         readonly IProjectStore projectStore;
         readonly ISessionStore sessionStore;
         readonly IStepStore stepStore;
-        public HomeController(IProjectStore projectStore, ISessionStore sessionStore, IStepStore stepStore,
+        readonly ITokenStore tokenStore;
+        public HomeController(IProjectStore projectStore, ISessionStore sessionStore, IStepStore stepStore, ITokenStore tokenStore,
             UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager):
             base(userManager, signInManager)
         {
             this.projectStore = projectStore;
             this.sessionStore = sessionStore;
             this.stepStore = stepStore;
+            this.tokenStore = tokenStore;
         }
         [HttpGet]
         [AllowAnonymous]
@@ -69,7 +71,8 @@ namespace Sharp.Redux.HubServer.Controllers
             var sessions = (from s in sessionStore.GetLast(id, 10)
                                 select new SessionViewModel(s, stepStore.CountForSession(s.Id))
                             ).ToArray();
-            return View(new ProjectDetailsViewModel(project.Id, project.Description, sessions));
+            var tokens = tokenStore.GetForProject(id);
+            return View(new ProjectDetailsViewModel(project.Id, project.Description, sessions, tokens));
         }
         [HttpGet]
         public async Task<IActionResult> SessionDetails(Guid id)
@@ -106,6 +109,20 @@ namespace Sharp.Redux.HubServer.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateReadToken(CreateTokenViewModel model)
+        {
+            tokenStore.AddReadToken(model.ProjectId);
+            return RedirectToAction(nameof(ProjectDetails), new { Id = model.ProjectId });
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateWriteToken(CreateTokenViewModel model)
+        {
+            tokenStore.AddWriteToken(model.ProjectId);
+            return RedirectToAction(nameof(ProjectDetails), new { Id = model.ProjectId });
         }
     }
 }
