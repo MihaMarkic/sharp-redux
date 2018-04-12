@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Sharp.Redux.HubServer.Authentication;
 using Sharp.Redux.HubServer.Models;
-using Sharp.Redux.HubServer.Models.Home;
 using Sharp.Redux.HubServer.Services;
 using Sharp.Redux.Shared.Models;
 using System;
@@ -15,14 +14,12 @@ namespace Sharp.Redux.HubServer.Controllers
     public class SessionsController : BaseController
     {
         readonly ISessionStore sessionStore;
-        readonly IProjectStore projectStore;
         readonly IStepStore stepStore;
         public SessionsController(ISessionStore sessionStore, IProjectStore projectStore, IStepStore stepStore,
             UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager) :
-            base(userManager, signInManager)
+            base(userManager, signInManager, projectStore)
         {
             this.sessionStore = sessionStore;
-            this.projectStore = projectStore;
             this.stepStore = stepStore;
         }
         [HttpPost]
@@ -44,25 +41,50 @@ namespace Sharp.Redux.HubServer.Controllers
             sessionStore.AddOrUpdate(session);
             return Ok();
         }
-        [HttpGet]
+        [HttpPost]
         [AllowAnonymous]
-        [Route("projects/list")]
+        [Route("[controller]/list")]
         [Authorize(AuthenticationSchemes = ReduxTokenAuthenticationOptions.AuthenticationScheme)]
-        public IActionResult Get(int? max = 10)
+        public IActionResult List([FromBody]SessionsFilter filter)
         {
-            var projectId = Guid.Parse(User.Claims.Single(c => c.Type == ReduxClaim.ProjectId).Value);
-            
-            if (!User.HasClaim(c => c.Type == ReduxClaim.IsRead))
+            var tokenVerificationResult = CheckForPermissions(ReduxClaim.IsRead);
+            if (tokenVerificationResult.StatusCode.HasValue)
             {
-                return StatusCode((int)HttpStatusCode.Unauthorized, "Not allowed");
+                return StatusCode((int)tokenVerificationResult.StatusCode.Value, tokenVerificationResult.Description);
             }
-            if (!projectStore.DoesExist(projectId))
-            {
-                return StatusCode((int)HttpStatusCode.Forbidden, "Project doesn't exist");
-            }
-            var sessions = from s in sessionStore.GetLast(projectId, max.Value)
-                           select new SessionViewModel(s, stepStore.CountForSession(s.Id));
-            return Ok(sessions);
+            var sessions = sessionStore.GetFiltered(tokenVerificationResult.ProjectId, filter);
+            var result = sessions.Select(s => 
+                new SessionInfo
+                {
+                    Id = s.Id,
+                    ClientDateTime = s.ClientDateTime,
+                    AppVersion = s.AppVersion,
+                    UserName = s.UserName,
+                    ActionsCount = stepStore.CountForSession(s.Id),
+                    FirstActionDate = stepStore.GetFirst(s.Id)?.Time,
+                    LastActionDate = stepStore.GetLast(s.Id)?.Time,
+                }).ToArray();
+            return Ok(result);
         }
+        //[HttpGet]
+        //[AllowAnonymous]
+        //[Route("projects/list")]
+        //[Authorize(AuthenticationSchemes = ReduxTokenAuthenticationOptions.AuthenticationScheme)]
+        //public IActionResult Get(int? max = 10)
+        //{
+        //    var projectId = Guid.Parse(User.Claims.Single(c => c.Type == ReduxClaim.ProjectId).Value);
+
+        //    if (!User.HasClaim(c => c.Type == ReduxClaim.IsRead))
+        //    {
+        //        return StatusCode((int)HttpStatusCode.Unauthorized, "Not allowed");
+        //    }
+        //    if (!projectStore.DoesExist(projectId))
+        //    {
+        //        return StatusCode((int)HttpStatusCode.Forbidden, "Project doesn't exist");
+        //    }
+        //    var sessions = from s in sessionStore.GetLast(projectId, max.Value)
+        //                   select new SessionViewModel(s, stepStore.CountForSession(s.Id));
+        //    return Ok(sessions);
+        //}
     }
 }

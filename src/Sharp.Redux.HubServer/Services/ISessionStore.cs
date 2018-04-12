@@ -10,5 +10,6 @@ namespace Sharp.Redux.HubServer.Services
         Session[] GetLast(Guid projectId, int max);
         bool DoesExist(Guid id);
         Session Get(string userId, Guid sessionId);
+        Session[] GetFiltered(Guid projectId, SessionsFilter filter);
     }
 }

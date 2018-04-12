@@ -8,14 +8,14 @@ namespace Sharp.Redux.HubClient.Core
         const string name = "SharpReduxSender";
         public static void Log(LogLevel level, string message)
         {
-            if (level >= SharpReduxSender.Settings.LogLevel)
+            if (level >= SharpReduxManager.Settings.LogLevel)
             {
                 Trace.WriteLine($"{name} {level}:{message}");
             }
         }
         public static void Log(LogLevel level, Exception ex, string message)
         {
-            if (level > SharpReduxSender.Settings.LogLevel)
+            if (level > SharpReduxManager.Settings.LogLevel)
             {
                 Trace.WriteLine($"{name} {level}:{message}");
                 var current = ex;

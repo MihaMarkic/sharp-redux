@@ -1,11 +1,10 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Sharp.Redux.HubClient
 {
-    public struct SharpReduxSenderSettings
+    public struct SharpReduxManagerSettings
     {
         public bool PersistData { get; }
         public bool IncludeState { get; }
@@ -13,7 +12,7 @@ namespace Sharp.Redux.HubClient
         public TimeSpan CollectionSpan { get; }
         public Func<CancellationToken, Task> WaitForConnection { get; }
         public string DataFile { get; }
-        public SharpReduxSenderSettings(bool persistData, bool includeState, int batchSize = 10, TimeSpan? collectionSpan = null, Func<CancellationToken, Task> waitForConnection = null,
+        public SharpReduxManagerSettings(bool persistData, bool includeState, int batchSize = 10, TimeSpan? collectionSpan = null, Func<CancellationToken, Task> waitForConnection = null,
             string dataFile = null)
         {
             PersistData = persistData;

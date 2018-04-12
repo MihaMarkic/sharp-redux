@@ -15,15 +15,13 @@ namespace Sharp.Redux.HubServer.Controllers
     [Authorize]
     public class HomeController : BaseController
     {
-        readonly IProjectStore projectStore;
         readonly ISessionStore sessionStore;
         readonly IStepStore stepStore;
         readonly ITokenStore tokenStore;
         public HomeController(IProjectStore projectStore, ISessionStore sessionStore, IStepStore stepStore, ITokenStore tokenStore,
             UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager):
-            base(userManager, signInManager)
+            base(userManager, signInManager, projectStore)
         {
-            this.projectStore = projectStore;
             this.sessionStore = sessionStore;
             this.stepStore = stepStore;
             this.tokenStore = tokenStore;
@@ -83,7 +81,7 @@ namespace Sharp.Redux.HubServer.Controllers
             {
                 throw new ArgumentException($"Couldn't find session {id}");
             }
-            var steps = (from s in stepStore.GetLast(id, 10)
+            var steps = (from s in stepStore.GetLastBatch(id, 10)
                             select new StepViewModel(s)
                             ).ToArray();
             return View(new SessionDetailsViewModel(session, steps));

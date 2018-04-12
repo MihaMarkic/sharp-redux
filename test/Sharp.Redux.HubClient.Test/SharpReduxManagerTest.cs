@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Sharp.Redux.HubClient.Test
 {
-    public class SharpReduxSenderTest
+    public class SharpReduxManagerTest
     {
         protected BlockingCollection<Step> buffer;
         protected List<Step> steps;
@@ -23,13 +23,13 @@ namespace Sharp.Redux.HubClient.Test
         }
 
         [TestFixture]
-        public class WaitForBatch: SharpReduxSenderTest
+        public class WaitForBatch: SharpReduxManagerTest
         {
             [Test]
             public async Task WhenNoStepsInGivenTime_TaskNotCompleted()
             {
                 TimeSpan timeout = TimeSpan.FromMilliseconds(100);
-                var task = Task.Run(() => SharpReduxSender.WaitForBatch(buffer, steps, 10, timeout, default));
+                var task = Task.Run(() => SharpReduxManager.WaitForBatch(buffer, steps, 10, timeout, default));
                 await Task.Delay(timeout);
 
                 bool isCompleted = task.IsCompleted;
@@ -41,7 +41,7 @@ namespace Sharp.Redux.HubClient.Test
             {
                 TimeSpan timeout = TimeSpan.FromMilliseconds(100);
                 var cts = new CancellationTokenSource();
-                var task = Task.Run(() => SharpReduxSender.WaitForBatch(buffer, steps, 10, timeout, cts.Token));
+                var task = Task.Run(() => SharpReduxManager.WaitForBatch(buffer, steps, 10, timeout, cts.Token));
                 cts.Cancel();
                 await Task.Delay(timeout);
 
@@ -54,7 +54,7 @@ namespace Sharp.Redux.HubClient.Test
             public async Task WhenOnlySingleStep_TaskCompletedAfterTimeout()
             {
                 TimeSpan timeout = TimeSpan.FromMilliseconds(100);
-                var task = Task.Run(() => SharpReduxSender.WaitForBatch(buffer, steps, 10, timeout, default));
+                var task = Task.Run(() => SharpReduxManager.WaitForBatch(buffer, steps, 10, timeout, default));
                 buffer.Add(new Step());
                 await Task.Delay(TimeSpan.FromMilliseconds(150));
 
@@ -66,7 +66,7 @@ namespace Sharp.Redux.HubClient.Test
             public async Task WhenOnlySingleStep_ResultIsTrue()
             {
                 TimeSpan timeout = TimeSpan.FromMilliseconds(100);
-                var task = Task.Run(() => SharpReduxSender.WaitForBatch(buffer, steps, 10, timeout, default));
+                var task = Task.Run(() => SharpReduxManager.WaitForBatch(buffer, steps, 10, timeout, default));
                 buffer.Add(new Step());
                 await Task.Delay(TimeSpan.FromMilliseconds(150));
 
@@ -79,7 +79,7 @@ namespace Sharp.Redux.HubClient.Test
             public async Task WhenOnlySingleStep_StepsContainsStep()
             {
                 TimeSpan timeout = TimeSpan.FromMilliseconds(100);
-                var task = Task.Run(() => SharpReduxSender.WaitForBatch(buffer, steps, 10, timeout, default));
+                var task = Task.Run(() => SharpReduxManager.WaitForBatch(buffer, steps, 10, timeout, default));
                 Step step = new Step();
                 buffer.Add(step);
                 await Task.Delay(TimeSpan.FromMilliseconds(150));
@@ -91,7 +91,7 @@ namespace Sharp.Redux.HubClient.Test
             {
                 TimeSpan timeout = TimeSpan.FromMilliseconds(100);
                 var cts = new CancellationTokenSource();
-                var task = Task.Run(() => SharpReduxSender.WaitForBatch(buffer, steps, 10, timeout, cts.Token));
+                var task = Task.Run(() => SharpReduxManager.WaitForBatch(buffer, steps, 10, timeout, cts.Token));
                 buffer.Add(new Step());
                 cts.Cancel();
                 await Task.Delay(timeout);
@@ -105,7 +105,7 @@ namespace Sharp.Redux.HubClient.Test
             public async Task WhenTwoSteps_StepsContainsBoth()
             {
                 TimeSpan timeout = TimeSpan.FromMilliseconds(100);
-                var task = Task.Run(() => SharpReduxSender.WaitForBatch(buffer, steps, 10, timeout, default));
+                var task = Task.Run(() => SharpReduxManager.WaitForBatch(buffer, steps, 10, timeout, default));
                 Step step1 = new Step();
                 buffer.Add(step1);
                 Step step2 = new Step();
@@ -116,14 +116,14 @@ namespace Sharp.Redux.HubClient.Test
             }
         }
         [TestFixture]
-        public class CreateStepFromStateChange: SharpReduxSenderTest
+        public class CreateStepFromStateChange: SharpReduxManagerTest
         {
             [Test]
             public void WhenStateIsNotRequired_StateIsNotMapped()
             {
                 var e = new StateChangedEventArgs(new DummyAction(), new object());
 
-                var actual = SharpReduxSender.CreateStepFromStateChange(Guid.NewGuid(), 1, new SharpReduxSenderSettings(false, false), e);
+                var actual = SharpReduxManager.CreateStepFromStateChange(Guid.NewGuid(), 1, new SharpReduxManagerSettings(false, false), e);
 
                 Assert.That(actual.State, Is.Null);
             }
@@ -133,28 +133,28 @@ namespace Sharp.Redux.HubClient.Test
                 object state = new object();
                 var e = new StateChangedEventArgs(new DummyAction(), state);
 
-                var actual = SharpReduxSender.CreateStepFromStateChange(Guid.NewGuid(), 1, new SharpReduxSenderSettings(false, true), e);
+                var actual = SharpReduxManager.CreateStepFromStateChange(Guid.NewGuid(), 1, new SharpReduxManagerSettings(false, true), e);
 
                 Assert.That(actual.State, Is.SameAs(state));
             }
         }
         [TestFixture]
-        public class ProcessPersistedAsync: SharpReduxSenderTest
+        public class ProcessPersistedAsync: SharpReduxManagerTest
         {
             protected IPersister persister;
             protected IReduxDispatcher dispatcher;
             protected ICommunicator communicator;
-            protected SharpReduxSender target;
-            protected SharpReduxSenderSettings settings;
+            protected SharpReduxManager target;
+            protected SharpReduxManagerSettings settings;
             [SetUp]
             public new void SetUp()
             {
                 persister = Substitute.For<IPersister>();
                 dispatcher = Substitute.For<IReduxDispatcher>();
                 communicator = Substitute.For<ICommunicator>();
-                settings = new SharpReduxSenderSettings(true, false, dataFile: "test.file");
-                target = new SharpReduxSender("token", serverUri: new Uri("https://blog.rthand.com/"), dispatcher,
-                    new SessionInfo("tVersion", "user"),settings, persister, communicator);
+                settings = new SharpReduxManagerSettings(true, false, dataFile: "test.file");
+                target = new SharpReduxManager("downloadToken", "uploadToken", serverUri: new Uri("https://blog.rthand.com/"), dispatcher,
+                    new EnvironmentInfo("tVersion", "user"),settings, persister, communicator);
             }
             [Test]
             public async Task WhenNoSessions_DoesNothing()

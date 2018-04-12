@@ -45,5 +45,9 @@ namespace Sharp.Redux.HubServer.Services
             }
             return null;
         }
+        public Session[] GetFiltered(Guid projectId, SessionsFilter filter)
+        {
+            return sessions.Find(s => s.ProjectId == projectId, limit: filter.MaxCount ?? int.MaxValue).ToArray();
+        }
     }
 }

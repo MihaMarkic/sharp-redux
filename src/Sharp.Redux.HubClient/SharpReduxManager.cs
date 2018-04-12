@@ -12,14 +12,15 @@ using System.Threading.Tasks;
 
 namespace Sharp.Redux.HubClient
 {
-    public class SharpReduxSender: IDisposable
+    public class SharpReduxManager : IDisposable, ISharpReduxManager
     {
         bool isDisposed;
-        readonly string token;
+        readonly string uploadToken;
+        readonly string downloadToken;
         readonly IReduxDispatcher dispatcher;
-        readonly SharpReduxSenderSettings settings;
+        readonly SharpReduxManagerSettings settings;
         readonly ICommunicator communicator;
-        public static SharpReduxSender Default { get; private set; }
+        public static SharpReduxManager Default { get; private set; }
         public static HubClientSettings Settings { get; } = new HubClientSettings();
         readonly CancellationTokenSource cts;
         Task processor;
@@ -27,23 +28,24 @@ namespace Sharp.Redux.HubClient
         readonly IPersister persister;
         int counter = 0;
         readonly Session session;
-        public SessionInfo SessionInfo { get; private set; }
-        public static void Start(string token, Uri serverUri, IReduxDispatcher dispatcher, SessionInfo sessionInfo, SharpReduxSenderSettings settings)
+        public EnvironmentInfo EnvironmentInfo { get; private set; }
+        public static void Start(string uploadToken, string downloadToken, Uri serverUri, IReduxDispatcher dispatcher, EnvironmentInfo environmentInfo, SharpReduxManagerSettings settings)
         {
             if (Default != null)
             {
                 throw new Exception("Sender already running");
             }
-            Default = new SharpReduxSender(token, serverUri, dispatcher, sessionInfo, settings, settings.PersistData ? new Persister() : null);
+            Default = new SharpReduxManager(uploadToken, downloadToken, serverUri, dispatcher, environmentInfo, settings, settings.PersistData ? new Persister() : null);
             Default.Start();
         }
-        internal SharpReduxSender(string token, Uri serverUri, IReduxDispatcher dispatcher, SessionInfo sessionInfo, SharpReduxSenderSettings settings, IPersister persister):
-            this(token, serverUri, dispatcher,sessionInfo, settings, persister, new Communicator(token, serverUri, settings.WaitForConnection))
-        {}
-        internal SharpReduxSender(string token, Uri serverUri, IReduxDispatcher dispatcher, SessionInfo sessionInfo, SharpReduxSenderSettings settings, IPersister persister,
+        internal SharpReduxManager(string uploadToken, string downloadToken, Uri serverUri, IReduxDispatcher dispatcher, EnvironmentInfo environmentInfo, SharpReduxManagerSettings settings, IPersister persister) :
+            this(uploadToken, downloadToken, serverUri, dispatcher, environmentInfo, settings, persister, new Communicator(uploadToken, downloadToken, serverUri, settings.WaitForConnection))
+        { }
+        internal SharpReduxManager(string uploadToken, string downloadToken, Uri serverUri, IReduxDispatcher dispatcher, EnvironmentInfo environmentInfo, SharpReduxManagerSettings settings, IPersister persister,
             ICommunicator communicator)
         {
-            this.token = token;
+            this.uploadToken = uploadToken;
+            this.downloadToken = downloadToken;
             this.dispatcher = dispatcher;
             this.persister = persister;
             dispatcher.StateChanged += Dispatcher_StateChanged;
@@ -51,23 +53,23 @@ namespace Sharp.Redux.HubClient
             cts = new CancellationTokenSource();
             buffer = new BlockingCollection<Step>();
             this.communicator = communicator;
-            SessionInfo = sessionInfo;
+            EnvironmentInfo = environmentInfo;
             session = new Session
             {
                 Id = Guid.NewGuid(),
                 ClientDateTime = DateTimeOffset.Now,
-                AppVersion = sessionInfo.AppVersion,
-                UserName = sessionInfo.UserName
+                AppVersion = environmentInfo.AppVersion,
+                UserName = environmentInfo.UserName
             };
             Logger.Log(LogLevel.Info, $"Created session {session.Id}");
         }
         bool IsPersisterRunning => persister?.IsRunning ?? false;
-        public Task UpdateSessionInfoAsync(SessionInfo sessionInfo, CancellationToken ct)
+        public Task UpdateEnvironmentInfoAsync(EnvironmentInfo environmentInfo, CancellationToken ct)
         {
-            SessionInfo = sessionInfo;
-            session.AppVersion = sessionInfo.AppVersion;
-            session.UserName = sessionInfo.UserName;
-            Logger.Log(LogLevel.Info, $"Updates session with appVersion:{sessionInfo.AppVersion} and UserName:{sessionInfo.UserName}");
+            EnvironmentInfo = environmentInfo;
+            session.AppVersion = environmentInfo.AppVersion;
+            session.UserName = environmentInfo.UserName;
+            Logger.Log(LogLevel.Info, $"Updates session with appVersion:{environmentInfo.AppVersion} and UserName:{environmentInfo.UserName}");
             // update
             return UploadSessionAsync(ct);
         }
@@ -83,7 +85,7 @@ namespace Sharp.Redux.HubClient
             buffer.Add(step);
             Logger.Log(LogLevel.Debug, $"Got action {e.Action.GetType().Name}");
         }
-        internal static Step CreateStepFromStateChange(Guid sessionId, int counter, SharpReduxSenderSettings settings, StateChangedEventArgs e)
+        internal static Step CreateStepFromStateChange(Guid sessionId, int counter, SharpReduxManagerSettings settings, StateChangedEventArgs e)
         {
             return new Step
             {
@@ -91,7 +93,7 @@ namespace Sharp.Redux.HubClient
                 Id = counter++,
                 ActionType = e.Action.GetType().FullName,
                 Action = JsonConvert.SerializeObject(e.Action),
-                State = settings.IncludeState ? e.State: null,
+                State = settings.IncludeState ? e.State : null,
                 Time = DateTimeOffset.Now
             };
         }
@@ -201,7 +203,15 @@ namespace Sharp.Redux.HubClient
             Logger.Log(LogLevel.Info, "Stopped");
 
         }
+        public Task<Session[]> GetSessionsAsync(SessionsFilter filter, CancellationToken ct)
+        {
+            return communicator.PostAsync<SessionsFilter, Session[]>("sessions/list", filter, ct);
+        }
 
+        public Task<Step[]> GetStepsAsync(string sessionId, StepsFilter filter, CancellationToken ct)
+        {
+            return communicator.PostAsync<StepsFilter, Step[]>($"sessions/{sessionId}/steps/list", filter, ct);
+        }
         public void Dispose()
         {
             if (!isDisposed)

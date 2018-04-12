@@ -9,5 +9,6 @@ namespace Sharp.Redux.HubClient.Services.Abstract
     {
         Task RegisterSessionAsync(Session session, CancellationToken ct);
         Task UploadStepsAsync(Step[] steps, CancellationToken ct);
+        Task<TResult> PostAsync<TData, TResult>(string relativeUrl, TData data, CancellationToken ct);
     }
 }

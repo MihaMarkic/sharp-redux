@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharp.Redux.HubClient", "Sh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharp.Redux.Shared", "Sharp.Redux.Shared\Sharp.Redux.Shared.csproj", "{768E53AA-9FBE-485D-AC2E-CC2757ED4B25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Redux.HubServer", "Sharp.Redux.HubServer\Sharp.Redux.HubServer.csproj", "{FF23220E-31EF-4244-AAF8-D76EBB6237C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharp.Redux.HubServer", "Sharp.Redux.HubServer\Sharp.Redux.HubServer.csproj", "{FF23220E-31EF-4244-AAF8-D76EBB6237C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

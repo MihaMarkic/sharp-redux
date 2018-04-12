@@ -9,10 +9,10 @@ namespace Todo.Engine
         {
             if (Settings.IsHubEnabled)
             {
-                SharpReduxSender.Settings.LogLevel = Settings.LogLevel;
-                SharpReduxSender.Start(Settings.Token, Settings.HubServer, sourceDispatcher,
-                    new Sharp.Redux.HubClient.Models.SessionInfo("1.0.0", "Miha"), 
-                    new SharpReduxSenderSettings(Settings.PersistData, Settings.IncludeState, dataFile: Settings.DataFile));
+                SharpReduxManager.Settings.LogLevel = Settings.LogLevel;
+                SharpReduxManager.Start(Settings.UploadToken, Settings.DownloadToken, Settings.HubServer, sourceDispatcher,
+                    new Sharp.Redux.HubClient.Models.EnvironmentInfo("1.0.0", "Miha"), 
+                    new SharpReduxManagerSettings(Settings.PersistData, Settings.IncludeState, dataFile: Settings.DataFile));
             }
         }
     }
