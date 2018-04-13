@@ -5,15 +5,18 @@ namespace Sharp.Redux.Visualizer.States
     public readonly struct RootState
     {
         public VisualizerState Visualizer { get; }
+        public HubState Hub { get; }
 
-        public RootState(VisualizerState visualizerState)
+        public RootState(VisualizerState visualizer, HubState hub)
         {
-            Visualizer = visualizerState;
+            Visualizer = visualizer;
+            Hub = hub;
         }
 
-        public RootState Clone(Param<VisualizerState>? visualizerState = null)
+        public RootState Clone(Param<VisualizerState>? visualizer = null, Param<HubState>? hub = null)
         {
-            return new RootState(visualizerState.HasValue ? visualizerState.Value.Value : Visualizer);
+            return new RootState(visualizer.HasValue ? visualizer.Value.Value : Visualizer,
+hub.HasValue ? hub.Value.Value : Hub);
         }
     }
 }
