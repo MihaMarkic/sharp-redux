@@ -1,4 +1,4 @@
-﻿using Sharp.Redux.Visualizer.Actions;
+﻿using Sharp.Redux.Actions.Visualizer;
 using Sharp.Redux.Visualizer.Core;
 using Sharp.Redux.Visualizer.States;
 using System.Collections.ObjectModel;

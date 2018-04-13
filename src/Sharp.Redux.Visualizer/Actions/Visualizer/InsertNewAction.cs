@@ -1,6 +1,6 @@
 ﻿using Righthand.Immutable;
 
-namespace Sharp.Redux.Visualizer.Actions
+namespace Sharp.Redux.Actions.Visualizer
 {
     public class InsertNewAction: ReduxAction
     {

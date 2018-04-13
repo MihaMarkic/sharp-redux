@@ -1,4 +1,4 @@
-﻿namespace Sharp.Redux.Visualizer.Actions
+﻿namespace Sharp.Redux.Actions.Visualizer
 {
     public class GenerateTreeHierarchyAction: ReduxAction
     {
