@@ -21,6 +21,7 @@
     <Version>1.0.0-alpha1</Version>
     <Dependencies>
       <dependency id="Righthand.SharpRedux" Version="1.0.2" />
+      <dependency id="Righthand.SharpRedux.HubClient" Version="1.0.2" />
       <Dependency id="Righthand.Immutable" Version="1.0.1" />
       <Dependency id="System.Collections.Immutable" Version="1.4.0" />
       <Dependency id="System.Threading.Tasks.Extensions" Version="4.4.0" />
@@ -34,6 +35,7 @@
     <PackageReference Include="System.Collections.Immutable" Version="1.4.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Sharp.Redux.HubClient\Sharp.Redux.HubClient.csproj" />
     <ProjectReference Include="..\Sharp.Redux\Sharp.Redux.csproj" />
   </ItemGroup>
 </Project>

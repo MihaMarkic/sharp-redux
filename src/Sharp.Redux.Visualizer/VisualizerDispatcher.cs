@@ -13,9 +13,8 @@ namespace Sharp.Redux.Visualizer
 
         public static void Init()
         {
-            RootState initialState = new RootState(steps: new Step[0], selectedStep: null);
+            RootState initialState = new RootState(new VisualizerState(steps: new Step[0], selectedStep: null));
             Default = new VisualizerDispatcher(initialState, new RootReducer(), TaskScheduler.FromCurrentSynchronizationContext());
-            Default.Start();
         }
     }
 }

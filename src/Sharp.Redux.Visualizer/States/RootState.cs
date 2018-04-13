@@ -2,21 +2,18 @@
 
 namespace Sharp.Redux.Visualizer.States
 {
-    public class RootState
+    public readonly struct RootState
     {
-        public Step[] Steps { get; }
-        public Step SelectedStep { get; }
+        public VisualizerState Visualizer { get; }
 
-        public RootState(Step[] steps, Step selectedStep)
+        public RootState(VisualizerState visualizerState)
         {
-            Steps = steps;
-            SelectedStep = selectedStep;
+            Visualizer = visualizerState;
         }
 
-        public RootState Clone(Param<Step[]>? steps = null, Param<Step>? selectedStep = null)
+        public RootState Clone(Param<VisualizerState>? visualizerState = null)
         {
-            return new RootState(steps.HasValue ? steps.Value.Value : Steps,
-selectedStep.HasValue ? selectedStep.Value.Value : SelectedStep);
+            return new RootState(visualizerState.HasValue ? visualizerState.Value.Value : Visualizer);
         }
     }
 }

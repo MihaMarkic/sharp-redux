@@ -11,6 +11,7 @@ namespace Sharp.Redux.Visualizer
             IgnoredNamespacePrefixes = ignoredNamespacePrefixes ?? new string[0];
             VisualizerDispatcher.Init();
             MainViewModel = new MainViewModel(sourceDispatcher);
+            VisualizerDispatcher.Default.Start();
         }
     }
 }

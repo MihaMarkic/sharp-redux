@@ -17,6 +17,7 @@ namespace Sharp.Redux.Visualizer.ViewModels
         public bool IsResetingState { get; private set; }
         public int ResetingActionsCount { get; private set; }
         public int ResetingActionCurrent { get; private set; }
+        VisualizerState state;
         public MainViewModel(IReduxDispatcher sourceDispatcher)
         {
             this.sourceDispatcher = sourceDispatcher;
@@ -31,7 +32,7 @@ namespace Sharp.Redux.Visualizer.ViewModels
             try
             {
                 await sourceDispatcher.ResetToInitialStateAsync();
-                var actions = dispatcher.InitialState.Steps
+                var actions = state.Steps
                     .TakeWhile(s => !Equals(s, selectedStep.State)).Union(new[] { selectedStep.State })
                     .Select(s => s.Action)
                     .ToArray();
@@ -79,7 +80,7 @@ namespace Sharp.Redux.Visualizer.ViewModels
 
         private void Default_StateChanged(object sender, StateChangedEventArgs<RootState> e)
         {
-            RootState state = e.State;
+            state = e.State.Visualizer;
             ReduxMerger.MergeList<int, Step, StepViewModel>(state.Steps, Steps, step => new StepViewModel(step));
             SelectedStep = state.SelectedStep != null ? Steps.Single(s => s.Key == state.SelectedStep.Key): null;
         }
