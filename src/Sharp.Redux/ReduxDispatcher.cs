@@ -203,7 +203,7 @@ namespace Sharp.Redux
         {
             try
             {
-                await OnStateChangedAsync(new StateChangedEventArgs<TState>(new InitAction(), state));
+                await OnStateChangedOnTaskSchedulerAsync(new InitAction(), state);
                 while (!ct.IsCancellationRequested)
                 {
                     if (queue.TryTake(out var action, -1, ct))
@@ -227,9 +227,15 @@ namespace Sharp.Redux
             state = await reducer.ReduceAsync(state, action, CancellationToken.None);
             if (!ct.IsCancellationRequested && !ReferenceEquals(oldState, state))
             {
-                await notificationFactory.StartNew(st => OnStateChangedAsync(new StateChangedEventArgs<TState>(action, (TState)st)), state).Unwrap();
+                await OnStateChangedOnTaskSchedulerAsync(action, state);
             }
         }
+
+        Task OnStateChangedOnTaskSchedulerAsync(ReduxAction action, TState state)
+        {
+            return notificationFactory.StartNew(st => OnStateChangedAsync(new StateChangedEventArgs<TState>(action, (TState)st)), state).Unwrap();
+        }
+
         readonly static Task defaultOnStateChangedResult = Task.FromResult(true);
         /// <summary>
         /// Raises <see cref="StateChanged"/> event. Client can add Tasks to event arguments for dispatcher to await their completion before 
