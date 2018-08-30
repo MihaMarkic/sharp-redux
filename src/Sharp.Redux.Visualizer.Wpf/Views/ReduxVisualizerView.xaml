@@ -14,7 +14,7 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
 
-    <Grid DataContext="{x:Static vis:ReduxVisualizer.MainViewModel}">
+    <Grid DataContext="{x:Static vis:ReduxVisualizer.VisualizerViewModel}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="Auto" />

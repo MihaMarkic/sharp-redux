@@ -15,7 +15,7 @@
     <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="LiteDB" Version="4.1.2" />
+    <PackageReference Include="LiteDB" Version="4.1.4" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Righthand.Immutable" Version="1.0.2" />
     <PackageReference Include="NSubstitute" Version="3.1.0" />
