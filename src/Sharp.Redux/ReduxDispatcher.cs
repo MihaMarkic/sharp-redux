@@ -4,7 +4,6 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 
 namespace Sharp.Redux
 {
@@ -38,7 +37,7 @@ namespace Sharp.Redux
         /// <summary>
         /// Queue for actions.
         /// </summary>
-        private readonly BufferBlock<ReduxAction> queue = new BufferBlock<ReduxAction>();
+        private readonly BlockingCollection<ReduxAction> queue = new BlockingCollection<ReduxAction>();
         /// <summary>
         /// Current state.
         /// </summary>
@@ -192,7 +191,7 @@ namespace Sharp.Redux
         /// <remarks>All actions have to be dispatched through this method.</remarks>
         public void Dispatch(ReduxAction action)
         {
-            queue.Post(action);
+            queue.Add(action);
         }
         /// <summary>
         /// The action processor. Handles the action queue and processes actions sequentially.
@@ -204,15 +203,17 @@ namespace Sharp.Redux
         {
             try
             {
-                await OnStateChangedAsync(new StateChangedEventArgs<TState>(new InitAction(), state));
-                while (await queue.OutputAvailableAsync(ct))
+                await OnStateChangedOnTaskSchedulerAsync(new InitAction(), state);
+                while (!ct.IsCancellationRequested)
                 {
-                    var action = queue.Receive(ct);
-                    await ProcessActionAsync(action, ct: ct);
+                    if (queue.TryTake(out var action, -1, ct))
+                    {
+                        await ProcessActionAsync(action, ct: ct);
+                    }
                 }
             }
             catch (OperationCanceledException)
-            {}
+            { }
         }
         /// <summary>
         /// Processes single action.
@@ -226,9 +227,15 @@ namespace Sharp.Redux
             state = await reducer.ReduceAsync(state, action, CancellationToken.None);
             if (!ct.IsCancellationRequested && !ReferenceEquals(oldState, state))
             {
-                await notificationFactory.StartNew(st => OnStateChangedAsync(new StateChangedEventArgs<TState>(action, (TState)st)), state).Unwrap();
+                await OnStateChangedOnTaskSchedulerAsync(action, state);
             }
         }
+
+        Task OnStateChangedOnTaskSchedulerAsync(ReduxAction action, TState state)
+        {
+            return notificationFactory.StartNew(st => OnStateChangedAsync(new StateChangedEventArgs<TState>(action, (TState)st)), state).Unwrap();
+        }
+
         readonly static Task defaultOnStateChangedResult = Task.FromResult(true);
         /// <summary>
         /// Raises <see cref="StateChanged"/> event. Client can add Tasks to event arguments for dispatcher to await their completion before 
