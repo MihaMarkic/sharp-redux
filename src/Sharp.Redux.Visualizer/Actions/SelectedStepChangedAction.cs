@@ -1,6 +1,4 @@
-﻿using Righthand.Immutable;
-
-namespace Sharp.Redux.Visualizer.Actions
+﻿namespace Sharp.Redux.Visualizer.Actions
 {
     public class SelectedStepChangedAction: ReduxAction
     {
@@ -9,11 +7,6 @@ namespace Sharp.Redux.Visualizer.Actions
         public SelectedStepChangedAction(int? key)
         {
             Key = key;
-        }
-
-        public SelectedStepChangedAction Clone(Param<int?>? key = null)
-        {
-            return new SelectedStepChangedAction(key.HasValue ? key.Value.Value : Key);
         }
     }
 }

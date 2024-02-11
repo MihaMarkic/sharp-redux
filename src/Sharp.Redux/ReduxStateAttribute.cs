@@ -1,9 +1,6 @@
-﻿using System;
+﻿namespace Sharp.Redux;
 
-namespace Sharp.Redux
+[AttributeUsage(AttributeTargets.Class)]
+public class ReduxStateAttribute: Attribute
 {
-    [AttributeUsage(AttributeTargets.Class)]
-    public class ReduxStateAttribute: Attribute
-    {
-    }
 }
