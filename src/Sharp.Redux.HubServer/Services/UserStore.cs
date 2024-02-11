@@ -9,7 +9,7 @@ namespace Sharp.Redux.HubServer.Services
 {
     public class UserStore : DisposableObject, IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser>
     {
-        readonly LiteCollection<ApplicationUser> users;
+        readonly ILiteCollection<ApplicationUser> users;
         public UserStore(LiteDatabase db)
         {
             users = db.GetCollection<ApplicationUser>();

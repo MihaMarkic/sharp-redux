@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.2;netstandard2.0;net45</TargetFrameworks>
+    <TargetFramework>net8.0</TargetFramework>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -24,9 +24,6 @@
       <file src="bin\Release\Sharp.Redux.xml" target="lib/netstandard2.0" />
       <file src="bin\Release\Sharp.Redux.xml" target="lib/net45" />
     </files>
-  </PropertyGroup>
-  <PropertyGroup>
-    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>bin\Release\Sharp.Redux.xml</DocumentationFile>

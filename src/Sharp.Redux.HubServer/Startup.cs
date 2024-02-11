@@ -29,7 +29,7 @@ namespace Sharp.Redux.HubServer
             services.AddScoped<ISessionStore, SessionStore>();
             services.AddScoped<IStepStore, StepStore>();
             services.AddScoped<ITokenStore, TokenStore>();
-            services.AddSingleton(new LiteDatabase("data.db"));
+            services.AddSingleton(new LiteDatabase("datax.db"));
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddDefaultTokenProviders();
 
@@ -51,9 +51,9 @@ namespace Sharp.Redux.HubServer
         {
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
+                //app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                //app.UseDatabaseErrorPage();
             }
             else
             {

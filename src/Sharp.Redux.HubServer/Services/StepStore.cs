@@ -7,7 +7,7 @@ namespace Sharp.Redux.HubServer.Services
 {
     public class StepStore : IStepStore
     {
-        readonly LiteCollection<Step> steps;
+        readonly ILiteCollection<Step> steps;
         public StepStore(LiteDatabase db)
         {
             steps = db.GetCollection<Step>();

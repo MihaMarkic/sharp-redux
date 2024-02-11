@@ -7,7 +7,7 @@ namespace Sharp.Redux.HubServer.Services
 {
     public class ProjectStore : IProjectStore
     {
-        readonly LiteCollection<SharpReduxProject> projects;
+        readonly ILiteCollection<SharpReduxProject> projects;
         public ProjectStore(LiteDatabase db)
         {
             projects = db.GetCollection<SharpReduxProject>();

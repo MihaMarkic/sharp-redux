@@ -8,7 +8,7 @@ namespace Sharp.Redux.HubServer.Services
 {
     public class TokenStore : ITokenStore
     {
-        readonly LiteCollection<SharpReduxToken> tokens;
+        readonly ILiteCollection<SharpReduxToken> tokens;
         readonly static char[] IdChars;
         readonly static Random random = new Random();
         readonly static object sync = new object();

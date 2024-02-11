@@ -7,7 +7,7 @@ namespace Sharp.Redux.HubServer.Services
 {
     public class SessionStore : ISessionStore
     {
-        readonly LiteCollection<Session> sessions;
+        readonly ILiteCollection<Session> sessions;
         readonly IProjectStore projectStore;
         public SessionStore(LiteDatabase db, IProjectStore projectStore)
         {
